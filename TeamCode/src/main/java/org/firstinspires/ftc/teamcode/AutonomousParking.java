@@ -15,6 +15,7 @@ public class AutonomousParking extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
@@ -41,6 +42,11 @@ public class AutonomousParking extends LinearOpMode {
         // Move forward
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        // WAIT
+        // Program pauses until start button is pressed on driver station
+        telemetry.addLine("WAITING FOR START");
+        waitForStart();
 
         // Total ticks to the destination
         int targetPosition = 1000;
