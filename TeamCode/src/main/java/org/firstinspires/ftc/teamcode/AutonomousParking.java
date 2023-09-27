@@ -49,7 +49,7 @@ public class AutonomousParking extends LinearOpMode {
         waitForStart();
 
         // Total ticks to the destination
-        int targetPosition = 1000;
+        int targetPosition = 1163;
         double speed = 0.5;
 
         frontLeft.setTargetPosition(targetPosition);
@@ -66,6 +66,19 @@ public class AutonomousParking extends LinearOpMode {
         frontRight.setPower(speed);
         backLeft.setPower(speed);
         backRight.setPower(speed);
+
+        while(opModeIsActive() && backLeft.isBusy() && backRight.isBusy() && frontLeft.isBusy() && frontRight.isBusy()) {
+            telemetry.addData("backLeft", backLeft.getCurrentPosition());
+            telemetry.addData("backRight",backRight.getCurrentPosition());
+            telemetry.addData("frontRight", frontRight.getCurrentPosition());
+            telemetry.addData("frontLeft", frontLeft.getCurrentPosition());
+            telemetry.update();
+        }
+        
+        backLeft.setPower(0);
+        backRight.setPower(0);
+        frontRight.setPower(0);
+        frontLeft.setPower(0);
 
     }
 }
