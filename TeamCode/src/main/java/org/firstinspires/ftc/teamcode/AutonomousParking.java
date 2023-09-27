@@ -39,9 +39,11 @@ public class AutonomousParking extends LinearOpMode {
         backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        // Move forward
+        // Strafe Right
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // WAIT
         // Program pauses until start button is pressed on driver station
@@ -49,8 +51,8 @@ public class AutonomousParking extends LinearOpMode {
         waitForStart();
 
         // Total ticks to the destination
-        int targetPosition = 1163;
-        double speed = 0.5;
+        int targetPosition = 2000;
+        double speed = 0.75;
 
         frontLeft.setTargetPosition(targetPosition);
         frontRight.setTargetPosition(targetPosition);
