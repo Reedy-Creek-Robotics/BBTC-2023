@@ -1,3 +1,4 @@
+// Done for scrimmage
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -5,8 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@Autonomous(name = "Autonomous Parking")
-public class AutonomousParking extends LinearOpMode {
+@Autonomous(name = "Auto Red Near Right")
+public class AutoRedNearRight extends LinearOpMode {
 
     private DcMotor frontLeft;
     private DcMotor frontRight;
