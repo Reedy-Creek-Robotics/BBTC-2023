@@ -58,6 +58,13 @@ public class TeleOpDrive extends LinearOpMode {
                 speedFactor --;
             }
 
+            if(speedFactor > 1) {
+                speedFactor = 1;
+            }
+            else if(speedfactor < 0.1) {
+                speedFactor = 0.1;
+            }
+
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio,
             // but only if at least one is out of the range [-1, 1]
@@ -72,8 +79,19 @@ public class TeleOpDrive extends LinearOpMode {
             frontRight.setPower(frontRightPower * speedFactor);
             backRight.setPower(backRightPower * speedFactor);
 
-            telemetry.addData("Speed Factor", speedFactor);
-            telemetry.update();
+            
+            
+            while(backLeft.isBusy() || backRight.isBusy() || frontLeft.isBusy() || frontRight.isBusy()) {
+                telemetry.addData("Speed Factor", speedFactor);
+                telemetry.addData("backLeft", backLeft.getCurrentPosition());
+                telemetry.addData("backRight",backRight.getCurrentPosition());
+                telemetry.addData("frontRight", frontRight.getCurrentPosition());
+                telemetry.addData("frontLeft", frontLeft.getCurrentPosition());
+                telemetry.addData("Left Stick Y", y);
+                telemetry.addData("Left Stick X", x);
+                telemetry.addData("Right Stick X", rx);
+                telemetry.update();
+            }
         }
     }
 }
