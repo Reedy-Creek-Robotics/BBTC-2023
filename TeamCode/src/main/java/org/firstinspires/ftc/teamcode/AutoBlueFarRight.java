@@ -50,9 +50,30 @@ public class AutoBlueFarRight extends LinearOpMode {
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
+
+        double speed = 0.3;
+
+        // Reset the motor encoder so that it reads zero ticks
+        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        // Turn the motor back on, required if you use STOP_AND_RESET_ENCODER
+        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
+        // Strafe Left
+        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
         // Total ticks to the destination
-        int targetPosition0 = 0;
-        double speed = 0.5;
+        int targetPosition0 = 2650;
 
         // Set distance or tick variable to each motor
         frontLeft.setTargetPosition(targetPosition0);
@@ -85,6 +106,8 @@ public class AutoBlueFarRight extends LinearOpMode {
         backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+
+
         // Turn the motor back on, required if you use STOP_AND_RESET_ENCODER
         frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -92,14 +115,15 @@ public class AutoBlueFarRight extends LinearOpMode {
         backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
-        // Strafe Left
+        // Move Forward
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+
 
         // Total ticks to the destination
-        int targetPosition1 = 2650;
+        int targetPosition1 = 2750;
 
         // Set distance or tick variable to each motor
         frontLeft.setTargetPosition(targetPosition1);
@@ -139,15 +163,24 @@ public class AutoBlueFarRight extends LinearOpMode {
         backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
+
+
+        // Turn the motor back on, required if you use STOP_AND_RESET_ENCODER
+        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
         // Move Forward
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
         // Total ticks to the destination
-        int targetPosition2 = 2750;
+        int targetPosition2 = 100000;
 
         // Set distance or tick variable to each motor
         frontLeft.setTargetPosition(targetPosition2);
