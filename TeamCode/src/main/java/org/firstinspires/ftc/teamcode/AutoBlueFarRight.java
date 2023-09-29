@@ -180,7 +180,7 @@ public class AutoBlueFarRight extends LinearOpMode {
 
 
         // Total ticks to the destination
-        int targetPosition2 = 100000;
+        int targetPosition2 = 1500;
 
         // Set distance or tick variable to each motor
         frontLeft.setTargetPosition(targetPosition2);
