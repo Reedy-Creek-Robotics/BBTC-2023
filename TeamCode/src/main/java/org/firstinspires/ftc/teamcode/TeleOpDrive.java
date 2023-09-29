@@ -26,9 +26,9 @@ public class TeleOpDrive extends LinearOpMode {
 
         // Move forward
         frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // WAIT
         // the program pauses here until the START button is pressed on the driver station
@@ -45,7 +45,7 @@ public class TeleOpDrive extends LinearOpMode {
             // these instructions will be executed over and over until STOP is pressed on the driver station
             // you will listen for gamepad and other input commands in this loop
             telemetry.addLine("EVENT LOOP");
-            double y = gamepad1.left_stick_y; // Remember, Y stick value is reversed
+            double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
             double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = gamepad1.right_stick_x;
 
@@ -67,10 +67,10 @@ public class TeleOpDrive extends LinearOpMode {
             double frontRightPower = (y - x - rx) / denominator;
             double backRightPower = (y + x - rx) / denominator;
 
-            frontLeft.setPower(-frontLeftPower * speedFactor);
+            frontLeft.setPower(frontLeftPower * speedFactor);
             backLeft.setPower(backLeftPower * speedFactor);
             frontRight.setPower(frontRightPower * speedFactor);
-            backRight.setPower(-backRightPower * speedFactor);
+            backRight.setPower(backRightPower * speedFactor);
 
             telemetry.addData("Speed Factor", speedFactor);
             telemetry.update();

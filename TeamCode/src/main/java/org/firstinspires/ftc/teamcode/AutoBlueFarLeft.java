@@ -87,7 +87,7 @@ public class AutoBlueFarLeft extends LinearOpMode {
         backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
-        // Stafe Left
+        // Strafe Left
         frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -97,10 +97,10 @@ public class AutoBlueFarLeft extends LinearOpMode {
         int targetPosition1 = 4000;
 
         // Set distance or tick variable to each motor
-        frontLeft.setTargetPosition(targetPosition0);
-        frontRight.setTargetPosition(targetPosition0);
-        backLeft.setTargetPosition(targetPosition0);
-        backRight.setTargetPosition(targetPosition0);
+        frontLeft.setTargetPosition(targetPosition1);
+        frontRight.setTargetPosition(targetPosition1);
+        backLeft.setTargetPosition(targetPosition1);
+        backRight.setTargetPosition(targetPosition1);
 
         // Run motors for
         frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -113,18 +113,18 @@ public class AutoBlueFarLeft extends LinearOpMode {
         backLeft.setPower(speed);
         backRight.setPower(speed);
 
+        while(opModeIsActive() && backLeft.isBusy() && backRight.isBusy() && frontLeft.isBusy() && frontRight.isBusy()) {
+            telemetry.addData("backLeft", backLeft.getCurrentPosition());
+            telemetry.addData("backRight",backRight.getCurrentPosition());
+            telemetry.addData("frontRight", frontRight.getCurrentPosition());
+            telemetry.addData("frontLeft", frontLeft.getCurrentPosition());
+            telemetry.update();
+        }
 
-        // Reset the motor encoder so that it reads zero ticks
-        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        // Turn the motor back on, required if you use STOP_AND_RESET_ENCODER
-        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+        frontRight.setPower(0);
+        frontLeft.setPower(0);
 
     }
 }
