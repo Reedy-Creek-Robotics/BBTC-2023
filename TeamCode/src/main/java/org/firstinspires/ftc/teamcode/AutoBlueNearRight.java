@@ -47,10 +47,8 @@ public class AutoBlueNearRight extends LinearOpMode {
 
 
         // Move Forward
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Total ticks to the destination
         int targetPosition0 = 2000;
@@ -73,7 +71,13 @@ public class AutoBlueNearRight extends LinearOpMode {
         backLeft.setPower(speed);
         backRight.setPower(speed);
 
-
+        while(opModeIsActive() && backLeft.isBusy() && backRight.isBusy() && frontLeft.isBusy() && frontRight.isBusy()) {
+            telemetry.addData("backLeft", backLeft.getCurrentPosition());
+            telemetry.addData("backRight",backRight.getCurrentPosition());
+            telemetry.addData("frontRight", frontRight.getCurrentPosition());
+            telemetry.addData("frontLeft", frontLeft.getCurrentPosition());
+            telemetry.update();
+        }
 
         // Reset the motor encoder so that it reads zero ticks
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

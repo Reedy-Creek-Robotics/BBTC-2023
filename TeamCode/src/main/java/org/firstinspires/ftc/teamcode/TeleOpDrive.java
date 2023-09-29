@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 @TeleOp(name = "TeleOp Driving")
 public class TeleOpDrive extends LinearOpMode {
 
+    double speedFactor = 0.7;
     private DcMotor frontLeft;
     private DcMotor frontRight;
     private DcMotor backRight;
@@ -46,11 +47,11 @@ public class TeleOpDrive extends LinearOpMode {
             // you will listen for gamepad and other input commands in this loop
             telemetry.addLine("EVENT LOOP");
             double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
-            double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
-            double rx = gamepad1.right_stick_x;
+            double x = -gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+            double rx = - gamepad1.right_stick_x;
 
 
-            double speedFactor = 0.7;
+
 
             if(gamepad1.dpad_up){
                 speedFactor ++;
@@ -61,7 +62,7 @@ public class TeleOpDrive extends LinearOpMode {
             if(speedFactor > 1) {
                 speedFactor = 1;
             }
-            else if(speedfactor < 0.1) {
+            else if(speedFactor < 0.1) {
                 speedFactor = 0.1;
             }
 
@@ -75,23 +76,23 @@ public class TeleOpDrive extends LinearOpMode {
             double backRightPower = (y + x - rx) / denominator;
 
             frontLeft.setPower(frontLeftPower * speedFactor);
-            backLeft.setPower(backLeftPower * speedFactor);
+            backLeft.setPower(-backLeftPower * speedFactor);
             frontRight.setPower(frontRightPower * speedFactor);
-            backRight.setPower(backRightPower * speedFactor);
+            backRight.setPower(-backRightPower * speedFactor);
 
             
             
-            while(backLeft.isBusy() || backRight.isBusy() || frontLeft.isBusy() || frontRight.isBusy()) {
-                telemetry.addData("Speed Factor", speedFactor);
-                telemetry.addData("backLeft", backLeft.getCurrentPosition());
-                telemetry.addData("backRight",backRight.getCurrentPosition());
-                telemetry.addData("frontRight", frontRight.getCurrentPosition());
-                telemetry.addData("frontLeft", frontLeft.getCurrentPosition());
-                telemetry.addData("Left Stick Y", y);
-                telemetry.addData("Left Stick X", x);
-                telemetry.addData("Right Stick X", rx);
-                telemetry.update();
-            }
+
+            telemetry.addData("Speed Factor", speedFactor);
+            telemetry.addData("backLeft", backLeft.getCurrentPosition());
+            telemetry.addData("backRight",backRight.getCurrentPosition());
+            telemetry.addData("frontRight", frontRight.getCurrentPosition());
+            telemetry.addData("frontLeft", frontLeft.getCurrentPosition());
+            telemetry.addData("Left Stick Y", y);
+            telemetry.addData("Left Stick X", x);
+            telemetry.addData("Right Stick X", rx);
+            telemetry.update();
         }
     }
 }
+

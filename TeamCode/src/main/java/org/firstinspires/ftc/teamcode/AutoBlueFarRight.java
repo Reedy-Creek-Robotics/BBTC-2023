@@ -47,13 +47,11 @@ public class AutoBlueFarRight extends LinearOpMode {
 
 
         // Move Forward
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Total ticks to the destination
-        int targetPosition0 = 200;
+        int targetPosition0 = 0;
         double speed = 0.5;
 
         // Set distance or tick variable to each motor
@@ -73,6 +71,13 @@ public class AutoBlueFarRight extends LinearOpMode {
         backLeft.setPower(speed);
         backRight.setPower(speed);
 
+        while(opModeIsActive() && backLeft.isBusy() && backRight.isBusy() && frontLeft.isBusy() && frontRight.isBusy()) {
+            telemetry.addData("backLeft", backLeft.getCurrentPosition());
+            telemetry.addData("backRight",backRight.getCurrentPosition());
+            telemetry.addData("frontRight", frontRight.getCurrentPosition());
+            telemetry.addData("frontLeft", frontLeft.getCurrentPosition());
+            telemetry.update();
+        }
 
         // Reset the motor encoder so that it reads zero ticks
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -94,7 +99,7 @@ public class AutoBlueFarRight extends LinearOpMode {
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Total ticks to the destination
-        int targetPosition1 = 2000;
+        int targetPosition1 = 2650;
 
         // Set distance or tick variable to each motor
         frontLeft.setTargetPosition(targetPosition1);
@@ -113,6 +118,13 @@ public class AutoBlueFarRight extends LinearOpMode {
         backLeft.setPower(speed);
         backRight.setPower(speed);
 
+        while(opModeIsActive() && backLeft.isBusy() && backRight.isBusy() && frontLeft.isBusy() && frontRight.isBusy()) {
+            telemetry.addData("backLeft", backLeft.getCurrentPosition());
+            telemetry.addData("backRight",backRight.getCurrentPosition());
+            telemetry.addData("frontRight", frontRight.getCurrentPosition());
+            telemetry.addData("frontLeft", frontLeft.getCurrentPosition());
+            telemetry.update();
+        }
 
         // Reset the motor encoder so that it reads zero ticks
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -127,15 +139,15 @@ public class AutoBlueFarRight extends LinearOpMode {
         backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
-
         // Move Forward
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
+
         // Total ticks to the destination
-        int targetPosition2 = 2000;
+        int targetPosition2 = 2750;
 
         // Set distance or tick variable to each motor
         frontLeft.setTargetPosition(targetPosition2);
@@ -154,6 +166,13 @@ public class AutoBlueFarRight extends LinearOpMode {
         backLeft.setPower(speed);
         backRight.setPower(speed);
 
+        while(opModeIsActive() && backLeft.isBusy() && backRight.isBusy() && frontLeft.isBusy() && frontRight.isBusy()) {
+            telemetry.addData("backLeft", backLeft.getCurrentPosition());
+            telemetry.addData("backRight",backRight.getCurrentPosition());
+            telemetry.addData("frontRight", frontRight.getCurrentPosition());
+            telemetry.addData("frontLeft", frontLeft.getCurrentPosition());
+            telemetry.update();
+        }
 
         // Reset the motor encoder so that it reads zero ticks
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -175,7 +194,7 @@ public class AutoBlueFarRight extends LinearOpMode {
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Total ticks to the destination
-        int targetPosition3 = 2000;
+        int targetPosition3 = 2500;
 
         // Set distance or tick variable to each motor
         frontLeft.setTargetPosition(targetPosition3);
