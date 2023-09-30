@@ -52,12 +52,17 @@ public class TeleOpDrive extends LinearOpMode {
 
 
             if(gamepad1.dpad_up){
-                speedFactor = 0.8;
+                speedFactor = 0.9;
             }
 
 
             if(gamepad1.dpad_down) {
                 speedFactor = 0.5;
+            }
+
+
+            if(gamepad1.dpad_right || gamepad1.dpad_left) {
+                speedFactor = 0.7;
             }
 
 
