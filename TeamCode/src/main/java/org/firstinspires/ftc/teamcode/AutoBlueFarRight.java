@@ -45,12 +45,6 @@ public class AutoBlueFarRight extends LinearOpMode {
         telemetry.addLine("WAITING FOR START");
         waitForStart();
 
-
-        // Move Forward
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-
-
         double speed = 0.3;
 
         // Reset the motor encoder so that it reads zero ticks
