@@ -47,14 +47,14 @@ public class AutoBlueNearRight extends LinearOpMode {
 
 
         // Move Forward
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Total ticks to the destination
-        int targetPosition0 = 2000;
-        double speed = 0.5;
+        int targetPosition0 = 1500;
+        double speed = 0.3;
 
         // Set distance or tick variable to each motor
         frontLeft.setTargetPosition(targetPosition0);
@@ -80,6 +80,9 @@ public class AutoBlueNearRight extends LinearOpMode {
             telemetry.addData("frontLeft", frontLeft.getCurrentPosition());
             telemetry.update();
         }
+
+
+
 
         // Reset the motor encoder so that it reads zero ticks
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

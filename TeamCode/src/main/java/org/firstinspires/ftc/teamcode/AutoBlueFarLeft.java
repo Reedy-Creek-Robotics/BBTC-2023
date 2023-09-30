@@ -52,7 +52,7 @@ public class AutoBlueFarLeft extends LinearOpMode {
 
         // Total ticks to the destination
         int targetPosition0 = 0;
-        double speed = 0.5;
+        double speed = 0.3;
 
         // Set distance or tick variable to each motor
         frontLeft.setTargetPosition(targetPosition0);

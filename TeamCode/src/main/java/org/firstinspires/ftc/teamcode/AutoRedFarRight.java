@@ -51,8 +51,8 @@ public class AutoRedFarRight extends LinearOpMode {
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Total ticks to the destination
-        int targetPosition0 = 270;
-        double speed = 0.5;
+        int targetPosition0 = 230;
+        double speed = 0.3;
 
         // Set distance or tick variable to each motor
         frontLeft.setTargetPosition(targetPosition0);
