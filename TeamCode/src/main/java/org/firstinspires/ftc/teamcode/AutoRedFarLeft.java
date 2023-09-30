@@ -191,7 +191,6 @@ public class AutoRedFarLeft extends LinearOpMode {
             telemetry.update();
         }
 
-
         // Reset the motor encoder so that it reads zero ticks
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -212,7 +211,7 @@ public class AutoRedFarLeft extends LinearOpMode {
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Total ticks to the destination
-        int targetPosition3 = 2000;
+        int targetPosition3 = 2500;
 
         // Set distance or tick variable to each motor
         frontLeft.setTargetPosition(targetPosition3);
