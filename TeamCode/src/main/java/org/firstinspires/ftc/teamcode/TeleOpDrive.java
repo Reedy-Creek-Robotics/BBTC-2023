@@ -51,20 +51,15 @@ public class TeleOpDrive extends LinearOpMode {
             double rx = - gamepad1.right_stick_x;
 
 
-
-
             if(gamepad1.dpad_up){
-                speedFactor ++;
-            } else if (gamepad1.dpad_down) {
-                speedFactor --;
+                speedFactor = 0.8;
             }
 
-            if(speedFactor > 1) {
-                speedFactor = 1;
+
+            if(gamepad1.dpad_down) {
+                speedFactor = 0.5;
             }
-            else if(speedFactor < 0.1) {
-                speedFactor = 0.1;
-            }
+
 
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio,
