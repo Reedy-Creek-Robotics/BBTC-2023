@@ -1,4 +1,4 @@
-// Done for testing
+// Test At Scrimmage
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
