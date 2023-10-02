@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@Autonomous(name = "!!!!DO NOT USE!!!!")
+@Autonomous(name = "!!!DO NOT USE!!!")
 public class DoNotUseMovementCode extends LinearOpMode {
 
     private DcMotor frontLeft;
