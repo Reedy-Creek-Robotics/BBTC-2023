@@ -17,6 +17,12 @@ public class Robot {
         this.driveBackRight = driveBackRight;
         this.driveBackLeft = driveBackLeft;
 
+        // Reset the motor encoder so that it reads zero ticks
+        driveFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        driveFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        driveBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        driveBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
     }
 
