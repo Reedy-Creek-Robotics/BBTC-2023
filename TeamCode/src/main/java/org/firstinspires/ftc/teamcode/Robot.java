@@ -19,8 +19,8 @@ public class Robot {
         this.driveBackLeft = driveBackLeft;
     }
 
-    public void Forward(int distance, double speed){
-        Setup(distance);
+    public void forward(int distance, double speed){
+        setup(distance);
 
         // Move Forward
         driveFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -34,8 +34,8 @@ public class Robot {
         driveBackRight.setPower(speed);
     }
 
-    public void Strafe(int distance, double speed, Direction direction) {
-        Setup(distance);
+    public void strafe(int distance, double speed, Direction direction) {
+        setup(distance);
 
         switch(direction){
             case LEFT:
@@ -60,7 +60,7 @@ public class Robot {
         driveBackRight.setPower(speed);
     }
 
-    private void Setup(int distance){
+    private void setup(int distance){
         // Reset the motor encoder so that it reads zero ticks
         driveFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         driveFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

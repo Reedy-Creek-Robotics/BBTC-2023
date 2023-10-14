@@ -33,7 +33,7 @@ public class AutoBlueNearRight extends LinearOpMode {
         telemetry.addLine("WAITING FOR START");
         waitForStart();
 
-        bot.Forward(forwardDistance, speed);
+        bot.forward(forwardDistance, speed);
 
         while(opModeIsActive() && driveBackLeft.isBusy() && driveBackRight.isBusy() && driveFrontLeft.isBusy() && driveFrontRight.isBusy()) {
             telemetry.addData("backLeft", driveBackLeft.getCurrentPosition());
@@ -43,7 +43,7 @@ public class AutoBlueNearRight extends LinearOpMode {
             telemetry.update();
         }
 
-        bot.Strafe(strafeDistance, speed, Direction.LEFT);
+        bot.strafe(strafeDistance, speed, Direction.LEFT);
 
         while(opModeIsActive() && driveBackLeft.isBusy() && driveBackRight.isBusy() && driveFrontLeft.isBusy() && driveFrontRight.isBusy()) {
             telemetry.addData("backLeft", driveBackLeft.getCurrentPosition());
