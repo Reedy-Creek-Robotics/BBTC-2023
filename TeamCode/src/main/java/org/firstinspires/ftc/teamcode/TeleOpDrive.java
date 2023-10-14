@@ -8,8 +8,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
-@TeleOp(name = "TeleOp Driving")
+@TeleOp(name = "Tele-Op Driving")
 public class TeleOpDrive extends LinearOpMode {
 
     double speedFactor = 0.7;
@@ -24,6 +25,12 @@ public class TeleOpDrive extends LinearOpMode {
         DcMotor frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         DcMotor backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         DcMotor backRight = hardwareMap.get(DcMotor.class, "backRight");
+
+        Gamepad currentGamepad1 = new Gamepad();
+        Gamepad currentGamepad2 = new Gamepad();
+
+        Gamepad previousGamepad1 = new Gamepad();
+        Gamepad previousGamepad2 = new Gamepad();
 
         // Move forward
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -51,20 +58,24 @@ public class TeleOpDrive extends LinearOpMode {
             double rx = gamepad1.right_stick_x;
 
 
-            if(gamepad1.dpad_up){
-                speedFactor = 0.9;
+            if (currentGamepad1.dpad_up && !previousGamepad1.dpad_up) {
+                speedFactor++;
             }
 
+            if (currentGamepad1.dpad_down && !previousGamepad1.dpad_down) {
+                speedFactor--;
+            }
 
-            if(gamepad1.dpad_down) {
+            if (currentGamepad1.dpad_right) {
+                speedFactor = 1;
+            }
+
+            if (currentGamepad1.dpad_left) {
                 speedFactor = 0.5;
             }
 
-
-            if(gamepad1.dpad_right || gamepad1.dpad_left) {
-                speedFactor = 0.7;
-            }
-
+            speedFactor = Math.max(speedFactor, 1);
+            speedFactor = Math.min(speedFactor, 0.5);
 
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio,
