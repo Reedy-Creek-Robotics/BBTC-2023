@@ -66,14 +66,6 @@ public class TeleOpDrive extends LinearOpMode {
                 speedFactor--;
             }
 
-            if (currentGamepad1.dpad_right) {
-                speedFactor = 1;
-            }
-
-            if (currentGamepad1.dpad_left) {
-                speedFactor = 0.5;
-            }
-
             speedFactor = Math.max(speedFactor, 1);
             speedFactor = Math.min(speedFactor, 0.5);
 
