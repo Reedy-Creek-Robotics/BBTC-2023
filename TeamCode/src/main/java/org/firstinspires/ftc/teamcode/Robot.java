@@ -22,6 +22,13 @@ public class Robot {
     public void forward(int distance, double speed){
         setup(distance);
 
+        // Set distance or tick variable to each motor
+        driveFrontLeft.setTargetPosition(-distance);
+        driveFrontRight.setTargetPosition(distance);
+        driveBackLeft.setTargetPosition(-distance);
+        driveBackRight.setTargetPosition(distance);
+
+
         // Move Forward
         driveFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         driveFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -37,6 +44,7 @@ public class Robot {
     public void strafe(int distance, double speed, Direction direction) {
         setup(distance);
 
+
         switch(direction){
             case LEFT:
                 // Strafe Left
@@ -44,6 +52,12 @@ public class Robot {
                 driveFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
                 driveBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
                 driveBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
+                // Set distance or tick variable to each motor
+                driveFrontLeft.setTargetPosition(distance);
+                driveFrontRight.setTargetPosition(distance);
+                driveBackLeft.setTargetPosition(distance);
+                driveBackRight.setTargetPosition(distance);
                 break;
             case RIGHT:
                 // Strafe Right
@@ -51,6 +65,12 @@ public class Robot {
                 driveFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
                 driveBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
                 driveBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
+
+                // Set distance or tick variable to each motor
+                driveFrontLeft.setTargetPosition(distance);
+                driveFrontRight.setTargetPosition(distance);
+                driveBackLeft.setTargetPosition(distance);
+                driveBackRight.setTargetPosition(distance);
                 break;
         }
 
@@ -78,12 +98,6 @@ public class Robot {
         driveFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         driveBackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         driveBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        // Set distance or tick variable to each motor
-        driveFrontLeft.setTargetPosition(distance);
-        driveFrontRight.setTargetPosition(distance);
-        driveBackLeft.setTargetPosition(distance);
-        driveBackRight.setTargetPosition(distance);
 
         // Run motors for
         driveFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);

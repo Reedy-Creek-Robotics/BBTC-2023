@@ -53,6 +53,16 @@ public class AutoBlueNearRight extends LinearOpMode {
             telemetry.update();
         }
 
+        bot.strafe(strafeDistance, speed, Direction.RIGHT);
+
+        while(opModeIsActive() && driveBackLeft.isBusy() && driveBackRight.isBusy() && driveFrontLeft.isBusy() && driveFrontRight.isBusy()) {
+            telemetry.addData("backLeft", driveBackLeft.getCurrentPosition());
+            telemetry.addData("backRight",driveBackRight.getCurrentPosition());
+            telemetry.addData("frontRight", driveFrontRight.getCurrentPosition());
+            telemetry.addData("frontLeft", driveFrontLeft.getCurrentPosition());
+            telemetry.update();
+        }
+
         driveBackLeft.setPower(0);
         driveBackRight.setPower(0);
         driveFrontRight.setPower(0);
