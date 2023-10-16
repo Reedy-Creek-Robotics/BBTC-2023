@@ -22,12 +22,12 @@ public class Robot {
     public void forward(int distance, double speed){
         setup(distance);
 
+        int revDistance = distance;
         // Set distance or tick variable to each motor
-        driveFrontLeft.setTargetPosition(-distance);
+        driveFrontLeft.setTargetPosition(-revDistance);
         driveFrontRight.setTargetPosition(distance);
-        driveBackLeft.setTargetPosition(-distance);
+        driveBackLeft.setTargetPosition(-revDistance);
         driveBackRight.setTargetPosition(distance);
-
 
         // Move Forward
         driveFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);

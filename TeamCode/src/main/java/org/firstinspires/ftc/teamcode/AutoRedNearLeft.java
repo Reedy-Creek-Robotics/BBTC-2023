@@ -9,128 +9,55 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 @Autonomous(name = "Auto Red Near Left")
 public class AutoRedNearLeft extends LinearOpMode {
 
-    private DcMotor frontLeft;
-    private DcMotor frontRight;
-    private DcMotor backRight;
-    private DcMotor backLeft;
+    private DcMotor driveFrontLeft;
+    private DcMotor driveFrontRight;
+    private DcMotor driveBackRight;
+    private DcMotor driveBackLeft;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
-        frontRight = hardwareMap.get(DcMotor.class, "frontRight");
-        backLeft = hardwareMap.get(DcMotor.class, "backLeft");
-        backRight = hardwareMap.get(DcMotor.class, "backRight");
 
-        // Reset the motor encoder so that it reads zero ticks
-        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // Total ticks to the destination
+        int forwardDistance = 1500;
+        int strafeDistance = 2000;
+        double speed = 0.3;
 
-        // Behavior when motor stops
-        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        driveFrontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
+        driveFrontRight = hardwareMap.get(DcMotor.class, "frontRight");
+        driveBackLeft = hardwareMap.get(DcMotor.class, "backLeft");
+        driveBackRight = hardwareMap.get(DcMotor.class, "backRight");
 
-        // Turn the motor back on, required if you use STOP_AND_RESET_ENCODER
-        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+        Robot bot = new Robot(driveFrontLeft, driveBackLeft, driveBackRight, driveFrontRight);
 
         // Program pauses until start button is pressed on driver station
         telemetry.addLine("WAITING FOR START");
         waitForStart();
 
+        bot.forward(forwardDistance, speed);
 
-        // Move Forward
-        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        // Total ticks to the destination
-        int targetPosition0 = 2000;
-        double speed = 0.3;
-
-        // Set distance or tick variable to each motor
-        frontLeft.setTargetPosition(targetPosition0);
-        frontRight.setTargetPosition(targetPosition0);
-        backLeft.setTargetPosition(targetPosition0);
-        backRight.setTargetPosition(targetPosition0);
-
-        // Run motors for
-        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        frontLeft.setPower(speed);
-        frontRight.setPower(speed);
-        backLeft.setPower(speed);
-        backRight.setPower(speed);
-
-        while(opModeIsActive() && backLeft.isBusy() && backRight.isBusy() && frontLeft.isBusy() && frontRight.isBusy()) {
-            telemetry.addData("backLeft", backLeft.getCurrentPosition());
-            telemetry.addData("backRight",backRight.getCurrentPosition());
-            telemetry.addData("frontRight", frontRight.getCurrentPosition());
-            telemetry.addData("frontLeft", frontLeft.getCurrentPosition());
+        while(opModeIsActive() && driveBackLeft.isBusy() && driveBackRight.isBusy() && driveFrontLeft.isBusy() && driveFrontRight.isBusy()) {
+            telemetry.addData("backLeft", driveBackLeft.getCurrentPosition());
+            telemetry.addData("backRight",driveBackRight.getCurrentPosition());
+            telemetry.addData("frontRight", driveFrontRight.getCurrentPosition());
+            telemetry.addData("frontLeft", driveFrontLeft.getCurrentPosition());
             telemetry.update();
         }
 
-        // Reset the motor encoder so that it reads zero ticks
-        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bot.strafe(strafeDistance, speed, Direction.RIGHT);
 
-        // Turn the motor back on, required if you use STOP_AND_RESET_ENCODER
-        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-
-        // Strafe Right
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
-
-
-        // Total ticks to the destination
-        int targetPosition1 = 2000;
-
-        frontLeft.setTargetPosition(targetPosition1);
-        frontRight.setTargetPosition(targetPosition1);
-        backLeft.setTargetPosition(targetPosition1);
-        backRight.setTargetPosition(targetPosition1);
-
-        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        frontLeft.setPower(speed);
-        frontRight.setPower(speed);
-        backLeft.setPower(speed);
-        backRight.setPower(speed);
-
-        while(opModeIsActive() && backLeft.isBusy() && backRight.isBusy() && frontLeft.isBusy() && frontRight.isBusy()) {
-            telemetry.addData("backLeft", backLeft.getCurrentPosition());
-            telemetry.addData("backRight",backRight.getCurrentPosition());
-            telemetry.addData("frontRight", frontRight.getCurrentPosition());
-            telemetry.addData("frontLeft", frontLeft.getCurrentPosition());
+        while(opModeIsActive() && driveBackLeft.isBusy() && driveBackRight.isBusy() && driveFrontLeft.isBusy() && driveFrontRight.isBusy()) {
+            telemetry.addData("backLeft", driveBackLeft.getCurrentPosition());
+            telemetry.addData("backRight",driveBackRight.getCurrentPosition());
+            telemetry.addData("frontRight", driveFrontRight.getCurrentPosition());
+            telemetry.addData("frontLeft", driveFrontLeft.getCurrentPosition());
             telemetry.update();
         }
 
-        backLeft.setPower(0);
-        backRight.setPower(0);
-        frontRight.setPower(0);
-        frontLeft.setPower(0);
+        driveBackLeft.setPower(0);
+        driveBackRight.setPower(0);
+        driveFrontRight.setPower(0);
+        driveFrontLeft.setPower(0);
 
     }
 }

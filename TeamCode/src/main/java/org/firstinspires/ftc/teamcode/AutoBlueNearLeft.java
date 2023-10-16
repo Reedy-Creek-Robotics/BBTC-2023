@@ -9,75 +9,43 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 @Autonomous(name = "Auto Blue Near Left")
 public class AutoBlueNearLeft extends LinearOpMode {
 
-    private DcMotor frontLeft;
-    private DcMotor frontRight;
-    private DcMotor backRight;
-    private DcMotor backLeft;
+    private DcMotor driveFrontLeft;
+    private DcMotor driveFrontRight;
+    private DcMotor driveBackRight;
+    private DcMotor driveBackLeft;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
-        frontRight = hardwareMap.get(DcMotor.class, "frontRight");
-        backLeft = hardwareMap.get(DcMotor.class, "backLeft");
-        backRight = hardwareMap.get(DcMotor.class, "backRight");
+        // Total ticks to the destination
+        int strafeDistance = 2000;
+        double speed = 0.3;
 
-        Robot bot = new Robot(frontLeft, backLeft, backRight, frontRight);
+        driveFrontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
+        driveFrontRight = hardwareMap.get(DcMotor.class, "frontRight");
+        driveBackLeft = hardwareMap.get(DcMotor.class, "backLeft");
+        driveBackRight = hardwareMap.get(DcMotor.class, "backRight");
 
-        // Behavior when motor stops
-        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        Robot bot = new Robot(driveFrontLeft, driveBackLeft, driveBackRight, driveFrontRight);
 
-        // Turn the motor back on, required if you use STOP_AND_RESET_ENCODER
-        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        // Strafe Left
-        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        // WAIT
         // Program pauses until start button is pressed on driver station
         telemetry.addLine("WAITING FOR START");
         waitForStart();
 
-        // Total ticks to the destination
-        int targetPosition = 2000;
-        double speed = 0.75;
+        bot.strafe(strafeDistance, speed, Direction.LEFT);
 
-        frontLeft.setTargetPosition(targetPosition);
-        frontRight.setTargetPosition(targetPosition);
-        backLeft.setTargetPosition(targetPosition);
-        backRight.setTargetPosition(targetPosition);
-
-        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        frontLeft.setPower(speed);
-        frontRight.setPower(speed);
-        backLeft.setPower(speed);
-        backRight.setPower(speed);
-
-        while(opModeIsActive() && backLeft.isBusy() && backRight.isBusy() && frontLeft.isBusy() && frontRight.isBusy()) {
-            telemetry.addData("backLeft", backLeft.getCurrentPosition());
-            telemetry.addData("backRight",backRight.getCurrentPosition());
-            telemetry.addData("frontRight", frontRight.getCurrentPosition());
-            telemetry.addData("frontLeft", frontLeft.getCurrentPosition());
+        while(opModeIsActive() && driveBackLeft.isBusy() && driveBackRight.isBusy() && driveFrontLeft.isBusy() && driveFrontRight.isBusy()) {
+            telemetry.addData("backLeft", driveBackLeft.getCurrentPosition());
+            telemetry.addData("backRight",driveBackRight.getCurrentPosition());
+            telemetry.addData("frontRight", driveFrontRight.getCurrentPosition());
+            telemetry.addData("frontLeft", driveFrontLeft.getCurrentPosition());
             telemetry.update();
         }
 
-        backLeft.setPower(0);
-        backRight.setPower(0);
-        frontRight.setPower(0);
-        frontLeft.setPower(0);
+        driveBackLeft.setPower(0);
+        driveBackRight.setPower(0);
+        driveFrontRight.setPower(0);
+        driveFrontLeft.setPower(0);
 
     }
 }
