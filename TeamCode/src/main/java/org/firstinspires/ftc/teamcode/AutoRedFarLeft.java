@@ -50,7 +50,7 @@ public class AutoRedFarLeft extends LinearOpMode {
         driveFrontRight.setPower(0);
         driveFrontLeft.setPower(0);
 
-        bot.strafe(strafeDistance, speed, Direction.RIGHT);
+        bot.forward(forwardDistance, speed);
 
         while(opModeIsActive() && driveBackLeft.isBusy() && driveBackRight.isBusy() && driveFrontLeft.isBusy() && driveFrontRight.isBusy()) {
             telemetry.addData("backLeft", driveBackLeft.getCurrentPosition());
@@ -75,7 +75,7 @@ public class AutoRedFarLeft extends LinearOpMode {
             telemetry.update();
         }
 
-        bot.strafe(strafeDistance2, speed, Direction.RIGHT);
+        bot.forward(forwardDistance2, speed);
 
         while(opModeIsActive() && driveBackLeft.isBusy() && driveBackRight.isBusy() && driveFrontLeft.isBusy() && driveFrontRight.isBusy()) {
             telemetry.addData("backLeft", driveBackLeft.getCurrentPosition());

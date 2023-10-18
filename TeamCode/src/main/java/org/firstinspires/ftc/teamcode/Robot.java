@@ -24,9 +24,9 @@ public class Robot {
 
         int revDistance = distance;
         // Set distance or tick variable to each motor
-        driveFrontLeft.setTargetPosition(-revDistance);
+        driveFrontLeft.setTargetPosition(distance);
         driveFrontRight.setTargetPosition(distance);
-        driveBackLeft.setTargetPosition(-revDistance);
+        driveBackLeft.setTargetPosition(distance);
         driveBackRight.setTargetPosition(distance);
 
         // Move Forward
@@ -39,6 +39,12 @@ public class Robot {
         driveFrontRight.setPower(speed);
         driveBackLeft.setPower(speed);
         driveBackRight.setPower(speed);
+
+        // Run motors for
+        driveFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        driveFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        driveBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        driveBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void strafe(int distance, double speed, Direction direction) {
@@ -78,6 +84,12 @@ public class Robot {
         driveFrontRight.setPower(speed);
         driveBackLeft.setPower(speed);
         driveBackRight.setPower(speed);
+
+        // Run motors for
+        driveFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        driveFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        driveBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        driveBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     private void setup(int distance){
@@ -94,16 +106,16 @@ public class Robot {
         driveBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Turn the motor back on, required if you use STOP_AND_RESET_ENCODER
-        driveFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        driveFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        driveBackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        driveBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        driveFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Run motors for
-        driveFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        driveFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        driveBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        driveBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        // driveFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        // driveFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        // driveBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        // driveBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
     }
 

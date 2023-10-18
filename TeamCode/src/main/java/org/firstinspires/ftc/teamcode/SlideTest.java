@@ -30,11 +30,11 @@ public class SlideTest extends LinearOpMode {
 
 
         // Move Forward
-        slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        slideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Total ticks to the destination
         int targetPosition0 = 1000;
-        double speed = 0.3;
+        double speed = 0.1;
 
         // Set distance or tick variable to each motor
         slideMotor.setTargetPosition(targetPosition0);
@@ -56,7 +56,7 @@ public class SlideTest extends LinearOpMode {
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Strafe Right
-        slideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
         // Total ticks to the destination
