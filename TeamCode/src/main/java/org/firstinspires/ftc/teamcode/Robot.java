@@ -22,18 +22,22 @@ public class Robot {
     public void forward(int distance, double speed){
         setup(distance);
 
-        int revDistance = distance;
-        // Set distance or tick variable to each motor
-        driveFrontLeft.setTargetPosition(distance);
-        driveFrontRight.setTargetPosition(distance);
-        driveBackLeft.setTargetPosition(distance);
-        driveBackRight.setTargetPosition(distance);
-
         // Move Forward
         driveFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         driveFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         driveBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         driveBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        // Set distance or tick variable to each motor
+        driveFrontLeft.setTargetPosition(distance);
+        driveFrontRight.setTargetPosition(distance);
+        driveBackLeft.setTargetPosition(distance);
+        driveBackRight.setTargetPosition(distance);
+        // Run motors for
+        driveFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        driveFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        driveBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        driveBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         driveFrontLeft.setPower(speed);
         driveFrontRight.setPower(speed);
@@ -41,10 +45,10 @@ public class Robot {
         driveBackRight.setPower(speed);
 
         // Run motors for
-        driveFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        driveFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        driveBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        driveBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //driveFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //driveFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //driveBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //driveBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void strafe(int distance, double speed, Direction direction) {
@@ -105,17 +109,6 @@ public class Robot {
         driveBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         driveBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        // Turn the motor back on, required if you use STOP_AND_RESET_ENCODER
-        driveFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        driveFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        driveBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        driveBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        // Run motors for
-        // driveFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        // driveFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        // driveBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        // driveBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
     }
 

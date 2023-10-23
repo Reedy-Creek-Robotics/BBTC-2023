@@ -19,9 +19,9 @@ public class AutoRedFarLeft extends LinearOpMode {
 
         // Total ticks to the destination
         int forwardDistance = 230;
-        int strafeDistance = 2650;
-        int forwardDistance2 = 2750;
-        int strafeDistance2 = 1500;
+        int strafeDistance = 2500;
+        int forwardDistance2 = 2600;
+        int strafeDistance2 = 1550;
         double speed = 0.3;
 
         driveFrontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
@@ -36,7 +36,6 @@ public class AutoRedFarLeft extends LinearOpMode {
         waitForStart();
 
         bot.forward(forwardDistance, speed);
-
         while(opModeIsActive() && driveBackLeft.isBusy() && driveBackRight.isBusy() && driveFrontLeft.isBusy() && driveFrontRight.isBusy()) {
             telemetry.addData("backLeft", driveBackLeft.getCurrentPosition());
             telemetry.addData("backRight",driveBackRight.getCurrentPosition());
@@ -50,7 +49,7 @@ public class AutoRedFarLeft extends LinearOpMode {
         driveFrontRight.setPower(0);
         driveFrontLeft.setPower(0);
 
-        bot.forward(forwardDistance, speed);
+        bot.strafe(strafeDistance, speed, Direction.RIGHT);
 
         while(opModeIsActive() && driveBackLeft.isBusy() && driveBackRight.isBusy() && driveFrontLeft.isBusy() && driveFrontRight.isBusy()) {
             telemetry.addData("backLeft", driveBackLeft.getCurrentPosition());
@@ -75,7 +74,7 @@ public class AutoRedFarLeft extends LinearOpMode {
             telemetry.update();
         }
 
-        bot.forward(forwardDistance2, speed);
+        bot.strafe(strafeDistance2, speed, Direction.RIGHT);
 
         while(opModeIsActive() && driveBackLeft.isBusy() && driveBackRight.isBusy() && driveFrontLeft.isBusy() && driveFrontRight.isBusy()) {
             telemetry.addData("backLeft", driveBackLeft.getCurrentPosition());
