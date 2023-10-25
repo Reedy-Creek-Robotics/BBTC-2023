@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+@Disabled
 public class Robot {
 
     private DcMotor driveFrontLeft;
@@ -96,6 +98,7 @@ public class Robot {
         driveBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
+    // May be able to delete distance below, goes unused in this method
     private void setup(int distance){
         // Reset the motor encoder so that it reads zero ticks
         driveFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
