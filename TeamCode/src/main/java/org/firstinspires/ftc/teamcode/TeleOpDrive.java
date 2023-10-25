@@ -1,6 +1,3 @@
-/*
-1. Strafing and turning on opposite joysticks than expected
- */
 
 package org.firstinspires.ftc.teamcode;
 
@@ -13,8 +10,6 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 @TeleOp(name = "Tele-Op Driving")
 public class TeleOpDrive extends LinearOpMode {
 
-    double speedFactor = 0.7;
-
     @Override
     public void runOpMode() throws InterruptedException {
         // INIT
@@ -25,7 +20,9 @@ public class TeleOpDrive extends LinearOpMode {
         DcMotor frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         DcMotor backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         DcMotor backRight = hardwareMap.get(DcMotor.class, "backRight");
-        DcMotor slideMotor = hardwareMap.get(DcMotor.class, "slideMotor");
+        DcMotor intakeSlide1 = hardwareMap.get(DcMotor.class, "intakeSlide1");
+
+        double speedFactor = 0.7;
 
         Gamepad currentGamepad1 = new Gamepad();
         Gamepad currentGamepad2 = new Gamepad();
@@ -57,18 +54,23 @@ public class TeleOpDrive extends LinearOpMode {
             double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
             double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = gamepad1.right_stick_x;
-            double lt = gamepad1.left_trigger;
-            double rt = gamepad1.right_trigger;
+            double lt2 = gamepad2.left_trigger;
+            double rt2 = gamepad2.right_trigger;
 
+                // setting game-pad values
+            previousGamepad1.copy(currentGamepad1);
+            previousGamepad2.copy(currentGamepad2);
+            currentGamepad1.copy(gamepad1);
+            currentGamepad2.copy(gamepad2);
 
-            if (currentGamepad1.dpad_up && !previousGamepad1.dpad_up) {
+            if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper) {
                 speedFactor++;
             }
 
-            if (currentGamepad1.dpad_down && !previousGamepad1.dpad_down) {
+            if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper) {
                 speedFactor--;
             }
-
+                // Sets min/max values
             speedFactor = Math.max(speedFactor, 1);
             speedFactor = Math.min(speedFactor, 0.5);
 
@@ -80,20 +82,20 @@ public class TeleOpDrive extends LinearOpMode {
             double backLeftPower = (y - x + rx) / denominator;
             double frontRightPower = (y - x - rx) / denominator;
             double backRightPower = (y + x - rx) / denominator;
-            double slideMotorPower = (lt - rt);
+            double intakeSlide1Power = (lt2 - rt2);
 
             frontLeft.setPower(frontLeftPower * speedFactor);
             backLeft.setPower(backLeftPower * speedFactor);
             frontRight.setPower(frontRightPower * speedFactor);
             backRight.setPower(backRightPower * speedFactor);
-            slideMotor.setPower(slideMotorPower);
+            intakeSlide1.setPower(intakeSlide1Power);
 
             telemetry.addData("Speed Factor", speedFactor);
             telemetry.addData("backLeft", backLeft.getCurrentPosition());
             telemetry.addData("backRight",backRight.getCurrentPosition());
             telemetry.addData("frontRight", frontRight.getCurrentPosition());
             telemetry.addData("frontLeft", frontLeft.getCurrentPosition());
-            telemetry.addData("slideMotor", slideMotor.getCurrentPosition());
+            telemetry.addData("intakeSlide1", intakeSlide1.getCurrentPosition());
             telemetry.addData("Left Stick Y", y);
             telemetry.addData("Left Stick X", x);
             telemetry.addData("Right Stick X", rx);
