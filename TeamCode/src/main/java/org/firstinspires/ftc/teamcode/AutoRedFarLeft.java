@@ -20,7 +20,7 @@ public class AutoRedFarLeft extends LinearOpMode {
         // Total ticks to the destination
         int forwardDistance = 230;
         int strafeDistance = 2500;
-        int forwardDistance2 = 2600;
+        int forwardDistance2 = 2250;
         int strafeDistance2 = 1550;
         double speed = 0.3;
 

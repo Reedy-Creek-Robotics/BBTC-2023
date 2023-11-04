@@ -20,8 +20,7 @@ public class TeleOpDrive extends LinearOpMode {
         DcMotor frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         DcMotor backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         DcMotor backRight = hardwareMap.get(DcMotor.class, "backRight");
-        DcMotor intakeSlide1 = hardwareMap.get(DcMotor.class, "intakeSlide1");
-
+        //DcMotor intakeSlide1 = hardwareMap.get(DcMotor.class, "intakeSlide1");
         double speedFactor = 0.7;
 
         Gamepad currentGamepad1 = new Gamepad();
@@ -87,15 +86,15 @@ public class TeleOpDrive extends LinearOpMode {
             frontLeft.setPower(frontLeftPower * speedFactor);
             backLeft.setPower(backLeftPower * speedFactor);
             frontRight.setPower(frontRightPower * speedFactor);
-            backRight.setPower(backRightPower * speedFactor);
-            intakeSlide1.setPower(intakeSlide1Power);
+           backRight.setPower(backRightPower * speedFactor);
+           //intakeSlide1.setPower(intakeSlide1Power);
 
             telemetry.addData("Speed Factor", speedFactor);
             telemetry.addData("backLeft", backLeft.getCurrentPosition());
             telemetry.addData("backRight",backRight.getCurrentPosition());
             telemetry.addData("frontRight", frontRight.getCurrentPosition());
             telemetry.addData("frontLeft", frontLeft.getCurrentPosition());
-            telemetry.addData("intakeSlide1", intakeSlide1.getCurrentPosition());
+            //telemetry.addData("intakeSlide1", intakeSlide1.getCurrentPosition());
             telemetry.addData("Left Stick Y", y);
             telemetry.addData("Left Stick X", x);
             telemetry.addData("Right Stick X", rx);
