@@ -20,8 +20,8 @@ public class AutoRedFarLeft extends LinearOpMode {
         // Total ticks to the destination
         int forwardDistance = 230;
         int strafeDistance = 2500;
-        int forwardDistance2 = 2250;
-        int strafeDistance2 = 1550;
+        int forwardDistance2 = 2000;
+        int strafeDistance2 = 2550;
         double speed = 0.3;
 
         driveFrontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
