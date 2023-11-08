@@ -1,11 +1,17 @@
-
+/*
+ToDo - Add arm motor (TEST)
+Todo - Add pincher platform rotation servo (TEST/INPUT #'s)
+ToDo - Add pincher servos (TEST/INPUT #'s)
+ */
 package org.firstinspires.ftc.teamcode;
 
+import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "Tele-Op Driving")
 public class TeleOpDrive extends LinearOpMode {
@@ -20,7 +26,13 @@ public class TeleOpDrive extends LinearOpMode {
         DcMotor frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         DcMotor backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         DcMotor backRight = hardwareMap.get(DcMotor.class, "backRight");
-        //DcMotor intakeSlide1 = hardwareMap.get(DcMotor.class, "intakeSlide1");
+        DcMotor intakeArm = hardwareMap.get(DcMotor.class, "intakeArm");
+        Servo pincherRotation = hardwareMap.get(Servo.class, "pincherRotation");
+        Servo pincher1 = hardwareMap.get(Servo.class, "pincher1");
+        Servo pincher2 = hardwareMap.get(Servo.class, "pincher2");
+
+        intakeArm.setZeroPowerBehavior(BRAKE);
+
         double speedFactor = 0.7;
 
         Gamepad currentGamepad1 = new Gamepad();
@@ -37,24 +49,18 @@ public class TeleOpDrive extends LinearOpMode {
         // the program pauses here until the START button is pressed on the driver station
         telemetry.addLine("WAITING FOR START");
         waitForStart();
-
-
-
-        // START / RUN
-        // all code after here runs when the START button is pressed on the driver station
-        // this is where all your code to move the robot goes
-        // once all instructions are executed the program will exit
+        // Code runs once at start pressed
         telemetry.addLine("PROGRAM STARTED");
         while( !isStopRequested() ) {
-            // this is your EVENT loop (like a video game loop)
-            // these instructions will be executed over and over until STOP is pressed on the driver station
-            // you will listen for gamepad and other input commands in this loop
+            // Event Loop
             telemetry.addLine("EVENT LOOP");
-            double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
-            double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
-            double rx = gamepad1.right_stick_x;
+            double ly1 = -gamepad1.left_stick_y; // Remember, ly1 stick value is reversed
+            double lx1 = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+            double rx1 = gamepad1.right_stick_x;
             double lt2 = gamepad2.left_trigger;
             double rt2 = gamepad2.right_trigger;
+            double lx2 = gamepad2.left_stick_x;
+            double rx2 = gamepad2.right_stick_x;
 
                 // setting game-pad values
             previousGamepad1.copy(currentGamepad1);
@@ -62,44 +68,62 @@ public class TeleOpDrive extends LinearOpMode {
             currentGamepad1.copy(gamepad1);
             currentGamepad2.copy(gamepad2);
 
-            if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper) {
-                speedFactor++;
-            }
-
-            if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper) {
-                speedFactor--;
-            }
-                // Sets min/max values
-            speedFactor = Math.max(speedFactor, 1);
-            speedFactor = Math.min(speedFactor, 0.5);
-
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio,
             // but only if at least one is out of the range [-1, 1]
-            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-            double frontLeftPower = (y + x + rx) / denominator;
-            double backLeftPower = (y - x + rx) / denominator;
-            double frontRightPower = (y - x - rx) / denominator;
-            double backRightPower = (y + x - rx) / denominator;
-            double intakeSlide1Power = (lt2 - rt2);
+            double denominator = Math.max(Math.abs(ly1) + Math.abs(lx1) + Math.abs(rx1), 1);
+            double frontLeftPower = (ly1 + lx1 + rx1) / denominator;
+            double backLeftPower = (ly1 - lx1 + rx1) / denominator;
+            double frontRightPower = (ly1 - lx1 - rx1) / denominator;
+            double backRightPower = (ly1 + lx1 - rx1) / denominator;
+            double intakeArmPower = (rt2 - lt2);
+
+            // pincherRotation
+            //in-taking
+            if(gamepad2.x){
+                pincherRotation.setPosition(0);
+            }
+            //traveling
+            else if(gamepad2.y){
+                pincherRotation.setPosition(0);
+            }
+            //depositing
+            else if(gamepad2.b){
+                pincherRotation.setPosition(0);
+            }
+
+            //closed position
+            if(lx2 < 0.1){
+                pincher1.setPosition(0);
+            }
+            //open position
+            else{
+                pincher1.setPosition(0);
+            }
+
+            //closed position
+            if(rx2 < 0.1){
+                pincher2.setPosition(0);
+            }
+            //open position
+            else{
+                pincher2.setPosition(0);
+            }
 
             frontLeft.setPower(frontLeftPower * speedFactor);
             backLeft.setPower(backLeftPower * speedFactor);
             frontRight.setPower(frontRightPower * speedFactor);
-           backRight.setPower(backRightPower * speedFactor);
-           //intakeSlide1.setPower(intakeSlide1Power);
+            backRight.setPower(backRightPower * speedFactor);
+            intakeArm.setPower(intakeArmPower);
 
-            telemetry.addData("Speed Factor", speedFactor);
             telemetry.addData("backLeft", backLeft.getCurrentPosition());
             telemetry.addData("backRight",backRight.getCurrentPosition());
             telemetry.addData("frontRight", frontRight.getCurrentPosition());
             telemetry.addData("frontLeft", frontLeft.getCurrentPosition());
-            //telemetry.addData("intakeSlide1", intakeSlide1.getCurrentPosition());
-            telemetry.addData("Left Stick Y", y);
-            telemetry.addData("Left Stick X", x);
-            telemetry.addData("Right Stick X", rx);
+            telemetry.addData("Left Stick ly1", ly1);
+            telemetry.addData("Left Stick lx1", lx1);
+            telemetry.addData("Right Stick lx1", rx1);
             telemetry.update();
         }
     }
 }
-
