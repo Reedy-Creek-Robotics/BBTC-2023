@@ -76,7 +76,7 @@ public class TeleOpDrive extends LinearOpMode {
             double backLeftPower = (ly1 - lx1 + rx1) / denominator;
             double frontRightPower = (ly1 - lx1 - rx1) / denominator;
             double backRightPower = (ly1 + lx1 - rx1) / denominator;
-            double intakeArmPower = (rt2 - lt2);
+            double intakeArmPower = (lt2 - rt2);
 
             // pincherRotation
             //in-taking
@@ -85,29 +85,29 @@ public class TeleOpDrive extends LinearOpMode {
             }
             //traveling
             else if(gamepad2.y){
-                pincherRotation.setPosition(0);
+                pincherRotation.setPosition(0.1);
             }
             //depositing
             else if(gamepad2.b){
-                pincherRotation.setPosition(0);
+                pincherRotation.setPosition(0.2);
             }
 
             //closed position
-            if(lx2 < 0.1){
-                pincher1.setPosition(0);
+            if(lx2 < 0.1 && lx2 > -0.1){
+                pincher1.setPosition(0.45);
             }
             //open position
             else{
-                pincher1.setPosition(0);
+                pincher1.setPosition(0.2);
             }
 
             //closed position
-            if(rx2 < 0.1){
-                pincher2.setPosition(0);
+            if(rx2 < 0.1 && rx2 > -0.1){
+                pincher2.setPosition(0.2);
             }
             //open position
             else{
-                pincher2.setPosition(0);
+                pincher2.setPosition(0.5);
             }
 
             frontLeft.setPower(frontLeftPower * speedFactor);
