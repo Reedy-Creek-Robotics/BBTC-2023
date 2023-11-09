@@ -19,30 +19,29 @@ public class ServoTest extends LinearOpMode {
 
 
         waitForStart();
-        while(opModeIsActive()){
+        while (opModeIsActive()) {
 
-            if(gamepad1.x){
+            if (gamepad1.x) {
                 pincher2.setPosition(0);
             }
-            if(gamepad1.y){
+            if (gamepad1.y) {
                 pincher2.setPosition(0.5);
             }
-            if(gamepad1.b){
-                pincher2.setPosition(1);
+            if (gamepad1.b) {
+                if (gamepad1.dpad_left) {
+                    pincher1.setPosition(0);
+                }
+                if (gamepad1.dpad_up) {
+                    pincher1.setPosition(0.5);
+                }
+                if (gamepad1.dpad_right) {
+                    pincher1.setPosition(1);
+                }
+                telemetry.addData("pincher1", pincher1.getPosition());
+                telemetry.addData("pincher2", pincher2.getPosition());
+                telemetry.update();
             }
-            if(gamepad1.dpad_left){
-                pincher1.setPosition(0);
-            }
-            if(gamepad1.dpad_up){
-                pincher1.setPosition(0.5);
-            }
-            if(gamepad1.dpad_right){
-                pincher1.setPosition(1);
-            }
-            telemetry.addData("pincher1", pincher1.getPosition());
-            telemetry.addData("pincher2", pincher2.getPosition());
-            telemetry.update();
         }
-    }
 
+    }
 }
