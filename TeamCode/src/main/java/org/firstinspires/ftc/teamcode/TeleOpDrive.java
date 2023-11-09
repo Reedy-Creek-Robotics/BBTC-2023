@@ -61,6 +61,7 @@ public class TeleOpDrive extends LinearOpMode {
             double rt2 = gamepad2.right_trigger;
             double lx2 = gamepad2.left_stick_x;
             double rx2 = gamepad2.right_stick_x;
+            int test = 0;
 
                 // setting game-pad values
             previousGamepad1.copy(currentGamepad1);
@@ -82,6 +83,7 @@ public class TeleOpDrive extends LinearOpMode {
             //in-taking
             if(gamepad2.x){
                 pincherRotation.setPosition(0);
+                test = 1;
             }
             //traveling
             else if(gamepad2.y){
@@ -94,7 +96,7 @@ public class TeleOpDrive extends LinearOpMode {
 
             //closed position
             if(lx2 < 0.1 && lx2 > -0.1){
-                pincher1.setPosition(0.45);
+                pincher1.setPosition(0.5);
             }
             //open position
             else{
@@ -103,7 +105,7 @@ public class TeleOpDrive extends LinearOpMode {
 
             //closed position
             if(rx2 < 0.1 && rx2 > -0.1){
-                pincher2.setPosition(0.2);
+                pincher2.setPosition(0.1);
             }
             //open position
             else{
@@ -123,6 +125,7 @@ public class TeleOpDrive extends LinearOpMode {
             telemetry.addData("Left Stick ly1", ly1);
             telemetry.addData("Left Stick lx1", lx1);
             telemetry.addData("Right Stick lx1", rx1);
+             telemetry.addData("test:", test);
             telemetry.update();
         }
     }
