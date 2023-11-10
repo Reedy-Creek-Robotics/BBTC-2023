@@ -105,7 +105,7 @@ public class TeleOpDrive extends LinearOpMode {
 
             //closed position
             if(rx2 < 0.1 && rx2 > -0.1){
-                pincher2.setPosition(0.1);
+                pincher2.setPosition(0.19);
             }
             //open position
             else{
