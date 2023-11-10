@@ -27,11 +27,11 @@ public class TeleOpDrive extends LinearOpMode {
         DcMotor backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         DcMotor backRight = hardwareMap.get(DcMotor.class, "backRight");
         DcMotor intakeArm = hardwareMap.get(DcMotor.class, "intakeArm");
-        Servo pincherRotation = hardwareMap.get(Servo.class, "pincherRotation");
         Servo pincher1 = hardwareMap.get(Servo.class, "pincher1");
         Servo pincher2 = hardwareMap.get(Servo.class, "pincher2");
 
         intakeArm.setZeroPowerBehavior(BRAKE);
+        intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         double speedFactor = 0.7;
 
@@ -79,21 +79,6 @@ public class TeleOpDrive extends LinearOpMode {
             double backRightPower = (ly1 + lx1 - rx1) / denominator;
             double intakeArmPower = (lt2 - rt2);
 
-            // pincherRotation
-            //in-taking
-            if(gamepad2.x){
-                pincherRotation.setPosition(0);
-                test = 1;
-            }
-            //traveling
-            else if(gamepad2.y){
-                pincherRotation.setPosition(0.1);
-            }
-            //depositing
-            else if(gamepad2.b){
-                pincherRotation.setPosition(0.2);
-            }
-
             //closed position
             if(lx2 < 0.1 && lx2 > -0.1){
                 pincher1.setPosition(0.5);
@@ -116,7 +101,11 @@ public class TeleOpDrive extends LinearOpMode {
             backLeft.setPower(backLeftPower * speedFactor);
             frontRight.setPower(frontRightPower * speedFactor);
             backRight.setPower(backRightPower * speedFactor);
-            intakeArm.setPower(intakeArmPower);
+            if(intakeArm.getCurrentPosition() < -300){
+                intakeArm.setPower(0);
+            }else {
+                intakeArm.setPower(intakeArmPower / 2);
+            }
 
             telemetry.addData("backLeft", backLeft.getCurrentPosition());
             telemetry.addData("backRight",backRight.getCurrentPosition());
@@ -125,7 +114,8 @@ public class TeleOpDrive extends LinearOpMode {
             telemetry.addData("Left Stick ly1", ly1);
             telemetry.addData("Left Stick lx1", lx1);
             telemetry.addData("Right Stick lx1", rx1);
-             telemetry.addData("test:", test);
+            telemetry.addData("intakeArm:", intakeArm.getCurrentPosition());
+            telemetry.addData("test", intakeArm.getPowerFloat());
             telemetry.update();
         }
     }
