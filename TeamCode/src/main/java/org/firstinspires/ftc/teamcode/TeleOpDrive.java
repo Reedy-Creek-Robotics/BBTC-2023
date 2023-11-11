@@ -12,10 +12,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name = "Tele-Op Driving")
 public class TeleOpDrive extends LinearOpMode {
 
+    ElapsedTime dBounceTimerPinch1 = new ElapsedTime();
+    ElapsedTime dBounceTimerPinch2 = new ElapsedTime();
     @Override
     public void runOpMode() throws InterruptedException {
         // INIT
@@ -29,10 +32,13 @@ public class TeleOpDrive extends LinearOpMode {
         DcMotor intakeArm = hardwareMap.get(DcMotor.class, "intakeArm");
         Servo pincher1 = hardwareMap.get(Servo.class, "pincher1");
         Servo pincher2 = hardwareMap.get(Servo.class, "pincher2");
+        boolean pincher1Open = true;
+        boolean pincher2Open = true;
 
         intakeArm.setZeroPowerBehavior(BRAKE);
-        intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         intakeArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
         double speedFactor = 0.7;
 
@@ -65,6 +71,8 @@ public class TeleOpDrive extends LinearOpMode {
             double ly2 = gamepad2.left_stick_y;
             double ry2 = gamepad2.right_stick_y;
 
+
+
                 // setting game-pad values
             previousGamepad1.copy(currentGamepad1);
             previousGamepad2.copy(currentGamepad2);
@@ -81,8 +89,33 @@ public class TeleOpDrive extends LinearOpMode {
             double backRightPower = (ly1 + lx1 - rx1) / denominator;
             double intakeArmPower = (lt2 - rt2);
 
+
+
+           if(gamepad2.left_bumper && dBounceTimerPinch1.milliseconds() > 200) {
+               pincher1Open = !pincher1Open;
+               dBounceTimerPinch1.reset();
+           }
+
+            if(gamepad2.right_bumper && dBounceTimerPinch2.milliseconds() > 200) {
+                pincher2Open = !pincher2Open;
+                dBounceTimerPinch2.reset();
+            }
+
+            if(pincher1Open){
+                pincher1.setPosition(0.2);
+            } else {
+                pincher1.setPosition(0.8);
+            }
+
+            if(pincher2Open){
+                pincher2.setPosition(0.5);
+            } else {
+                pincher2.setPosition(0.1);
+            }
+
+           /*
             //closed position
-            if(lx2 < 0.1 && lx2 > -0.1 && ly2 > 0.1 && ly2 > -0.1){
+            if(lx2 < 0.1 && lx2 > -0.1 && ly2 < 0.1 && ly2 > -0.1){
                 pincher1.setPosition(0.2);
             }
             //open position
@@ -98,16 +131,26 @@ public class TeleOpDrive extends LinearOpMode {
             else{
                 pincher2.setPosition(0.19);
             }
-
+*/
             frontLeft.setPower(frontLeftPower * speedFactor);
             backLeft.setPower(backLeftPower * speedFactor);
             frontRight.setPower(frontRightPower * speedFactor);
             backRight.setPower(backRightPower * speedFactor);
             if(intakeArm.getCurrentPosition() < -300){
                 intakeArm.setPower(0);
+                telemetry.addLine("Test");
             }else {
                 intakeArm.setPower(intakeArmPower / 2);
+                telemetry.addData("powering", intakeArmPower);
             }
+
+            /*if(Math.abs(intakeArmPower) <= 0.05){
+                int pos = intakeArm.getCurrentPosition();
+                intakeArm.setTargetPosition(pos);
+                intakeArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                intakeArm.setPower(1);
+                telemetry.addLine("here");
+            }*/
 
             telemetry.addData("backLeft", backLeft.getCurrentPosition());
             telemetry.addData("backRight",backRight.getCurrentPosition());

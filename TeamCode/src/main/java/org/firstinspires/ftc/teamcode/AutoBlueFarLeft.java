@@ -18,7 +18,7 @@ public class AutoBlueFarLeft extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         // Total ticks to the destination
-        int forwardDistance = 170;
+        int forwardDistance = 120;
         int strafeDistance = 4545;
         double speed = 0.3;
 

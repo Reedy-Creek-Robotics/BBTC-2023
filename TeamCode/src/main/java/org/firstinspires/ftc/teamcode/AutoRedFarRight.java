@@ -18,7 +18,7 @@ public class AutoRedFarRight extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         // Total ticks to the destination
-        int forwardDistance = 230;
+        int forwardDistance = 120;
         int strafeDistance = 4545;
         double speed = 0.3;
 

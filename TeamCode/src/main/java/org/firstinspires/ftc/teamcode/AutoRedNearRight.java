@@ -53,7 +53,7 @@ public class AutoRedNearRight extends LinearOpMode {
 
         // Total ticks to the destination
         int targetPosition = 2000;
-        double speed = 0.75;
+        double speed = 0.3 ;
 
         frontLeft.setTargetPosition(targetPosition);
         frontRight.setTargetPosition(targetPosition);

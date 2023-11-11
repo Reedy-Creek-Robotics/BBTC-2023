@@ -17,10 +17,10 @@ public class AutoBlueFarRight extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         // Total ticks to the destination
-        int forwardDistance = 175;
+        int forwardDistance = 120;
         int strafeDistance = 2500;
-        int forwardDistance2 = 1600;
-        int strafeDistance2 = 2550;
+        int forwardDistance2 = 1066;
+        int strafeDistance2 = 2200;
         double speed = 0.3;
 
         driveFrontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
