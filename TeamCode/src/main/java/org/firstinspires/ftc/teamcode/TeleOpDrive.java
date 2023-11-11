@@ -32,6 +32,7 @@ public class TeleOpDrive extends LinearOpMode {
 
         intakeArm.setZeroPowerBehavior(BRAKE);
         intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        intakeArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         double speedFactor = 0.7;
 
@@ -61,7 +62,8 @@ public class TeleOpDrive extends LinearOpMode {
             double rt2 = gamepad2.right_trigger;
             double lx2 = gamepad2.left_stick_x;
             double rx2 = gamepad2.right_stick_x;
-            int test = 0;
+            double ly2 = gamepad2.left_stick_y;
+            double ry2 = gamepad2.right_stick_y;
 
                 // setting game-pad values
             previousGamepad1.copy(currentGamepad1);
@@ -80,21 +82,21 @@ public class TeleOpDrive extends LinearOpMode {
             double intakeArmPower = (lt2 - rt2);
 
             //closed position
-            if(lx2 < 0.1 && lx2 > -0.1){
-                pincher1.setPosition(0.5);
+            if(lx2 < 0.1 && lx2 > -0.1 && ly2 > 0.1 && ly2 > -0.1){
+                pincher1.setPosition(0.2);
             }
             //open position
             else{
-                pincher1.setPosition(0.2);
+                pincher1.setPosition(0.5);
             }
 
             //closed position
-            if(rx2 < 0.1 && rx2 > -0.1){
-                pincher2.setPosition(0.19);
+            if(rx2 < 0.1 && rx2 > -0.1 && ry2 < 0.1 && ry2 > -0.1){
+                pincher2.setPosition(0.5);
             }
             //open position
             else{
-                pincher2.setPosition(0.5);
+                pincher2.setPosition(0.19);
             }
 
             frontLeft.setPower(frontLeftPower * speedFactor);
