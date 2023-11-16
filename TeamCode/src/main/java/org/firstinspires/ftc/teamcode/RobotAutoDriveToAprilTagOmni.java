@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -67,7 +66,7 @@ import java.util.concurrent.TimeUnit;
  *
  * Under "Drive To Target" mode, the robot has three goals:
  * 1) Turn the robot to always keep the Tag centered on the camera frame. (Use the Target Bearing to turn the robot.)
- * 2) Strafe the robot towards the centerline of the Tag, so it approaches directly in front  of the tag.  (Use the Target Yaw to strafe the robot)
+ * 2) Strafe the robot towards the center-line of the Tag, so it approaches directly in front  of the tag.  (Use the Target Yaw to strafe the robot)
  * 3) Drive towards the Tag to get to the desired distance.  (Use Tag Range to drive the robot forward/backward)
  *
  * Use DESIRED_DISTANCE to set how close you want the robot to get to the target.
@@ -96,15 +95,15 @@ public class RobotAutoDriveToAprilTagOmni extends LinearOpMode
     final double MAX_AUTO_TURN  = 0.3;   //  Clip the turn speed to this max value (adjust for your robot)
 
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
-    private static final int DESIRED_TAG_ID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
+    private static final int DESIRED_TAG_ID = -1;    // Choose the tag you want to approach or set to -1 for ANY tag.
     private VisionPortal visionPortal;               // Used to manage the video source.
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
 
-    DcMotor driveFrontLeft  = hardwareMap.get(DcMotor.class, "driveFrontLeft");
-    DcMotor driveFrontRight = hardwareMap.get(DcMotor.class, "driveFrontRight");
-    DcMotor driveBackLeft = hardwareMap.get(DcMotor.class, "driveBackLeft");
-    DcMotor driveBackRight = hardwareMap.get(DcMotor.class, "driveBackRight");
+DcMotor driveFrontLeft;
+DcMotor driveFrontRight;
+DcMotor driveBackLeft;
+DcMotor driveBackRight;
 
     @Override public void runOpMode()
     {
@@ -113,15 +112,18 @@ public class RobotAutoDriveToAprilTagOmni extends LinearOpMode
         double strafe = 0.3;        // Desired strafe power/speed (-1 to +1)
         double turn = 0.3;        // Desired turning power/speed (-1 to +1)
 
-        // Initialize the Apriltag Detection process
+        driveFrontLeft  = hardwareMap.get(DcMotor.class, "driveFrontLeft");
+        driveFrontRight = hardwareMap.get(DcMotor.class, "driveFrontRight");
+        driveBackLeft = hardwareMap.get(DcMotor.class, "driveBackLeft");
+        driveBackRight = hardwareMap.get(DcMotor.class, "driveBackRight");
+
+        // Initialize the April tag Detection process
         initAprilTag();
 
-        /**
-         * To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
-         * <p>
-         * When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
-         * <p>
-         * Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
+        /*
+          To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
+          When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
+          Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
         */
         driveFrontLeft.setDirection(DcMotor.Direction.REVERSE);
         driveBackLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -182,7 +184,7 @@ public class RobotAutoDriveToAprilTagOmni extends LinearOpMode
                 telemetry.addData("Auto","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
             } else {
 
-                // drive using manual POV Joystick mode.  Slow things down to make the robot more controlable.
+                // drive using manual POV Joystick mode.  Slow things down to make the robot more controllable.
                 drive  = -gamepad1.left_stick_y  / 2.0;  // Reduce drive rate to 50%.
                 strafe = -gamepad1.left_stick_x  / 2.0;  // Reduce strafe rate to 50%.
                 turn   = -gamepad1.right_stick_x / 3.0;  // Reduce turn rate to 33%.
@@ -241,7 +243,7 @@ public class RobotAutoDriveToAprilTagOmni extends LinearOpMode
         // Create the vision portal by using a builder.
         if (USE_WEBCAM) {
             visionPortal = new VisionPortal.Builder()
-                    .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                    .setCamera(hardwareMap.get(WebcamName.class, "Webcam1"))
                     .addProcessor(aprilTag)
                     .build();
         } else {
