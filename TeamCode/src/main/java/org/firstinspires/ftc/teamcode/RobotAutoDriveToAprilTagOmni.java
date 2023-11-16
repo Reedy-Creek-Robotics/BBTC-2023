@@ -116,9 +116,13 @@ public class RobotAutoDriveToAprilTagOmni extends LinearOpMode
         // Initialize the Apriltag Detection process
         initAprilTag();
 
-        // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
-        // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
-        // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
+        /**
+         * To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
+         * <p>
+         * When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
+         * <p>
+         * Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
+        */
         driveFrontLeft.setDirection(DcMotor.Direction.REVERSE);
         driveBackLeft.setDirection(DcMotor.Direction.REVERSE);
         driveFrontRight.setDirection(DcMotor.Direction.FORWARD);
