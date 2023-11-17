@@ -9,42 +9,42 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 @Autonomous(name = "Auto Red Near Right")
 public class AutoRedNearRight extends LinearOpMode {
 
-    private DcMotor frontLeft;
-    private DcMotor frontRight;
-    private DcMotor backRight;
-    private DcMotor backLeft;
+    private DcMotor driveFrontLeft;
+    private DcMotor driveFrontRight;
+    private DcMotor driveBackRight;
+    private DcMotor driveBackLeft;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
-        frontRight = hardwareMap.get(DcMotor.class, "frontRight");
-        backLeft = hardwareMap.get(DcMotor.class, "backLeft");
-        backRight = hardwareMap.get(DcMotor.class, "backRight");
+        driveFrontLeft = hardwareMap.get(DcMotor.class, "driveFrontLeft");
+        driveFrontRight = hardwareMap.get(DcMotor.class, "driveFrontRight");
+        driveBackLeft = hardwareMap.get(DcMotor.class, "driveBackLeft");
+        driveBackRight = hardwareMap.get(DcMotor.class, "driveBackRight");
 
         // Reset the motor encoder so that it reads zero ticks
-        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        driveFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        driveFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        driveBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        driveBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // Behavior when motor stops
-        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        driveFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        driveFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        driveBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        driveBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Turn the motor back on, required if you use STOP_AND_RESET_ENCODER
-        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        driveFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        driveFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        driveBackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        driveBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Strafe Right
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        driveFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        driveFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        driveBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        driveBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // WAIT
         // Program pauses until start button is pressed on driver station
@@ -55,33 +55,33 @@ public class AutoRedNearRight extends LinearOpMode {
         int targetPosition = 2000;
         double speed = 0.3 ;
 
-        frontLeft.setTargetPosition(targetPosition);
-        frontRight.setTargetPosition(targetPosition);
-        backLeft.setTargetPosition(targetPosition);
-        backRight.setTargetPosition(targetPosition);
+        driveFrontLeft.setTargetPosition(targetPosition);
+        driveFrontRight.setTargetPosition(targetPosition);
+        driveBackLeft.setTargetPosition(targetPosition);
+        driveBackRight.setTargetPosition(targetPosition);
 
-        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        driveFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        driveFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        driveBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        driveBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        frontLeft.setPower(speed);
-        frontRight.setPower(speed);
-        backLeft.setPower(speed);
-        backRight.setPower(speed);
+        driveFrontLeft.setPower(speed);
+        driveFrontRight.setPower(speed);
+        driveBackLeft.setPower(speed);
+        driveBackRight.setPower(speed);
 
-        while(opModeIsActive() && backLeft.isBusy() && backRight.isBusy() && frontLeft.isBusy() && frontRight.isBusy()) {
-            telemetry.addData("backLeft", backLeft.getCurrentPosition());
-            telemetry.addData("backRight",backRight.getCurrentPosition());
-            telemetry.addData("frontRight", frontRight.getCurrentPosition());
-            telemetry.addData("frontLeft", frontLeft.getCurrentPosition());
+        while(opModeIsActive() && driveBackLeft.isBusy() && driveBackRight.isBusy() && driveFrontLeft.isBusy() && driveFrontRight.isBusy()) {
+            telemetry.addData("driveBackLeft", driveBackLeft.getCurrentPosition());
+            telemetry.addData("driveBackRight",driveBackRight.getCurrentPosition());
+            telemetry.addData("driveFrontRight", driveFrontRight.getCurrentPosition());
+            telemetry.addData("driveFrontLeft", driveFrontLeft.getCurrentPosition());
             telemetry.update();
         }
         
-        backLeft.setPower(0);
-        backRight.setPower(0);
-        frontRight.setPower(0);
-        frontLeft.setPower(0);
+        driveBackLeft.setPower(0);
+        driveBackRight.setPower(0);
+        driveFrontRight.setPower(0);
+        driveFrontLeft.setPower(0);
 
     }
 }

@@ -21,10 +21,10 @@ public class AutoBlueNearLeft extends LinearOpMode {
         int strafeDistance = 2000;
         double speed = 0.3;
 
-        driveFrontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
-        driveFrontRight = hardwareMap.get(DcMotor.class, "frontRight");
-        driveBackLeft = hardwareMap.get(DcMotor.class, "backLeft");
-        driveBackRight = hardwareMap.get(DcMotor.class, "backRight");
+        driveFrontLeft = hardwareMap.get(DcMotor.class, "driveFrontLeft");
+        driveFrontRight = hardwareMap.get(DcMotor.class, "driveFrontRight");
+        driveBackLeft = hardwareMap.get(DcMotor.class, "driveBackLeft");
+        driveBackRight = hardwareMap.get(DcMotor.class, "driveBackRight");
 
         Robot bot = new Robot(driveFrontLeft, driveBackLeft, driveBackRight, driveFrontRight);
 
@@ -35,10 +35,10 @@ public class AutoBlueNearLeft extends LinearOpMode {
         bot.strafe(strafeDistance, speed, Direction.LEFT);
 
         while(opModeIsActive() && driveBackLeft.isBusy() && driveBackRight.isBusy() && driveFrontLeft.isBusy() && driveFrontRight.isBusy()) {
-            telemetry.addData("backLeft", driveBackLeft.getCurrentPosition());
-            telemetry.addData("backRight",driveBackRight.getCurrentPosition());
-            telemetry.addData("frontRight", driveFrontRight.getCurrentPosition());
-            telemetry.addData("frontLeft", driveFrontLeft.getCurrentPosition());
+            telemetry.addData("driveBackLeft", driveBackLeft.getCurrentPosition());
+            telemetry.addData("driveBackRight",driveBackRight.getCurrentPosition());
+            telemetry.addData("driveFrontRight", driveFrontRight.getCurrentPosition());
+            telemetry.addData("driveFrontLeft", driveFrontLeft.getCurrentPosition());
             telemetry.update();
         }
 
