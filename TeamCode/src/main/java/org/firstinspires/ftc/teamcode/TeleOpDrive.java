@@ -125,10 +125,10 @@ public class TeleOpDrive extends LinearOpMode {
                 telemetry.addData("powering", intakeArmPower);
             }
 
-            telemetry.addData("backLeft", driveBackLeft.getCurrentPosition());
-            telemetry.addData("backRight",driveBackRight.getCurrentPosition());
-            telemetry.addData("frontRight", driveFrontRight.getCurrentPosition());
-            telemetry.addData("frontLeft", driveFrontLeft.getCurrentPosition());
+            telemetry.addData("driveBackLeft", driveBackLeft.getCurrentPosition());
+            telemetry.addData("driveBackRight",driveBackRight.getCurrentPosition());
+            telemetry.addData("driveFrontRight", driveFrontRight.getCurrentPosition());
+            telemetry.addData("driveFrontLeft", driveFrontLeft.getCurrentPosition());
             telemetry.addData("Left Stick ly1", ly1);
             telemetry.addData("Left Stick lx1", lx1);
             telemetry.addData("Right Stick lx1", rx1);
