@@ -25,10 +25,10 @@ public class TeleOpDrive extends LinearOpMode {
         // all code between here and WAIT runs when the INIT button is pressed on the driver station
         // this is where you initialize all the hardware and code for your program
         // the robot should NOT move in this part of the program (its a penalty)
-        DcMotor frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
-        DcMotor frontRight = hardwareMap.get(DcMotor.class, "frontRight");
-        DcMotor backLeft = hardwareMap.get(DcMotor.class, "backLeft");
-        DcMotor backRight = hardwareMap.get(DcMotor.class, "backRight");
+        DcMotor driveFrontLeft = hardwareMap.get(DcMotor.class, "driveFrontLeft");
+        DcMotor driveFrontRight = hardwareMap.get(DcMotor.class, "driveFrontRight");
+        DcMotor driveBackLeft = hardwareMap.get(DcMotor.class, "driveBackLeft");
+        DcMotor driveBackRight = hardwareMap.get(DcMotor.class, "driveBackRight");
         DcMotor intakeArm = hardwareMap.get(DcMotor.class, "intakeArm");
         Servo pincher1 = hardwareMap.get(Servo.class, "pincher1");
         Servo pincher2 = hardwareMap.get(Servo.class, "pincher2");
@@ -49,8 +49,8 @@ public class TeleOpDrive extends LinearOpMode {
         Gamepad previousGamepad2 = new Gamepad();
 
         // Move forward
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        driveFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        driveBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // WAIT
         // the program pauses here until the START button is pressed on the driver station
@@ -132,10 +132,10 @@ public class TeleOpDrive extends LinearOpMode {
                 pincher2.setPosition(0.19);
             }
 */
-            frontLeft.setPower(frontLeftPower * speedFactor);
-            backLeft.setPower(backLeftPower * speedFactor);
-            frontRight.setPower(frontRightPower * speedFactor);
-            backRight.setPower(backRightPower * speedFactor);
+            driveFrontLeft.setPower(frontLeftPower * speedFactor);
+            driveBackLeft.setPower(backLeftPower * speedFactor);
+            driveFrontRight.setPower(frontRightPower * speedFactor);
+            driveBackRight.setPower(backRightPower * speedFactor);
             if(intakeArm.getCurrentPosition() < -300){
                 intakeArm.setPower(0);
                 telemetry.addLine("Test");
@@ -152,10 +152,10 @@ public class TeleOpDrive extends LinearOpMode {
                 telemetry.addLine("here");
             }*/
 
-            telemetry.addData("backLeft", backLeft.getCurrentPosition());
-            telemetry.addData("backRight",backRight.getCurrentPosition());
-            telemetry.addData("frontRight", frontRight.getCurrentPosition());
-            telemetry.addData("frontLeft", frontLeft.getCurrentPosition());
+            telemetry.addData("driveBackLeft", driveBackLeft.getCurrentPosition());
+            telemetry.addData("driveBackRight",driveBackRight.getCurrentPosition());
+            telemetry.addData("driveFrontRight", driveFrontRight.getCurrentPosition());
+            telemetry.addData("driveFrontLeft", driveFrontLeft.getCurrentPosition());
             telemetry.addData("Left Stick ly1", ly1);
             telemetry.addData("Left Stick lx1", lx1);
             telemetry.addData("Right Stick lx1", rx1);
