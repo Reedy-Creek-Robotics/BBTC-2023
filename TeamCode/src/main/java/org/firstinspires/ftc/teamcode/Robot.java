@@ -13,7 +13,7 @@ public class Robot {
     private DcMotor driveBackLeft;
 
     public static double TICKS_PER_CM = 17.83; // 17.83 tics/cm traveled(Strafer)
-    public static double ROTATION_CORRECTION = 1.05; //(62/90);
+    public static double ROTATION_CORRECTION = 1.2; //(62/90);
     public static double TURN_CONSTANT = 50.5d/90d; // distance per deg
 
 
