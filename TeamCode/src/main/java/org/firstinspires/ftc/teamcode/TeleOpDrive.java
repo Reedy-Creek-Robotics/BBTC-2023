@@ -69,7 +69,7 @@ public class TeleOpDrive extends LinearOpMode {
         driveFrontLeft.setPower(frontLeftPower * speedFactor);
         driveBackLeft.setPower(backLeftPower * speedFactor);
         driveFrontRight.setPower(frontRightPower * speedFactor);
-        driveBackLeft.setPower(backRightPower * speedFactor);
+        driveBackRight.setPower(backRightPower * speedFactor);
 
         if (gamepad1.dpad_up && (speedFactorDebounce.milliseconds() >= buttonDelay)) {
             speedFactorDebounce.reset();
