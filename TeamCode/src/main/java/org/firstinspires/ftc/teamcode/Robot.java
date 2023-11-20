@@ -151,7 +151,7 @@ public class Robot {
     }
 
     private int DegreeToDistance(int degrees) {
-        int distance = ((int) (-(degrees * TURN_CONSTANT) * TICKS_PER_CM * ROTATION_CORRECTION));
+        int distance = ((int) ((degrees * TURN_CONSTANT) * TICKS_PER_CM * ROTATION_CORRECTION));
 
         return distance;
     }
