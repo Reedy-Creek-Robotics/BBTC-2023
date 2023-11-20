@@ -23,6 +23,8 @@ public class TeleOpDrive extends LinearOpMode {
     double rx1;
     double lt2;
     double rt2;
+    double lt1;
+    double rt1;
     Gamepad currentGamepad1 = new Gamepad();
     Gamepad currentGamepad2 = new Gamepad();
     Gamepad previousGamepad1 = new Gamepad();
@@ -70,27 +72,10 @@ public class TeleOpDrive extends LinearOpMode {
         driveBackLeft.setPower(backLeftPower * speedFactor);
         driveFrontRight.setPower(frontRightPower * speedFactor);
         driveBackRight.setPower(backRightPower * speedFactor);
-
-        if (gamepad1.dpad_up && (speedFactorDebounce.milliseconds() >= buttonDelay)) {
-            speedFactorDebounce.reset();
-            if (speedFactor < 1) {
-                speedFactor += INCREMENT;
-            }
-            telemetry.addData("Dpad Up Pressed", "");
-        }
-
-        if (gamepad1.dpad_down && (speedFactorDebounce.milliseconds() >= buttonDelay)) {
-            speedFactorDebounce.reset();
-            if (speedFactor > 0) {
-                speedFactor -= INCREMENT;
-            }
-            telemetry.addData("Dpad Down Pressed", "");
-        }
-
     }
 
     private void processControl(){
-        double intakeArmPower = (lt2 - rt2);
+        double intakeArmPower = (lt1 - rt1);
 
         if(gamepad2.left_bumper && pinch1Debounce.milliseconds() > buttonDelay) {
             pincher1Open = !pincher1Open;
@@ -114,11 +99,11 @@ public class TeleOpDrive extends LinearOpMode {
             pincher2.setPosition(0.1);
         }
 
-        if(intakeArm.getCurrentPosition() < -300){
-            intakeArm.setPower(0);
+        if(intakeArm.getCurrentPosition() < -700){
+            intakeArm.setPower(0.3);
             telemetry.addLine("Test");
         }else {
-            intakeArm.setPower(intakeArmPower / 2);
+            intakeArm.setPower(intakeArmPower);
             telemetry.addData("powering", intakeArmPower);
         }
 
@@ -130,6 +115,8 @@ public class TeleOpDrive extends LinearOpMode {
         rx1 = gamepad1.right_stick_x;
         lt2 = gamepad2.left_trigger;
         rt2 = gamepad2.right_trigger;
+        lt1 = gamepad1.left_trigger;
+        rt1 = gamepad1.right_trigger;
 
         previousGamepad1.copy(currentGamepad1);
         previousGamepad2.copy(currentGamepad2);
@@ -139,25 +126,54 @@ public class TeleOpDrive extends LinearOpMode {
         pinch1Debounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         pinch1Debounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         speedFactorDebounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+
+        if (gamepad1.dpad_up && (speedFactorDebounce.milliseconds() >= buttonDelay)) {
+            speedFactorDebounce.reset();
+            speedFactor += 0.1;
+            telemetry.addLine("Dpad Up Pressed");
+        }
+
+        if (gamepad1.dpad_down && (speedFactorDebounce.milliseconds() >= buttonDelay)) {
+            speedFactorDebounce.reset();
+            speedFactor -= 0.1;
+            telemetry.addLine("Dpad Down Pressed");
+        }
+        if (speedFactor > 1) {
+            speedFactor = 1;
+        } else if (speedFactor <= 0) {
+            speedFactor = 0.1;
+        }
     }
 
     private void processTelemetry(){
-        telemetry.addData("driveBackLeft", driveBackLeft.getCurrentPosition());
-        telemetry.addData("driveBackRight",driveBackRight.getCurrentPosition());
-        telemetry.addData("driveFrontRight", driveFrontRight.getCurrentPosition());
-        telemetry.addData("driveFrontLeft", driveFrontLeft.getCurrentPosition());
         telemetry.addData("Left Stick ly1", ly1);
         telemetry.addData("Left Stick lx1", lx1);
         telemetry.addData("Right Stick lx1", rx1);
+        telemetry.addData("Speed Factor", speedFactor);
         telemetry.addData("intakeArm:", intakeArm.getCurrentPosition());
         telemetry.update();
     }
 
     private void initHardware() {
         driveFrontLeft = hardwareMap.get(DcMotor.class, "driveFrontLeft");
+        driveFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        driveFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveFrontLeft.setZeroPowerBehavior(BRAKE);
+
         driveFrontRight = hardwareMap.get(DcMotor.class, "driveFrontRight");
+        driveFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        driveFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveFrontRight.setZeroPowerBehavior(BRAKE);
+
         driveBackLeft = hardwareMap.get(DcMotor.class, "driveBackLeft");
+        driveBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        driveBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveBackLeft.setZeroPowerBehavior(BRAKE);
+
         driveBackRight = hardwareMap.get(DcMotor.class, "driveBackRight");
+        driveBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        driveBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveBackRight.setZeroPowerBehavior(BRAKE);
 
         intakeArm = hardwareMap.get(DcMotor.class, "intakeArm");
         intakeArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
