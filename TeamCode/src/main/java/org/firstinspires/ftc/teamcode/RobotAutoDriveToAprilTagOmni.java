@@ -44,44 +44,12 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-/*
- * This OpMode illustrates using a camera to locate and drive towards a specific AprilTag.
- * The code assumes a Holonomic (Mecanum or X Drive) Robot.
- *
- * The drive goal is to rotate to keep the Tag centered in the camera, while strafing to be directly in front of the tag, and
- * driving towards the tag to achieve the desired distance.
- * To reduce any motion blur (which will interrupt the detection process) the Camera exposure is reduced to a very low value (5mS)
- * You can determine the best Exposure and Gain values by using the ConceptAprilTagOptimizeExposure OpMode in this Samples folder.
- *
- * The code assumes a Robot Configuration with motors named: leftfront_drive and rightfront_drive, leftback_drive and rightback_drive.
- * The motor directions must be set so a positive power goes forward on all wheels.
- * This sample assumes that the current game AprilTag Library (usually for the current season) is being loaded by default,
- * so you should choose to approach a valid tag ID (usually starting at 0)
- *
- * Under manual control, the left stick will move forward/back & left/right.  The right stick will rotate the robot.
- * Manually drive the robot until it displays Target data on the Driver Station.
- *
- * Press and hold the *Left Bumper* to enable the automatic "Drive to target" mode.
- * Release the Left Bumper to return to manual driving mode.
- *
- * Under "Drive To Target" mode, the robot has three goals:
- * 1) Turn the robot to always keep the Tag centered on the camera frame. (Use the Target Bearing to turn the robot.)
- * 2) Strafe the robot towards the center-line of the Tag, so it approaches directly in front  of the tag.  (Use the Target Yaw to strafe the robot)
- * 3) Drive towards the Tag to get to the desired distance.  (Use Tag Range to drive the robot forward/backward)
- *
- * Use DESIRED_DISTANCE to set how close you want the robot to get to the target.
- * Speed and Turn sensitivity can be adjusted using the SPEED_GAIN, STRAFE_GAIN and TURN_GAIN constants.
- *
- * Use Android Studio to Copy this Class, and Paste it into the TeamCode/src/main/java/org/firstinspires/ftc/teamcode folder.
- * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
- *
- */
 
 @TeleOp(name="Omni Drive To AprilTag", group = "Concept")
 public class RobotAutoDriveToAprilTagOmni extends LinearOpMode
 {
     // Adjust these numbers to suit your robot.
-    final double DESIRED_DISTANCE = 12.0; //  this is how close the camera should get to the target (inches)
+    final double DESIRED_DISTANCE = 5.0; //  this is how close the camera should get to the target (inches)
 
     //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
     //  applied to the drive motors to correct the error.
@@ -98,7 +66,7 @@ public class RobotAutoDriveToAprilTagOmni extends LinearOpMode
     private static final int DESIRED_TAG_ID = -1;    // Choose the tag you want to approach or set to -1 for ANY tag.
     private VisionPortal visionPortal;               // Used to manage the video source.
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
-    private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
+    private AprilTagDetection detectedTag = null;     // Used to hold the data for a detected AprilTag
 
 DcMotor driveFrontLeft;
 DcMotor driveFrontRight;
@@ -120,18 +88,13 @@ DcMotor driveBackRight;
         // Initialize the April tag Detection process
         initAprilTag();
 
-        /*
-          To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
-          When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
-          Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
-        */
         driveFrontLeft.setDirection(DcMotor.Direction.REVERSE);
         driveBackLeft.setDirection(DcMotor.Direction.REVERSE);
         driveFrontRight.setDirection(DcMotor.Direction.FORWARD);
         driveBackRight.setDirection(DcMotor.Direction.FORWARD);
 
         if (USE_WEBCAM)
-            setManualExposure(6, 50);  // Use low exposure time to reduce motion blur
+            setManualExposure(6, 0);  // Use low exposure time to reduce motion blur
 
         // Wait for driver to press start
         telemetry.addData("Camera preview on/off", "3 dots, Camera Stream");
@@ -142,7 +105,7 @@ DcMotor driveBackRight;
         while (opModeIsActive())
         {
             targetFound = false;
-            desiredTag  = null;
+            detectedTag  = null;
 
             // Step through the list of detected tags and look for a matching tag
             List<AprilTagDetection> currentDetections = aprilTag.getDetections();
@@ -150,7 +113,7 @@ DcMotor driveBackRight;
                 if ((detection.metadata != null) &&
                     ((DESIRED_TAG_ID < 0) || (detection.id == DESIRED_TAG_ID))  ){
                     targetFound = true;
-                    desiredTag = detection;
+                    detectedTag = detection;
                     break;  // don't look any further.
                 } else {
                     telemetry.addData("Unknown Target", "Tag ID %d is not in TagLibrary\n", detection.id);
@@ -160,10 +123,10 @@ DcMotor driveBackRight;
             // Tell the driver what we see, and what to do.
             if (targetFound) {
                 telemetry.addData(">","HOLD Left-Bumper to Drive to Target\n");
-                telemetry.addData("Target", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
-                telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
-                telemetry.addData("Bearing","%3.0f degrees", desiredTag.ftcPose.bearing);
-                telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
+                telemetry.addData("Target", "ID %d (%s)", detectedTag.id, detectedTag.metadata.name);
+                telemetry.addData("Range",  "%5.1f inches", detectedTag.ftcPose.range);
+                telemetry.addData("Bearing","%3.0f degrees", detectedTag.ftcPose.bearing);
+                telemetry.addData("Yaw","%3.0f degrees", detectedTag.ftcPose.yaw);
             } else {
                 telemetry.addData(">","Drive using joysticks to find valid target\n");
             }
@@ -172,9 +135,9 @@ DcMotor driveBackRight;
             if (gamepad1.left_bumper && targetFound) {
 
                 // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
-                double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
-                double  headingError    = desiredTag.ftcPose.bearing;
-                double  yawError        = desiredTag.ftcPose.yaw;
+                double  rangeError      = (detectedTag.ftcPose.range - DESIRED_DISTANCE);
+                double  headingError    = detectedTag.ftcPose.bearing;
+                double  yawError        = detectedTag.ftcPose.yaw;
 
                 // Use the speed and turn "gains" to calculate how we want the robot to move.
                 drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
