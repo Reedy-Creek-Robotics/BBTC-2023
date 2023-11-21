@@ -27,7 +27,7 @@ public class TeleOpDrive extends LinearOpMode {
         // the robot should NOT move in this part of the program (its a penalty)
         DcMotor driveFrontLeft = hardwareMap.get(DcMotor.class, "driveFrontLeft");
         DcMotor driveFrontRight = hardwareMap.get(DcMotor.class, "driveFrontRight");
-        DcMotor driveBackLeft = hardwareMap.get(DcMotor.class, "drieBackLeft");
+        DcMotor driveBackLeft = hardwareMap.get(DcMotor.class, "driveBackLeft");
         DcMotor driveBackRight = hardwareMap.get(DcMotor.class, "driveBackRight");
         DcMotor intakeArm = hardwareMap.get(DcMotor.class, "intakeArm");
         Servo pincher1 = hardwareMap.get(Servo.class, "pincher1");
@@ -113,10 +113,12 @@ public class TeleOpDrive extends LinearOpMode {
                 pincher2.setPosition(0.1);
             }
 
+
             driveFrontLeft.setPower(frontLeftPower * speedFactor);
             driveBackLeft.setPower(backLeftPower * speedFactor);
             driveFrontRight.setPower(frontRightPower * speedFactor);
             driveBackLeft.setPower(backRightPower * speedFactor);
+
             if(intakeArm.getCurrentPosition() < -300){
                 intakeArm.setPower(0);
                 telemetry.addLine("Test");
