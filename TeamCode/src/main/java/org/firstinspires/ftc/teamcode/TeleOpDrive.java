@@ -1,8 +1,3 @@
-/*
-ToDo - Add arm motor (TEST)
-Todo - Add pincher platform rotation servo (TEST/INPUT #'s)
-ToDo - Add pincher servos (TEST/INPUT #'s)
- */
 package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
@@ -17,126 +12,182 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @TeleOp(name = "Tele-Op Driving")
 public class TeleOpDrive extends LinearOpMode {
 
-    ElapsedTime dBounceTimerPinch1 = new ElapsedTime();
-    ElapsedTime dBounceTimerPinch2 = new ElapsedTime();
+    static final double INCREMENT = 0.05;
+    ElapsedTime pinch1Debounce;
+    ElapsedTime pinch2Debounce;
+    ElapsedTime speedFactorDebounce;
+    static final int buttonDelay = 250;
+    double speedFactor = 0.7;
+    double ly1;
+    double lx1;
+    double rx1;
+    double lt2;
+    double rt2;
+    double lt1;
+    double rt1;
+    Gamepad currentGamepad1 = new Gamepad();
+    Gamepad currentGamepad2 = new Gamepad();
+    Gamepad previousGamepad1 = new Gamepad();
+    Gamepad previousGamepad2 = new Gamepad();
+    DcMotor driveFrontLeft;
+    DcMotor driveFrontRight;
+    DcMotor driveBackLeft;
+    DcMotor driveBackRight;
+    DcMotor intakeArm;
+    Servo pincher1;
+    Servo pincher2;
+    boolean pincher1Open;
+    boolean pincher2Open;
+
     @Override
     public void runOpMode() throws InterruptedException {
-        // INIT
-        // all code between here and WAIT runs when the INIT button is pressed on the driver station
-        // this is where you initialize all the hardware and code for your program
         // the robot should NOT move in this part of the program (its a penalty)
-        DcMotor driveFrontLeft = hardwareMap.get(DcMotor.class, "driveFrontLeft");
-        DcMotor driveFrontRight = hardwareMap.get(DcMotor.class, "driveFrontRight");
-        DcMotor driveBackLeft = hardwareMap.get(DcMotor.class, "driveBackLeft");
-        DcMotor driveBackRight = hardwareMap.get(DcMotor.class, "driveBackRight");
-        DcMotor intakeArm = hardwareMap.get(DcMotor.class, "intakeArm");
-        Servo pincher1 = hardwareMap.get(Servo.class, "pincher1");
-        Servo pincher2 = hardwareMap.get(Servo.class, "pincher2");
+
+        initHardware();
+
+        telemetry.addLine("> PRESS START");
+        waitForStart();
+
+        telemetry.addLine("> PROGRAM STARTED");
+        while(opModeIsActive()) {
+
+            processVariableUpdates();
+
+            processDriving();
+            processControl();
+            processTelemetry();
+
+        }
+    }
+
+    private void processDriving(){
+
+        double denominator = Math.max(Math.abs(ly1) + Math.abs(lx1) + Math.abs(rx1), 1);
+        double frontLeftPower = (ly1 + lx1 + rx1) / denominator;
+        double backLeftPower = (ly1 - lx1 + rx1) / denominator;
+        double frontRightPower = (ly1 - lx1 - rx1) / denominator;
+        double backRightPower = (ly1 + lx1 - rx1) / denominator;
+
+        driveFrontLeft.setPower(frontLeftPower * speedFactor);
+        driveBackLeft.setPower(backLeftPower * speedFactor);
+        driveFrontRight.setPower(frontRightPower * speedFactor);
+        driveBackRight.setPower(backRightPower * speedFactor);
+    }
+
+    private void processControl(){
+        double intakeArmPower = (lt1 - rt1);
+
+        if(gamepad2.left_bumper && pinch1Debounce.milliseconds() > buttonDelay) {
+            pincher1Open = !pincher1Open;
+            pinch1Debounce.reset();
+        }
+
+        if(gamepad2.right_bumper && pinch2Debounce.milliseconds() > buttonDelay) {
+            pincher2Open = !pincher2Open;
+            pinch2Debounce.reset();
+        }
+
+        if(pincher1Open){
+            pincher1.setPosition(0.2);
+        } else {
+            pincher1.setPosition(0.8);
+        }
+
+        if(pincher2Open){
+            pincher2.setPosition(0.5);
+        } else {
+            pincher2.setPosition(0.1);
+        }
+
+        if(intakeArm.getCurrentPosition() < -700){
+            intakeArm.setPower(0.3);
+            telemetry.addLine("Test");
+        }else {
+            intakeArm.setPower(intakeArmPower);
+            telemetry.addData("powering", intakeArmPower);
+        }
+
+    }
+
+    private void processVariableUpdates(){
+        ly1 = -gamepad1.left_stick_y;
+        lx1 = gamepad1.left_stick_x * 1.1;
+        rx1 = gamepad1.right_stick_x;
+        lt2 = gamepad2.left_trigger;
+        rt2 = gamepad2.right_trigger;
+        lt1 = gamepad1.left_trigger;
+        rt1 = gamepad1.right_trigger;
+
+        previousGamepad1.copy(currentGamepad1);
+        previousGamepad2.copy(currentGamepad2);
+        currentGamepad1.copy(gamepad1);
+        currentGamepad2.copy(gamepad2);
+
+        pinch1Debounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+        pinch1Debounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+        speedFactorDebounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+
+        if (gamepad1.dpad_up && (speedFactorDebounce.milliseconds() >= buttonDelay)) {
+            speedFactorDebounce.reset();
+            speedFactor += 0.1;
+            telemetry.addLine("Dpad Up Pressed");
+        }
+
+        if (gamepad1.dpad_down && (speedFactorDebounce.milliseconds() >= buttonDelay)) {
+            speedFactorDebounce.reset();
+            speedFactor -= 0.1;
+            telemetry.addLine("Dpad Down Pressed");
+        }
+        if (speedFactor > 1) {
+            speedFactor = 1;
+        } else if (speedFactor <= 0) {
+            speedFactor = 0.1;
+        }
+    }
+
+    private void processTelemetry(){
+        telemetry.addData("Left Stick ly1", ly1);
+        telemetry.addData("Left Stick lx1", lx1);
+        telemetry.addData("Right Stick lx1", rx1);
+        telemetry.addData("Speed Factor", speedFactor);
+        telemetry.addData("intakeArm:", intakeArm.getCurrentPosition());
+        telemetry.update();
+    }
+
+    private void initHardware() {
+        driveFrontLeft = hardwareMap.get(DcMotor.class, "driveFrontLeft");
+        driveFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        driveFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveFrontLeft.setZeroPowerBehavior(BRAKE);
+
+        driveFrontRight = hardwareMap.get(DcMotor.class, "driveFrontRight");
+        driveFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        driveFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveFrontRight.setZeroPowerBehavior(BRAKE);
+
+        driveBackLeft = hardwareMap.get(DcMotor.class, "driveBackLeft");
+        driveBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        driveBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveBackLeft.setZeroPowerBehavior(BRAKE);
+
+        driveBackRight = hardwareMap.get(DcMotor.class, "driveBackRight");
+        driveBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        driveBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveBackRight.setZeroPowerBehavior(BRAKE);
+
+        intakeArm = hardwareMap.get(DcMotor.class, "intakeArm");
+        intakeArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        pincher1 = hardwareMap.get(Servo.class, "pincher1");
+        pincher2 = hardwareMap.get(Servo.class, "pincher2");
         boolean pincher1Open = true;
         boolean pincher2Open = true;
 
         intakeArm.setZeroPowerBehavior(BRAKE);
-        intakeArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-
-        double speedFactor = 0.7;
-
-        Gamepad currentGamepad1 = new Gamepad();
-        Gamepad currentGamepad2 = new Gamepad();
-
-        Gamepad previousGamepad1 = new Gamepad();
-        Gamepad previousGamepad2 = new Gamepad();
-
-        // Move forward
         driveFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         driveBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        // WAIT
-        // the program pauses here until the START button is pressed on the driver station
-        telemetry.addLine("WAITING FOR START");
-        waitForStart();
-        // Code runs once at start pressed
-        telemetry.addLine("PROGRAM STARTED");
-        while( !isStopRequested() ) {
-            // Event Loop
-            telemetry.addLine("EVENT LOOP");
-            double ly1 = -gamepad1.left_stick_y; // Remember, ly1 stick value is reversed
-            double lx1 = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
-            double rx1 = gamepad1.right_stick_x;
-            double lt2 = gamepad2.left_trigger;
-            double rt2 = gamepad2.right_trigger;
-            double lx2 = gamepad2.left_stick_x;
-            double rx2 = gamepad2.right_stick_x;
-            double ly2 = gamepad2.left_stick_y;
-            double ry2 = gamepad2.right_stick_y;
-
-
-
-                // setting game-pad values
-            previousGamepad1.copy(currentGamepad1);
-            previousGamepad2.copy(currentGamepad2);
-            currentGamepad1.copy(gamepad1);
-            currentGamepad2.copy(gamepad2);
-
-            // Denominator is the largest motor power (absolute value) or 1
-            // This ensures all the powers maintain the same ratio,
-            // but only if at least one is out of the range [-1, 1]
-            double denominator = Math.max(Math.abs(ly1) + Math.abs(lx1) + Math.abs(rx1), 1);
-            double frontLeftPower = (ly1 + lx1 + rx1) / denominator;
-            double backLeftPower = (ly1 - lx1 + rx1) / denominator;
-            double frontRightPower = (ly1 - lx1 - rx1) / denominator;
-            double backRightPower = (ly1 + lx1 - rx1) / denominator;
-            double intakeArmPower = (lt2 - rt2);
-
-
-
-           if(gamepad2.left_bumper && dBounceTimerPinch1.milliseconds() > 200) {
-               pincher1Open = !pincher1Open;
-               dBounceTimerPinch1.reset();
-           }
-
-            if(gamepad2.right_bumper && dBounceTimerPinch2.milliseconds() > 200) {
-                pincher2Open = !pincher2Open;
-                dBounceTimerPinch2.reset();
-            }
-
-            if(pincher1Open){
-                pincher1.setPosition(0.2);
-            } else {
-                pincher1.setPosition(0.8);
-            }
-
-            if(pincher2Open){
-                pincher2.setPosition(0.5);
-            } else {
-                pincher2.setPosition(0.1);
-            }
-
-
-            driveFrontLeft.setPower(frontLeftPower * speedFactor);
-            driveBackLeft.setPower(backLeftPower * speedFactor);
-            driveFrontRight.setPower(frontRightPower * speedFactor);
-            driveBackLeft.setPower(backRightPower * speedFactor);
-
-            if(intakeArm.getCurrentPosition() < -300){
-                intakeArm.setPower(0);
-                telemetry.addLine("Test");
-            }else {
-                intakeArm.setPower(intakeArmPower / 2);
-                telemetry.addData("powering", intakeArmPower);
-            }
-
-            telemetry.addData("driveBackLeft", driveBackLeft.getCurrentPosition());
-            telemetry.addData("driveBackRight",driveBackRight.getCurrentPosition());
-            telemetry.addData("driveFrontRight", driveFrontRight.getCurrentPosition());
-            telemetry.addData("driveFrontLeft", driveFrontLeft.getCurrentPosition());
-            telemetry.addData("Left Stick ly1", ly1);
-            telemetry.addData("Left Stick lx1", lx1);
-            telemetry.addData("Right Stick lx1", rx1);
-            telemetry.addData("intakeArm:", intakeArm.getCurrentPosition());
-            telemetry.addData("test", intakeArm.getPowerFloat());
-            telemetry.update();
-        }
     }
 }
