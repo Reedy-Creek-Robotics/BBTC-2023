@@ -12,12 +12,13 @@ public class Robot {
     private DcMotor driveBackRight;
     private DcMotor driveBackLeft;
 
-    public static double TICKS_PER_CM = 17.83; // 17.83 tics/cm traveled(Strafer)
+    private static final double TICKS_PER_CM = 17.83; // 17.83 tics/cm traveled(Strafer)
 
-    public static double ROTATION_CORRECTION = 1.2; //(62/90);
+    private static final double TICKS_PER_INCH = 45.2847909135; //17.83 cm / 2.54 = inches per cm
 
-    public static double TURN_CONSTANT = 50.5d/90d; // distance per deg
+    private static final double ROTATION_CORRECTION = 1.2; //(62/90);
 
+    private static final double TURN_CONSTANT = 50.5d/90d; // distance per deg
 
     public Robot(DcMotor driveFrontLeft, DcMotor driveBackLeft, DcMotor driveBackRight, DcMotor driveFrontRight){
 
@@ -27,8 +28,9 @@ public class Robot {
         this.driveBackLeft = driveBackLeft;
     }
 
-    public void forward(int distance, double speed){
+    public void forward(double distanceInches, double speed){
         setup();
+        int distanceTicks = inchesToTicks(distanceInches);
 
         // Move Forward
         driveFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -36,25 +38,14 @@ public class Robot {
         driveBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         driveBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        // Set distance or tick variable to each motor
-        driveFrontLeft.setTargetPosition(distance);
-        driveFrontRight.setTargetPosition(distance);
-        driveBackLeft.setTargetPosition(distance);
-        driveBackRight.setTargetPosition(distance);
-        // Run motors for
-        driveFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        driveFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        driveBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        driveBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        driveTargetPositions(distanceTicks);
 
-        driveFrontLeft.setPower(speed);
-        driveFrontRight.setPower(speed);
-        driveBackLeft.setPower(speed);
-        driveBackRight.setPower(speed);
+        driveMotors(speed);
     }
 
-    public void strafe(int distance, double speed, Direction direction) {
+    public void strafe(int distanceInches, double speed, Direction direction) {
         setup();
+        int distanceTicks = inchesToTicks(distanceInches);
 
 
         switch(direction){
@@ -66,10 +57,7 @@ public class Robot {
                 driveBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
                 // Set distance or tick variable to each motor
-                driveFrontLeft.setTargetPosition(distance);
-                driveFrontRight.setTargetPosition(distance);
-                driveBackLeft.setTargetPosition(distance);
-                driveBackRight.setTargetPosition(distance);
+                driveTargetPositions(distanceTicks);
                 break;
             case RIGHT:
                 // Strafe Right
@@ -78,18 +66,11 @@ public class Robot {
                 driveBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
                 driveBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
-                // Set distance or tick variable to each motor
-                driveFrontLeft.setTargetPosition(distance);
-                driveFrontRight.setTargetPosition(distance);
-                driveBackLeft.setTargetPosition(distance);
-                driveBackRight.setTargetPosition(distance);
+                driveTargetPositions(distanceTicks);
                 break;
         }
 
-        driveFrontLeft.setPower(speed);
-        driveFrontRight.setPower(speed);
-        driveBackLeft.setPower(speed);
-        driveBackRight.setPower(speed);
+        driveMotors(speed);
 
         // Run motors for
         driveFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -101,7 +82,7 @@ public class Robot {
 
     public void turn(int degrees, double speed, Direction direction){
         setup();
-        int distance = DegreeToDistance(degrees);
+        int distanceTicks = degreesToDistance(degrees);
         switch(direction){
             case LEFT:
                 driveFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -109,10 +90,7 @@ public class Robot {
                 driveBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
                 driveBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
-                driveFrontLeft.setTargetPosition(distance);
-                driveFrontRight.setTargetPosition(distance);
-                driveBackLeft.setTargetPosition(distance);
-                driveBackRight.setTargetPosition(distance);
+                driveTargetPositions(distanceTicks);
                 break;
             case RIGHT:
                 driveFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -120,23 +98,10 @@ public class Robot {
                 driveBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
                 driveBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-                driveFrontLeft.setTargetPosition(distance);
-                driveFrontRight.setTargetPosition(distance);
-                driveBackLeft.setTargetPosition(distance);
-                driveBackRight.setTargetPosition(distance);
+                driveTargetPositions(distanceTicks);
                 break;
-
         }
-        driveFrontLeft.setPower(speed);
-        driveFrontRight.setPower(speed);
-        driveBackLeft.setPower(speed);
-        driveBackRight.setPower(speed);
-
-        // Run motors for
-        driveFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        driveFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        driveBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        driveBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        driveMotors(speed);
     }
 
     private void setup(){
@@ -154,10 +119,35 @@ public class Robot {
 
     }
 
-    private int DegreeToDistance(int degrees) {
+    private int degreesToDistance(int degrees) {
         int distance = ((int) ((degrees * TURN_CONSTANT) * TICKS_PER_CM * ROTATION_CORRECTION));
 
         return distance;
+    }
 
+    private int inchesToTicks(double distanceInches) {
+        int distanceTicks;
+
+        distanceTicks = ((int) (distanceInches * TICKS_PER_INCH));
+
+        return distanceTicks;
+    }
+
+    private void driveMotors(double power){
+        driveFrontLeft.setPower(power);
+        driveFrontRight.setPower(power);
+        driveBackLeft.setPower(power);
+        driveBackRight.setPower(power);
+    }
+    private void driveTargetPositions(int distanceTicks){
+        driveFrontLeft.setTargetPosition(distanceTicks);
+        driveFrontRight.setTargetPosition(distanceTicks);
+        driveBackLeft.setTargetPosition(distanceTicks);
+        driveBackRight.setTargetPosition(distanceTicks);
+
+        driveFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        driveFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        driveBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        driveBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 }
