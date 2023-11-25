@@ -308,7 +308,7 @@ public class TeleOpDrive extends LinearOpMode {
     private void processAprilTagDetection(){
         targetFound = false;
         detectedTag  = null;
-        setManualExposure(6, 200);
+        setManualExposure(6, 50);
 
         // Step through the list of detected tags and look for a matching tag
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
