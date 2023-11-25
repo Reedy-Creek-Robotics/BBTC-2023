@@ -32,7 +32,7 @@ public class TurnTest extends LinearOpMode {
         waitForStart();
 
 
-        bot.forward(20, 0.3);
+        bot.forward(24, 0.3);
 
         while(opModeIsActive() && driveBackLeft.isBusy() && driveBackRight.isBusy() && driveFrontLeft.isBusy() && driveFrontRight.isBusy()){}
 
@@ -43,7 +43,7 @@ public class TurnTest extends LinearOpMode {
 
         while(opModeIsActive() && driveBackLeft.isBusy() && driveBackRight.isBusy() && driveFrontLeft.isBusy() && driveFrontRight.isBusy()){}
 
-        bot.forward(10, 0.3);
+        bot.forward(24, 0.3);
 
         telemetry.addLine("Right 180");
         telemetry.update();
