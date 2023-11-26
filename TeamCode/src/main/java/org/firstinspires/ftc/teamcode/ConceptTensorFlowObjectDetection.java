@@ -27,16 +27,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import java.util.List;
 
@@ -44,11 +46,10 @@ import java.util.List;
  * This OpMode illustrates the basics of TensorFlow Object Detection,
  * including Java Builder structures for specifying Vision parameters.
  *
- * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Use Android  Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
-@TeleOp(name = "Concept: TensorFlow Object Detection", group = "Concept")
-@Disabled
+@Autonomous(name = "Concept: TensorFlow Object Detection", group = "Concept")
 public class ConceptTensorFlowObjectDetection extends LinearOpMode {
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
@@ -62,6 +63,16 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
      * The variable to store our instance of the vision portal.
      */
     private VisionPortal visionPortal;
+
+    private static final String TFOD_MODEL_ASSET = "CenterStage.tflite";
+
+    private static final String[] LABELS = {
+            "Pixel",
+    };
+    private DcMotor driveFrontLeft;
+    private DcMotor driveFrontRight;
+    private DcMotor driveBackRight;
+    private DcMotor driveBackLeft;
 
     @Override
     public void runOpMode() {
@@ -82,20 +93,36 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
                 // Push telemetry to the Driver Station.
                 telemetry.update();
 
-                // Save CPU resources; can resume streaming when needed.
-                if (gamepad1.dpad_down) {
-                    visionPortal.stopStreaming();
-                } else if (gamepad1.dpad_up) {
-                    visionPortal.resumeStreaming();
-                }
-
                 // Share the CPU.
                 sleep(20);
             }
         }
 
+        List<Recognition> currentRecognitions = tfod.getRecognitions();
+
+        if(currentRecognitions != null){
+            visionPortal.close();
+
+            for (Recognition recognition : currentRecognitions) {
+
+                if (isStopRequested()) {
+                    break;
+                }
+
+                double x = (recognition.getLeft() + recognition.getRight()) / 2;
+
+                if (x < 150) {
+                    //run left code
+                } else if (x > 250) {
+                    //run right code
+                } else {
+                    //run center code
+                }
+
+            }
+        }
+
         // Save more CPU resources when camera is no longer needed.
-        visionPortal.close();
 
     }   // end runOpMode()
 
@@ -109,14 +136,14 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
 
             // Use setModelAssetName() if the TF Model is built in as an asset.
             // Use setModelFileName() if you have downloaded a custom team model to the Robot Controller.
-            //.setModelAssetName(TFOD_MODEL_ASSET)
-            //.setModelFileName(TFOD_MODEL_FILE)
+            .setModelAssetName(TFOD_MODEL_ASSET)
+            //.setModelFileName("CenterStage.tflite")
 
-            //.setModelLabels(LABELS)
+            .setModelLabels(LABELS)
             //.setIsModelTensorFlow2(true)
             //.setIsModelQuantized(true)
             //.setModelInputSize(300)
-            //.setModelAspectRatio(16.0 / 9.0)
+            .setModelAspectRatio(16.0 / 9.0)
 
             .build();
 
@@ -124,11 +151,8 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
         VisionPortal.Builder builder = new VisionPortal.Builder();
 
         // Set the camera (webcam vs. built-in RC phone camera).
-        if (USE_WEBCAM) {
-            builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
-        } else {
-            builder.setCamera(BuiltinCameraDirection.BACK);
-        }
+
+        builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam1"));
 
         // Choose a camera resolution. Not all cameras support all resolutions.
         //builder.setCameraResolution(new Size(640, 480));
@@ -178,5 +202,37 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
         }   // end for() loop
 
     }   // end method telemetryTfod()
+
+    private void leftAlign(){
+        initMotors();
+        Robot bot = new Robot(driveFrontLeft, driveBackLeft, driveBackRight, driveFrontRight);
+
+        bot.strafe(2000, 0.3, Direction.LEFT);
+        while(driveFrontLeft.isBusy() && driveFrontRight.isBusy() && driveBackLeft.isBusy() && driveBackRight.isBusy() && opModeIsActive());
+
+    }
+
+    private void centerAlign(){
+        initMotors();
+        Robot bot = new Robot(driveFrontLeft, driveBackLeft, driveBackRight, driveFrontRight);
+
+        bot.forward(2000, 0.3);
+        while(driveFrontLeft.isBusy() && driveFrontRight.isBusy() && driveBackLeft.isBusy() && driveBackRight.isBusy() && opModeIsActive());
+    }
+
+    private void rightAlign(){
+        initMotors();
+        Robot bot = new Robot(driveFrontLeft, driveBackLeft, driveBackRight, driveFrontRight);
+
+        bot.strafe(2000, 0.3, Direction.RIGHT);
+        while(driveFrontLeft.isBusy() && driveFrontRight.isBusy() && driveBackLeft.isBusy() && driveBackRight.isBusy() && opModeIsActive());
+    }
+
+    private void initMotors(){
+        driveFrontLeft = hardwareMap.get(DcMotor.class, "driveFrontLeft");
+        driveFrontRight = hardwareMap.get(DcMotor.class, "driveFrontRight");
+        driveBackLeft = hardwareMap.get(DcMotor.class, "driveBackLeft");
+        driveBackRight = hardwareMap.get(DcMotor.class, "driveBackRight");
+    }
 
 }   // end class
