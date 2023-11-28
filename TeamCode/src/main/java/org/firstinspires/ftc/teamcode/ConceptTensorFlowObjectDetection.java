@@ -52,8 +52,6 @@ import java.util.List;
 @Autonomous(name = "Concept: TensorFlow Object Detection", group = "Concept")
 public class ConceptTensorFlowObjectDetection extends LinearOpMode {
 
-    private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
-
     /**
      * The variable to store our instance of the TensorFlow Object Detection processor.
      */
@@ -112,11 +110,11 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
                 double x = (recognition.getLeft() + recognition.getRight()) / 2;
 
                 if (x < 150) {
-                    //run left code
+                    leftAlign();
                 } else if (x > 250) {
-                    //run right code
+                    rightAlign();
                 } else {
-                    //run center code
+                    centerAlign();
                 }
 
             }
@@ -207,7 +205,9 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
         initMotors();
         Robot bot = new Robot(driveFrontLeft, driveBackLeft, driveBackRight, driveFrontRight);
 
-        bot.strafe(2000, 0.3, Direction.LEFT);
+        bot.strafe(12, 0.3, Direction.LEFT);
+        while(driveFrontLeft.isBusy() && driveFrontRight.isBusy() && driveBackLeft.isBusy() && driveBackRight.isBusy() && opModeIsActive());
+        bot.forward(36, 0.3);
         while(driveFrontLeft.isBusy() && driveFrontRight.isBusy() && driveBackLeft.isBusy() && driveBackRight.isBusy() && opModeIsActive());
 
     }
@@ -216,7 +216,7 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
         initMotors();
         Robot bot = new Robot(driveFrontLeft, driveBackLeft, driveBackRight, driveFrontRight);
 
-        bot.forward(2000, 0.3);
+        bot.forward(36, 0.3);
         while(driveFrontLeft.isBusy() && driveFrontRight.isBusy() && driveBackLeft.isBusy() && driveBackRight.isBusy() && opModeIsActive());
     }
 
@@ -224,7 +224,9 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
         initMotors();
         Robot bot = new Robot(driveFrontLeft, driveBackLeft, driveBackRight, driveFrontRight);
 
-        bot.strafe(2000, 0.3, Direction.RIGHT);
+        bot.strafe(12, 0.3, Direction.RIGHT);
+        while(driveFrontLeft.isBusy() && driveFrontRight.isBusy() && driveBackLeft.isBusy() && driveBackRight.isBusy() && opModeIsActive());
+        bot.forward(36, 0.3);
         while(driveFrontLeft.isBusy() && driveFrontRight.isBusy() && driveBackLeft.isBusy() && driveBackRight.isBusy() && opModeIsActive());
     }
 
