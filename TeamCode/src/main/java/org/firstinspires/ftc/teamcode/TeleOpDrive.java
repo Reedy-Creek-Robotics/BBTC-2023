@@ -151,6 +151,7 @@ public class TeleOpDrive extends LinearOpMode {
         telemetry.addData("Right Stick lx1", rx1);
         telemetry.addData("Speed Factor", speedFactor);
         telemetry.addData("intakeArm:", intakeArm.getCurrentPosition());
+        telemetry.addData("Distance", driveFrontRight.getCurrentPosition());
         telemetry.update();
     }
 

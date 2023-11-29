@@ -33,17 +33,14 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.*;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.configuration.WebcamConfiguration;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /*
  * This OpMode illustrates the basics of TensorFlow Object Detection,
@@ -54,8 +51,6 @@ import java.util.concurrent.TimeUnit;
  */
 @Autonomous(name = "Concept: TensorFlow Object Detection", group = "Concept")
 public class ConceptTensorFlowObjectDetection extends LinearOpMode {
-
-    private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
     /**
      * The variable to store our instance of the TensorFlow Object Detection processor.
@@ -82,7 +77,10 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
 
         initTfod();
 
-
+        driveFrontLeft = hardwareMap.get(DcMotor.class, "driveFrontLeft");
+        driveFrontRight = hardwareMap.get(DcMotor.class, "driveFrontRight");
+        driveBackLeft = hardwareMap.get(DcMotor.class, "driveBackLeft");
+        driveBackRight = hardwareMap.get(DcMotor.class, "driveBackRight");
 
         // Wait for the DS start button to be touched.
         telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
@@ -105,7 +103,7 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
 
         List<Recognition> currentRecognitions = tfod.getRecognitions();
 
-        if(currentRecognitions != null){
+        if (currentRecognitions != null) {
             visionPortal.close();
 
             for (Recognition recognition : currentRecognitions) {
@@ -117,11 +115,11 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
                 double x = (recognition.getLeft() + recognition.getRight()) / 2;
 
                 if (x < 150) {
-                    //run left code
+                    leftAlign();
                 } else if (x > 250) {
-                    //run right code
+                    rightAlign();
                 } else {
-                    //run center code
+                    centerAlign();
                 }
 
             }
@@ -139,23 +137,21 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
         // Create the TensorFlow processor by using a builder.
         tfod = new TfodProcessor.Builder()
 
-            // Use setModelAssetName() if the TF Model is built in as an asset.
-            // Use setModelFileName() if you have downloaded a custom team model to the Robot Controller.
-            .setModelAssetName(TFOD_MODEL_ASSET)
-            //.setModelFileName("CenterStage.tflite")
+                // Use setModelAssetName() if the TF Model is built in as an asset.
+                // Use setModelFileName() if you have downloaded a custom team model to the Robot Controller.
+                .setModelAssetName(TFOD_MODEL_ASSET)
+                //.setModelFileName("CenterStage.tflite")
 
-            .setModelLabels(LABELS)
-            //.setIsModelTensorFlow2(true)
-            //.setIsModelQuantized(true)
-            //.setModelInputSize(300)
-            .setModelAspectRatio(16.0 / 9.0)
+                .setModelLabels(LABELS)
+                //.setIsModelTensorFlow2(true)
+                //.setIsModelQuantized(true)
+                //.setModelInputSize(300)
+                .setModelAspectRatio(16.0 / 9.0)
 
-            .build();
+                .build();
 
         // Create the vision portal by using a builder.
         VisionPortal.Builder builder = new VisionPortal.Builder();
-
-        setManualExposure(6, 50);
 
         // Set the camera (webcam vs. built-in RC phone camera).
 
@@ -199,10 +195,10 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
 
         // Step through the list of recognitions and display info for each one.
         for (Recognition recognition : currentRecognitions) {
-            double x = (recognition.getLeft() + recognition.getRight()) / 2 ;
-            double y = (recognition.getTop()  + recognition.getBottom()) / 2 ;
+            double x = (recognition.getLeft() + recognition.getRight()) / 2;
+            double y = (recognition.getTop() + recognition.getBottom()) / 2;
 
-            telemetry.addData(""," ");
+            telemetry.addData("", " ");
             telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
             telemetry.addData("- Position", "%.0f / %.0f", x, y);
             telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
@@ -210,69 +206,31 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
 
     }   // end method telemetryTfod()
 
-    private void leftAlign(){
-        initMotors();
+    private void leftAlign() {
         Robot bot = new Robot(driveFrontLeft, driveBackLeft, driveBackRight, driveFrontRight);
 
-        bot.strafe(2000, 0.3, Direction.LEFT);
-        while(driveFrontLeft.isBusy() && driveFrontRight.isBusy() && driveBackLeft.isBusy() && driveBackRight.isBusy() && opModeIsActive());
+        bot.strafe(12, 0.3, Direction.LEFT);
+        while (driveFrontLeft.isBusy() && driveFrontRight.isBusy() && driveBackLeft.isBusy() && driveBackRight.isBusy() && opModeIsActive()) ;
+        bot.forward(36, 0.3);
+        while (driveFrontLeft.isBusy() && driveFrontRight.isBusy() && driveBackLeft.isBusy() && driveBackRight.isBusy() && opModeIsActive()) ;
 
     }
 
-    private void centerAlign(){
-        initMotors();
+    private void centerAlign() {
         Robot bot = new Robot(driveFrontLeft, driveBackLeft, driveBackRight, driveFrontRight);
 
-        bot.forward(2000, 0.3);
-        while(driveFrontLeft.isBusy() && driveFrontRight.isBusy() && driveBackLeft.isBusy() && driveBackRight.isBusy() && opModeIsActive());
+        bot.forward(36, 0.3);
+        while (driveFrontLeft.isBusy() && driveFrontRight.isBusy() && driveBackLeft.isBusy() && driveBackRight.isBusy() && opModeIsActive()) ;
     }
 
-    private void rightAlign(){
-        initMotors();
+    private void rightAlign() {
         Robot bot = new Robot(driveFrontLeft, driveBackLeft, driveBackRight, driveFrontRight);
 
-        bot.strafe(2000, 0.3, Direction.RIGHT);
-        while(driveFrontLeft.isBusy() && driveFrontRight.isBusy() && driveBackLeft.isBusy() && driveBackRight.isBusy() && opModeIsActive());
-    }
+        bot.strafe(12, 0.3, Direction.RIGHT);
+        while (driveFrontLeft.isBusy() && driveFrontRight.isBusy() && driveBackLeft.isBusy() && driveBackRight.isBusy() && opModeIsActive()) ;
+        bot.forward(36, 0.3);
+        while (driveFrontLeft.isBusy() && driveFrontRight.isBusy() && driveBackLeft.isBusy() && driveBackRight.isBusy() && opModeIsActive()) ;
 
-    private void initMotors(){
-        driveFrontLeft = hardwareMap.get(DcMotor.class, "driveFrontLeft");
-        driveFrontRight = hardwareMap.get(DcMotor.class, "driveFrontRight");
-        driveBackLeft = hardwareMap.get(DcMotor.class, "driveBackLeft");
-        driveBackRight = hardwareMap.get(DcMotor.class, "driveBackRight");
-    }
 
-    private void setManualExposure(int exposureMS, int gain) {
-        // Wait for the camera to be open, then use the controls
-
-        if (visionPortal == null) {
-            return;
-        }
-
-        // Make sure camera is streaming before we try to set the exposure controls
-        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
-            telemetry.addData("Camera", "Waiting");
-            telemetry.update();
-            while (!isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
-                sleep(20);
-            }
-            telemetry.addData("Camera", "Ready");
-            telemetry.update();
-        }
-
-        if (!isStopRequested())
-        {
-            ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
-            if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
-                exposureControl.setMode(ExposureControl.Mode.Manual);
-                sleep(50);
-            }
-            exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
-            sleep(20);
-            GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
-            gainControl.setGain(gain);
-            sleep(20);
-        }
-    }
-
-}   // end class
+    }   // end class
+}
