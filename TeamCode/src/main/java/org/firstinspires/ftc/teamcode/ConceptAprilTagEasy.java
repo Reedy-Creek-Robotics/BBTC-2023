@@ -29,11 +29,11 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.*;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -85,7 +85,7 @@ public class ConceptAprilTagEasy extends LinearOpMode {
                 // Save CPU resources; can resume streaming when needed.
                 if (gamepad1.dpad_down) {
                     visionPortal.stopStreaming();
-                } else if (gamepad1.dpad_up) {
+                } else {
                     visionPortal.resumeStreaming();
                 }
 
@@ -108,13 +108,9 @@ public class ConceptAprilTagEasy extends LinearOpMode {
         aprilTag = AprilTagProcessor.easyCreateWithDefaults();
 
         // Create the vision portal the easy way.
-        if (USE_WEBCAM) {
             visionPortal = VisionPortal.easyCreateWithDefaults(
-                hardwareMap.get(WebcamName.class, "Webcam1"), aprilTag);
-        } else {
-            visionPortal = VisionPortal.easyCreateWithDefaults(
-                BuiltinCameraDirection.BACK, aprilTag);
-        }
+                    hardwareMap.get(WebcamName.class, "Webcam1"), aprilTag
+            );
 
     }   // end method initAprilTag()
 

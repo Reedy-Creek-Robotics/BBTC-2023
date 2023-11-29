@@ -33,14 +33,17 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.*;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.configuration.WebcamConfiguration;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /*
  * This OpMode illustrates the basics of TensorFlow Object Detection,
@@ -78,6 +81,8 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
     public void runOpMode() {
 
         initTfod();
+
+
 
         // Wait for the DS start button to be touched.
         telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
@@ -149,6 +154,8 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
 
         // Create the vision portal by using a builder.
         VisionPortal.Builder builder = new VisionPortal.Builder();
+
+        setManualExposure(6, 50);
 
         // Set the camera (webcam vs. built-in RC phone camera).
 
@@ -233,6 +240,39 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
         driveFrontRight = hardwareMap.get(DcMotor.class, "driveFrontRight");
         driveBackLeft = hardwareMap.get(DcMotor.class, "driveBackLeft");
         driveBackRight = hardwareMap.get(DcMotor.class, "driveBackRight");
+    }
+
+    private void setManualExposure(int exposureMS, int gain) {
+        // Wait for the camera to be open, then use the controls
+
+        if (visionPortal == null) {
+            return;
+        }
+
+        // Make sure camera is streaming before we try to set the exposure controls
+        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            telemetry.addData("Camera", "Waiting");
+            telemetry.update();
+            while (!isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+                sleep(20);
+            }
+            telemetry.addData("Camera", "Ready");
+            telemetry.update();
+        }
+
+        if (!isStopRequested())
+        {
+            ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
+            if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
+                exposureControl.setMode(ExposureControl.Mode.Manual);
+                sleep(50);
+            }
+            exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
+            sleep(20);
+            GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
+            gainControl.setGain(gain);
+            sleep(20);
+        }
     }
 
 }   // end class
