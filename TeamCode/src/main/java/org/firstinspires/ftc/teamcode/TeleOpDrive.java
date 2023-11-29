@@ -13,9 +13,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class TeleOpDrive extends LinearOpMode {
 
     static final double INCREMENT = 0.05;
-    ElapsedTime pinch1Debounce;
-    ElapsedTime pinch2Debounce;
-    ElapsedTime speedFactorDebounce;
+    ElapsedTime pinch1Debounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+    ElapsedTime pinch2Debounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+    ElapsedTime speedFactorDebounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
     static final int buttonDelay = 250;
     double speedFactor = 0.7;
     double ly1;
@@ -36,6 +36,7 @@ public class TeleOpDrive extends LinearOpMode {
     DcMotor intakeArm;
     Servo pincher1;
     Servo pincher2;
+    Servo drone;
     boolean pincher1Open;
     boolean pincher2Open;
 
@@ -99,6 +100,13 @@ public class TeleOpDrive extends LinearOpMode {
             pincher2.setPosition(0.1);
         }
 
+        if(gamepad1.b && gamepad1.x){
+            drone.setPosition(1);
+        }
+        else{
+            drone.setPosition(0.5);
+        }
+
         if(intakeArm.getCurrentPosition() < -700){
             intakeArm.setPower(0.3);
             telemetry.addLine("Test");
@@ -122,10 +130,6 @@ public class TeleOpDrive extends LinearOpMode {
         previousGamepad2.copy(currentGamepad2);
         currentGamepad1.copy(gamepad1);
         currentGamepad2.copy(gamepad2);
-
-        pinch1Debounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
-        pinch1Debounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
-        speedFactorDebounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
 
         if (gamepad1.dpad_up && (speedFactorDebounce.milliseconds() >= buttonDelay)) {
             speedFactorDebounce.reset();
@@ -181,8 +185,10 @@ public class TeleOpDrive extends LinearOpMode {
 
         pincher1 = hardwareMap.get(Servo.class, "pincher1");
         pincher2 = hardwareMap.get(Servo.class, "pincher2");
+        drone = hardwareMap.get(Servo.class, "drone");
         boolean pincher1Open = true;
         boolean pincher2Open = true;
+
 
         intakeArm.setZeroPowerBehavior(BRAKE);
 
