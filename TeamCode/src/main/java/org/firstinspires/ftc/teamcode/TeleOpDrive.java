@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @TeleOp(name = "Tele-Op Driving")
 public class TeleOpDrive extends LinearOpMode {
 
-    static final double INCREMENT = 0.05;
     ElapsedTime pinch1Debounce;
     ElapsedTime pinch2Debounce;
     ElapsedTime speedFactorDebounce;
@@ -36,14 +35,19 @@ public class TeleOpDrive extends LinearOpMode {
     DcMotor intakeArm;
     Servo pincher1;
     Servo pincher2;
+    Servo drone;
     boolean pincher1Open;
     boolean pincher2Open;
-
+    boolean droneLaunched;
     @Override
     public void runOpMode() throws InterruptedException {
         // the robot should NOT move in this part of the program (its a penalty)
 
         initHardware();
+
+        pinch1Debounce = new ElapsedTime();
+        pinch1Debounce = new ElapsedTime();
+        speedFactorDebounce = new ElapsedTime();
 
         telemetry.addLine("> PRESS START");
         waitForStart();
@@ -99,6 +103,15 @@ public class TeleOpDrive extends LinearOpMode {
             pincher2.setPosition(0.1);
         }
 
+        if(gamepad1.x && gamepad1.b){
+            drone.setPosition(1);
+            droneLaunched = true;
+        }
+
+        if(!droneLaunched){
+            drone.setPosition(0.5);
+        }
+
         if(intakeArm.getCurrentPosition() < -700){
             intakeArm.setPower(0.3);
             telemetry.addLine("Test");
@@ -123,21 +136,16 @@ public class TeleOpDrive extends LinearOpMode {
         currentGamepad1.copy(gamepad1);
         currentGamepad2.copy(gamepad2);
 
-        pinch1Debounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
-        pinch1Debounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
-        speedFactorDebounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
-
         if (gamepad1.dpad_up && (speedFactorDebounce.milliseconds() >= buttonDelay)) {
             speedFactorDebounce.reset();
             speedFactor += 0.1;
-            telemetry.addLine("Dpad Up Pressed");
         }
 
         if (gamepad1.dpad_down && (speedFactorDebounce.milliseconds() >= buttonDelay)) {
             speedFactorDebounce.reset();
             speedFactor -= 0.1;
-            telemetry.addLine("Dpad Down Pressed");
         }
+
         if (speedFactor > 1) {
             speedFactor = 1;
         } else if (speedFactor <= 0) {
@@ -151,6 +159,8 @@ public class TeleOpDrive extends LinearOpMode {
         telemetry.addData("Right Stick lx1", rx1);
         telemetry.addData("Speed Factor", speedFactor);
         telemetry.addData("intakeArm:", intakeArm.getCurrentPosition());
+        if(droneLaunched){
+            telemetry.addLine("DRONE LAUNCHED");}
         telemetry.update();
     }
 
@@ -178,13 +188,13 @@ public class TeleOpDrive extends LinearOpMode {
         intakeArm = hardwareMap.get(DcMotor.class, "intakeArm");
         intakeArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        intakeArm.setZeroPowerBehavior(BRAKE);
 
         pincher1 = hardwareMap.get(Servo.class, "pincher1");
         pincher2 = hardwareMap.get(Servo.class, "pincher2");
-        boolean pincher1Open = true;
-        boolean pincher2Open = true;
-
-        intakeArm.setZeroPowerBehavior(BRAKE);
+        drone = hardwareMap.get(Servo.class, "drone");
+        pincher1Open = true;
+        pincher2Open = true;
 
         driveFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         driveBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
