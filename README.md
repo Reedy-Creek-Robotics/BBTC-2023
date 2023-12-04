@@ -1163,7 +1163,7 @@ Changes include:
      - Fixed typos.
      - Made blocks for ElapsedTime more consistent with other objects.
      - Added blocks to support Quaternion, Velocity, Orientation, AngularVelocity.
-     - Added blocks to support VuforiaTrackables, VuforiaTrackable, VuforiaLocalizer, VuforiaTrackableDefaultListener.
+     - Added blocks to support VuforiaTrackables, VuforiaTrackable, VuforiaLocalizes, VuforiaTrackableDefaultListener.
      - Fixed a few blocks.
      - Added type checking to new blocks.
      - Updated to latest blockly.
@@ -1360,7 +1360,7 @@ Changes include:
  * made ReadWriteRunnableStanard interface public.
  * fixed off-by-one errors in Command constructor
  * moved specific hardware implmentations into their own package.
- * moved specific gamepad implemnatations to the hardware library.
+   * moved specific gamepad implemnatations to the hardware library.
  * changed LICENSE file to new BSD version.
  * fixed race condition when shutting down Modern Robotics USB devices.
  * methods in the ColorSensor classes have been synchronized.

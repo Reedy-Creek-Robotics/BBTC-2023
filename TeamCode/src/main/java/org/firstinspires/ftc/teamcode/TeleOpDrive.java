@@ -160,7 +160,10 @@ public class TeleOpDrive extends LinearOpMode {
         telemetry.addData("Speed Factor", speedFactor);
         telemetry.addData("intakeArm:", intakeArm.getCurrentPosition());
         if(droneLaunched){
-            telemetry.addLine("DRONE LAUNCHED");}
+            telemetry.addLine("DRONE LAUNCHED");
+        }
+        telemetry.addData("Distance", driveFrontRight.getCurrentPosition());
+
         telemetry.update();
     }
 
