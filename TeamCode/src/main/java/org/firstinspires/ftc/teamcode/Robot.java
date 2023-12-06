@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @Disabled
 public class Robot {
@@ -11,6 +12,11 @@ public class Robot {
     private DcMotor driveFrontRight;
     private DcMotor driveBackRight;
     private DcMotor driveBackLeft;
+    private DcMotor intakeSlide1;
+    private DcMotor intakeSlide2;
+    private DcMotor intakeArm;
+    private Servo pincher1;
+    private Servo pincher2;
 
     private static final double TICKS_PER_CM = 17.83; // 17.83 tics/cm traveled(Strafer)
 
@@ -20,12 +26,29 @@ public class Robot {
 
     private static final double TURN_CONSTANT = 50.5d/90d; // distance per deg
 
-    public Robot(DcMotor driveFrontLeft, DcMotor driveBackLeft, DcMotor driveBackRight, DcMotor driveFrontRight){
+    // Linear Slide Position Constants
+
+    private static final int LOADING_POSITION = 0;
+    private static final int PICKING_POSITION = 0;
+    private static final int TRAVELING_POSITION = 0;
+    private static final int LINE01_POSITION = 0;
+    private static final int LINE1_POSITION = 0;
+    private static final int LINE12_POSITION = 0;
+    private static final int LINE2_POSITION = 0;
+    private static final int LINE23_POSITION = 0;
+    private static final int LINE3_POSITION = 0;
+
+    public Robot(DcMotor driveFrontLeft, DcMotor driveBackLeft, DcMotor driveBackRight, DcMotor driveFrontRight, DcMotor intakeSlide1, DcMotor intakeSlide2, DcMotor intakeArm, Servo pincher1, Servo pincher2){
 
         this.driveFrontLeft = driveFrontLeft;
         this.driveFrontRight = driveFrontRight;
         this.driveBackRight = driveBackRight;
         this.driveBackLeft = driveBackLeft;
+        this.intakeSlide1 = intakeSlide1;
+        this.intakeSlide2 = intakeSlide2;
+        this.intakeArm = intakeArm;
+        this.pincher1 = pincher1;
+        this.pincher2 = pincher2;
     }
 
     public void forward(double distanceInches, double speed){
@@ -104,6 +127,32 @@ public class Robot {
         driveMotors(speed);
     }
 
+    public void runLinearSlides(LinearSlidePositions linearSlidePositions, double speed){
+        setup();
+        switch (linearSlidePositions){
+            case LOADING:
+                intakeSlide1.setTargetPosition(LOADING_POSITION);
+                intakeSlide2.setTargetPosition(LOADING_POSITION);
+                break;
+            case TRAVELING:
+                break;
+            case PICKING:
+                break;
+            case LINE01:
+                break;
+            case LINE1:
+                break;
+            case LINE12:
+                break;
+            case LINE2:
+                break;
+            case LINE23:
+                break;
+            case LINE3:
+                break;
+        }
+    }
+
     private void setup(){
         // Reset the motor encoder so that it reads zero ticks
         driveFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -127,9 +176,7 @@ public class Robot {
 
     private int inchesToTicks(double distanceInches) {
         int distanceTicks;
-
         distanceTicks = ((int) (distanceInches * TICKS_PER_INCH));
-
         return distanceTicks;
     }
 
@@ -150,4 +197,6 @@ public class Robot {
         driveBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         driveBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
+
+
 }
