@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
-public enum LinearSlidePositions {
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+public enum IntakePositions {
     LOADING,
     PICKING,
     TRAVELING,
@@ -9,5 +11,6 @@ public enum LinearSlidePositions {
     LINE12,
     LINE2,
     LINE23,
-    LINE3
+    LINE3,
+    TOP,
 }
