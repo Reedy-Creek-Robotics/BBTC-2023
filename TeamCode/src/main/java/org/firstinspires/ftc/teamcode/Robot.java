@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
+import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
+import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -15,6 +19,7 @@ public class Robot {
     private DcMotor intakeSlide1;
     private DcMotor intakeSlide2;
     private DcMotor intakeArm;
+
     private Servo pincher1;
     private Servo pincher2;
 
@@ -27,18 +32,40 @@ public class Robot {
     private static final double TURN_CONSTANT = 50.5d/90d; // distance per deg
 
     // Linear Slide Position Constants
+    private static final int
+            SLIDE_LOADING_POSITION = 0,
+            SLIDE_PICKING_POSITION = 0,
+            SLIDE_TRAVELING_POSITION = 0,
+            SLIDE_LINE01_POSITION = 0,
+            SLIDE_LINE1_POSITION = 0,
+            SLIDE_LINE12_POSITION = 0,
+            SLIDE_LINE2_POSITION = 0,
+            SLIDE_LINE23_POSITION = 0,
+            SLIDE_LINE3_POSITION = 0,
+            SLIDE_TOP_POSITION = 0,
 
-    private static final int LOADING_POSITION = 0;
-    private static final int PICKING_POSITION = 0;
-    private static final int TRAVELING_POSITION = 0;
-    private static final int LINE01_POSITION = 0;
-    private static final int LINE1_POSITION = 0;
-    private static final int LINE12_POSITION = 0;
-    private static final int LINE2_POSITION = 0;
-    private static final int LINE23_POSITION = 0;
-    private static final int LINE3_POSITION = 0;
+            ARM_LOADING_POSITION = 0,
+            ARM_PICKING_POSITION = 0,
+            ARM_TRAVELING_POSITION = 0,
+            ARM_LINE01_POSITION = 0,
+            ARM_LINE1_POSITION = 0,
+            ARM_LINE12_POSITION = 0,
+            ARM_LINE2_POSITION = 0,
+            ARM_LINE23_POSITION = 0,
+            ARM_LINE3_POSITION = 0,
+            ARM_TOP_POSITION = 0;
 
-    public Robot(DcMotor driveFrontLeft, DcMotor driveBackLeft, DcMotor driveBackRight, DcMotor driveFrontRight, DcMotor intakeSlide1, DcMotor intakeSlide2, DcMotor intakeArm, Servo pincher1, Servo pincher2){
+    public Robot(
+            DcMotor driveFrontLeft,
+            DcMotor driveBackLeft,
+            DcMotor driveBackRight,
+            DcMotor driveFrontRight,
+            DcMotor intakeSlide1,
+            DcMotor intakeSlide2,
+            DcMotor intakeArm,
+            Servo pincher1,
+            Servo pincher2
+    ) {
 
         this.driveFrontLeft = driveFrontLeft;
         this.driveFrontRight = driveFrontRight;
@@ -56,9 +83,9 @@ public class Robot {
         int distanceTicks = inchesToTicks(distanceInches);
 
         // Move Forward
-        driveFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        driveFrontLeft.setDirection(REVERSE);
         driveFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        driveBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        driveBackLeft.setDirection(REVERSE);
         driveBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         driveTargetPositions(distanceTicks);
@@ -76,16 +103,16 @@ public class Robot {
                 // Strafe Left
                 driveFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
                 driveFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-                driveBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-                driveBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+                driveBackLeft.setDirection(REVERSE);
+                driveBackRight.setDirection(REVERSE);
 
                 // Set distance or tick variable to each motor
                 driveTargetPositions(distanceTicks);
                 break;
             case RIGHT:
                 // Strafe Right
-                driveFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-                driveFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+                driveFrontLeft.setDirection(REVERSE);
+                driveFrontRight.setDirection(REVERSE);
                 driveBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
                 driveBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
@@ -96,12 +123,11 @@ public class Robot {
         driveMotors(speed);
 
         // Run motors for
-        driveFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        driveFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        driveBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        driveBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        driveFrontLeft.setMode(RUN_TO_POSITION);
+        driveFrontRight.setMode(RUN_TO_POSITION);
+        driveBackLeft.setMode(RUN_TO_POSITION);
+        driveBackRight.setMode(RUN_TO_POSITION);
     }
-
 
     public void turn(int degrees, double speed, Direction direction){
         setup();
@@ -116,10 +142,10 @@ public class Robot {
                 driveTargetPositions(distanceTicks);
                 break;
             case RIGHT:
-                driveFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-                driveFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-                driveBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-                driveBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+                driveFrontLeft.setDirection(REVERSE);
+                driveFrontRight.setDirection(REVERSE);
+                driveBackLeft.setDirection(REVERSE);
+                driveBackRight.setDirection(REVERSE);
 
                 driveTargetPositions(distanceTicks);
                 break;
@@ -127,30 +153,75 @@ public class Robot {
         driveMotors(speed);
     }
 
-    public void runLinearSlides(LinearSlidePositions linearSlidePositions, double speed){
+    public void runIntake(IntakePositions IntakePositions, double speed){
         setup();
-        switch (linearSlidePositions){
+        int armDistance = 0;
+        int slideDistance = 0;
+        switch (IntakePositions){
             case LOADING:
-                intakeSlide1.setTargetPosition(LOADING_POSITION);
-                intakeSlide2.setTargetPosition(LOADING_POSITION);
-                break;
-            case TRAVELING:
+                intakeSlide1.setDirection(REVERSE);
+
+                slideDistance = SLIDE_LOADING_POSITION;
+                armDistance = ARM_LOADING_POSITION;
                 break;
             case PICKING:
+                intakeSlide1.setDirection(REVERSE);
+
+                slideDistance = SLIDE_PICKING_POSITION;
+                armDistance = ARM_PICKING_POSITION;
+                break;
+            case TRAVELING:
+                intakeSlide1.setDirection(REVERSE);
+
+                slideDistance = SLIDE_TRAVELING_POSITION;
+                armDistance = ARM_TRAVELING_POSITION;
                 break;
             case LINE01:
+                intakeSlide1.setDirection(REVERSE);
+
+                slideDistance = SLIDE_LINE01_POSITION;
+                armDistance = ARM_LINE01_POSITION;
                 break;
             case LINE1:
+                intakeSlide1.setDirection(REVERSE);
+
+                slideDistance = SLIDE_LINE1_POSITION;
+                armDistance = ARM_LINE1_POSITION;
                 break;
             case LINE12:
+                intakeSlide1.setDirection(REVERSE);
+
+                slideDistance = SLIDE_LINE12_POSITION;
+                armDistance = ARM_LINE12_POSITION;
                 break;
             case LINE2:
+                intakeSlide1.setDirection(REVERSE);
+
+                slideDistance = SLIDE_LINE2_POSITION;
+                armDistance = ARM_LINE2_POSITION;
                 break;
             case LINE23:
+                intakeSlide1.setDirection(REVERSE);
+
+                slideDistance = SLIDE_LINE23_POSITION;
+                armDistance = ARM_LINE23_POSITION;
                 break;
             case LINE3:
+                intakeSlide1.setDirection(REVERSE);
+
+                slideDistance = SLIDE_LINE3_POSITION;
+                armDistance = ARM_LINE3_POSITION;
+                break;
+            case TOP:
+                intakeSlide1.setDirection(REVERSE);
+
+                slideDistance = SLIDE_TOP_POSITION;
+                armDistance = ARM_TOP_POSITION;
                 break;
         }
+
+        intakeTargetPositions(armDistance, slideDistance);
+        intakeMotors(speed);
     }
 
     private void setup(){
@@ -161,10 +232,13 @@ public class Robot {
         driveBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // Behavior when motor stops
-        driveFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        driveFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        driveBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        driveBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        driveFrontLeft.setZeroPowerBehavior(BRAKE);
+        driveFrontRight.setZeroPowerBehavior(BRAKE);
+        driveBackLeft.setZeroPowerBehavior(BRAKE);
+        driveBackRight.setZeroPowerBehavior(BRAKE);
+        intakeArm.setZeroPowerBehavior(BRAKE);
+        intakeSlide1.setZeroPowerBehavior(BRAKE);
+        intakeSlide2.setZeroPowerBehavior(BRAKE);
 
     }
 
@@ -186,17 +260,32 @@ public class Robot {
         driveBackLeft.setPower(power);
         driveBackRight.setPower(power);
     }
+
     private void driveTargetPositions(int distanceTicks){
         driveFrontLeft.setTargetPosition(distanceTicks);
         driveFrontRight.setTargetPosition(distanceTicks);
         driveBackLeft.setTargetPosition(distanceTicks);
         driveBackRight.setTargetPosition(distanceTicks);
 
-        driveFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        driveFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        driveBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        driveBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        driveFrontLeft.setMode(RUN_TO_POSITION);
+        driveFrontRight.setMode(RUN_TO_POSITION);
+        driveBackLeft.setMode(RUN_TO_POSITION);
+        driveBackRight.setMode(RUN_TO_POSITION);
     }
 
+    private void intakeMotors(double power){
+        intakeArm.setPower(power);
+        intakeSlide1.setPower(power);
+        intakeSlide2.setPower(power);
+    }
 
+    private void intakeTargetPositions(int armDistance, int slideDistance){
+        intakeArm.setTargetPosition(armDistance);
+        intakeSlide1.setTargetPosition(slideDistance);
+        intakeSlide2.setTargetPosition(slideDistance);
+
+        intakeArm.setMode(RUN_TO_POSITION);
+        intakeSlide1.setMode(RUN_TO_POSITION);
+        intakeSlide2.setMode(RUN_TO_POSITION);
+    }
 }
