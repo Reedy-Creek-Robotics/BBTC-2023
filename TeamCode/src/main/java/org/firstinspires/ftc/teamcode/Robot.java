@@ -8,7 +8,6 @@ import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Disabled
@@ -32,6 +31,13 @@ public class Robot {
     private static final double ROTATION_CORRECTION = 1.2; //(62/90);
 
     private static final double TURN_CONSTANT = 50.5d/90d; // distance per deg
+
+    public static final double
+            PINCHER_1_CLOSED = 0,
+            PINCHER_1_OPEN = 0,
+            PINCHER_2_CLOSED = 0,
+            PINCHER_2_OPEN = 0;
+
 
     // Linear Slide Position Constants
     private static final int
