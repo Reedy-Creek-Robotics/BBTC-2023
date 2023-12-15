@@ -1,10 +1,9 @@
 // Works For Scrimmage
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.disabled;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Autonomous(name = "Auto Blue Near Left")
 public class AutoBlueNearLeft extends LinearOpMode {

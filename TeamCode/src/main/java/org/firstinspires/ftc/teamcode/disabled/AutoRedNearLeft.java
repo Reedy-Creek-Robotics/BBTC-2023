@@ -1,13 +1,12 @@
 // Test At Scrimmage
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.disabled;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@Autonomous(name = "Auto Red Far Right")
-public class AutoRedFarRight extends LinearOpMode {
+@Autonomous(name = "Auto Red Near Left")
+public class AutoRedNearLeft extends LinearOpMode {
 
     private DcMotor driveFrontLeft;
     private DcMotor driveFrontRight;
@@ -17,9 +16,10 @@ public class AutoRedFarRight extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
+
         // Total ticks to the destination
-        int forwardDistance = 120;
-        int strafeDistance = 4545;
+        int forwardDistance = 1500;
+        int strafeDistance = 2000;
         double speed = 0.3;
 
         driveFrontLeft = hardwareMap.get(DcMotor.class, "driveFrontLeft");

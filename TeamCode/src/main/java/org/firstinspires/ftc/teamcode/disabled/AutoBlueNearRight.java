@@ -1,13 +1,12 @@
-// Test At Scrimmage
-package org.firstinspires.ftc.teamcode;
+// Works For Scrimmage
+package org.firstinspires.ftc.teamcode.disabled;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@Autonomous(name = "Auto Red Far Left")
-public class AutoRedFarLeft extends LinearOpMode {
+@Autonomous(name = "Auto Blue Near Right")
+public class AutoBlueNearRight extends LinearOpMode {
 
     private DcMotor driveFrontLeft;
     private DcMotor driveFrontRight;
@@ -18,10 +17,8 @@ public class AutoRedFarLeft extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         // Total ticks to the destination
-        int forwardDistance = 120;
-        int strafeDistance = 2500;
-        int forwardDistance2 = 2000;
-        int strafeDistance2 = 2550;
+        int forwardDistance = 1500;
+        int strafeDistance = 2000;
         double speed = 0.3;
 
         driveFrontLeft = hardwareMap.get(DcMotor.class, "driveFrontLeft");
@@ -36,20 +33,7 @@ public class AutoRedFarLeft extends LinearOpMode {
         waitForStart();
 
         bot.forward(forwardDistance, speed);
-        while(opModeIsActive() && driveBackLeft.isBusy() && driveBackRight.isBusy() && driveFrontLeft.isBusy() && driveFrontRight.isBusy()) {
-            telemetry.addData("driveBackLeft", driveBackLeft.getCurrentPosition());
-            telemetry.addData("driveBackRight",driveBackRight.getCurrentPosition());
-            telemetry.addData("driveFrontRight", driveFrontRight.getCurrentPosition());
-            telemetry.addData("driveFrontLeft", driveFrontLeft.getCurrentPosition());
-            telemetry.update();
-        }
 
-        driveBackLeft.setPower(0);
-        driveBackRight.setPower(0);
-        driveFrontRight.setPower(0);
-        driveFrontLeft.setPower(0);
-
-        bot.strafe(strafeDistance, speed, Direction.RIGHT);
 
         while(opModeIsActive() && driveBackLeft.isBusy() && driveBackRight.isBusy() && driveFrontLeft.isBusy() && driveFrontRight.isBusy()) {
             telemetry.addData("driveBackLeft", driveBackLeft.getCurrentPosition());
@@ -59,22 +43,7 @@ public class AutoRedFarLeft extends LinearOpMode {
             telemetry.update();
         }
 
-        driveBackLeft.setPower(0);
-        driveBackRight.setPower(0);
-        driveFrontRight.setPower(0);
-        driveFrontLeft.setPower(0);
-
-        bot.forward(forwardDistance2, speed);
-
-        while(opModeIsActive() && driveBackLeft.isBusy() && driveBackRight.isBusy() && driveFrontLeft.isBusy() && driveFrontRight.isBusy()) {
-            telemetry.addData("driveBackLeft", driveBackLeft.getCurrentPosition());
-            telemetry.addData("driveBackRight",driveBackRight.getCurrentPosition());
-            telemetry.addData("driveFrontRight", driveFrontRight.getCurrentPosition());
-            telemetry.addData("driveFrontLeft", driveFrontLeft.getCurrentPosition());
-            telemetry.update();
-        }
-
-        bot.strafe(strafeDistance2, speed, Direction.RIGHT);
+        bot.strafe(strafeDistance, speed, Direction.LEFT);
 
         while(opModeIsActive() && driveBackLeft.isBusy() && driveBackRight.isBusy() && driveFrontLeft.isBusy() && driveFrontRight.isBusy()) {
             telemetry.addData("driveBackLeft", driveBackLeft.getCurrentPosition());

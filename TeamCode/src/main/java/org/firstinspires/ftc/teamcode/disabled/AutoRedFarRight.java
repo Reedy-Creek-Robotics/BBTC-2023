@@ -1,13 +1,12 @@
-// Works For Scrimmage
-package org.firstinspires.ftc.teamcode;
+// Test At Scrimmage
+package org.firstinspires.ftc.teamcode.disabled;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@Autonomous(name = "Auto Blue Far Left")
-public class AutoBlueFarLeft extends LinearOpMode {
+@Autonomous(name = "Auto Red Far Right")
+public class AutoRedFarRight extends LinearOpMode {
 
     private DcMotor driveFrontLeft;
     private DcMotor driveFrontRight;
@@ -43,7 +42,7 @@ public class AutoBlueFarLeft extends LinearOpMode {
             telemetry.update();
         }
 
-        bot.strafe(strafeDistance, speed, Direction.LEFT);
+        bot.strafe(strafeDistance, speed, Direction.RIGHT);
 
         while(opModeIsActive() && driveBackLeft.isBusy() && driveBackRight.isBusy() && driveFrontLeft.isBusy() && driveFrontRight.isBusy()) {
             telemetry.addData("driveBackLeft", driveBackLeft.getCurrentPosition());
@@ -59,4 +58,4 @@ public class AutoBlueFarLeft extends LinearOpMode {
         driveFrontLeft.setPower(0);
 
     }
- }
+}
