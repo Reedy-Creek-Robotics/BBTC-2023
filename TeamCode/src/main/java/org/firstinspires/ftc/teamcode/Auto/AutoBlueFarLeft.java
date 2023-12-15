@@ -4,17 +4,20 @@
 
 package org.firstinspires.ftc.teamcode.Auto;
 
-import static org.firstinspires.ftc.teamcode.Robot.*;
-import static org.firstinspires.ftc.teamcode.IntakePositions.*;
-import static org.firstinspires.ftc.teamcode.Direction.*;
+import static org.firstinspires.ftc.teamcode.Direction.LEFT;
+import static org.firstinspires.ftc.teamcode.Direction.RIGHT;
+import static org.firstinspires.ftc.teamcode.IntakePositions.LOADING;
+import static org.firstinspires.ftc.teamcode.IntakePositions.PICKING;
+import static org.firstinspires.ftc.teamcode.IntakePositions.TRAVELING;
+import static org.firstinspires.ftc.teamcode.Robot.PINCHER_1_CLOSED;
+import static org.firstinspires.ftc.teamcode.Robot.PINCHER_1_OPEN;
+import static org.firstinspires.ftc.teamcode.Robot.PINCHER_2_CLOSED;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.Direction;
-import org.firstinspires.ftc.teamcode.IntakePositions;
 import org.firstinspires.ftc.teamcode.Robot;
 
 @Autonomous(name = "Auto Blue Far Left")
@@ -73,7 +76,7 @@ public class AutoBlueFarLeft extends LinearOpMode {
         Find team prop
          */
 
-        if (propPos == "Right") {
+        if (propPos.equals("Right")) {
 
             bot.forward(24, 0.3);
             bot.turn(90, 0.3, RIGHT);
@@ -83,7 +86,7 @@ public class AutoBlueFarLeft extends LinearOpMode {
             bot.runIntake(TRAVELING, 0.3);
             bot.forward(-12, 0.3);
             bot.turn(90, 0.3, LEFT);
-        } else if (propPos == "Left") {
+        } else if (propPos.equals("Left")) {
 
             bot.forward(24, 0.3);
             bot.turn(90, 0.3, LEFT);
@@ -93,7 +96,7 @@ public class AutoBlueFarLeft extends LinearOpMode {
             bot.runIntake(TRAVELING, 0.3);
             bot.forward(-12, 0.3);
             bot.turn(90, 0.3, RIGHT);
-        }else{
+        } else{
 
             bot.forward(36, 0.3);
             bot.runIntake(PICKING, 0.3);
