@@ -67,11 +67,10 @@ public class TeleOpDrive extends LinearOpMode {
     private void processDriving(){
 
         double denominator = Math.max(Math.abs(ly1) + Math.abs(lx1) + Math.abs(rx1), 1);
-        // Squared drive powers with Math.pow to add finer control
-        double frontLeftPower = Math.pow(((ly1 + lx1 + rx1) / denominator), 2);
-        double backLeftPower = Math.pow(((ly1 - lx1 + rx1) / denominator), 2);
-        double frontRightPower = Math.pow(((ly1 - lx1 - rx1) / denominator), 2);
-        double backRightPower = Math.pow(((ly1 + lx1 - rx1) / denominator), 2);
+        double frontLeftPower = (ly1 + lx1 + rx1) / denominator;
+        double backLeftPower = (ly1 - lx1 + rx1) / denominator;
+        double frontRightPower = (ly1 - lx1 - rx1) / denominator;
+        double backRightPower = (ly1 + lx1 - rx1) / denominator;
 
         driveFrontLeft.setPower(frontLeftPower * speedFactor);
         driveBackLeft.setPower(backLeftPower * speedFactor);
@@ -79,10 +78,6 @@ public class TeleOpDrive extends LinearOpMode {
         driveBackRight.setPower(backRightPower * speedFactor);
     }
 
-
-    /**
-     * Processes the control of systems besides driving
-     */
     private void processControl(){
         double intakeArmPower = (lt1 - rt1);
 
