@@ -32,7 +32,6 @@ public class TeleOpDrive extends LinearOpMode {
     DcMotor driveFrontRight;
     DcMotor driveBackLeft;
     DcMotor driveBackRight;
-    DcMotor intakeArm;
     Servo pincher1;
     Servo pincher2;
     Servo drone;
@@ -112,14 +111,6 @@ public class TeleOpDrive extends LinearOpMode {
             drone.setPosition(0.5);
         }
 
-        if(intakeArm.getCurrentPosition() < -700){
-            intakeArm.setPower(0.3);
-            telemetry.addLine("Test");
-        }else {
-            intakeArm.setPower(intakeArmPower);
-            telemetry.addData("powering", intakeArmPower);
-        }
-
     }
 
     private void processVariableUpdates(){
@@ -158,7 +149,6 @@ public class TeleOpDrive extends LinearOpMode {
         telemetry.addData("Left Stick lx1", lx1);
         telemetry.addData("Right Stick lx1", rx1);
         telemetry.addData("Speed Factor", speedFactor);
-        telemetry.addData("intakeArm:", intakeArm.getCurrentPosition());
         if(droneLaunched){
             telemetry.addLine("DRONE LAUNCHED");
         }
@@ -187,11 +177,6 @@ public class TeleOpDrive extends LinearOpMode {
         driveBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         driveBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         driveBackRight.setZeroPowerBehavior(BRAKE);
-
-        intakeArm = hardwareMap.get(DcMotor.class, "intakeArm");
-        intakeArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        intakeArm.setZeroPowerBehavior(BRAKE);
 
         pincher1 = hardwareMap.get(Servo.class, "pincher1");
         pincher2 = hardwareMap.get(Servo.class, "pincher2");
