@@ -155,6 +155,14 @@ public class Robot {
         driveMotors(speed);
     }
 
+    public void runPincher1(double position) {
+        pincher1.setPosition(position);
+    }
+
+    public void runPincher2(double position) {
+        pincher2.setPosition(position);
+    }
+
     public void runIntake(IntakePositions IntakePositions, double speed){
         setup();
         int armDistance = 0;
