@@ -30,6 +30,7 @@ public class BaseAuto extends LinearOpMode {
 
     private static int RESOLUTION_WIDTH = 1280;
     private static int RESOLUTION_HEIGHT = 720;
+    private static final double SPEED_INTAKE = .3;
 
     public BaseAuto() {
         super();
@@ -64,7 +65,7 @@ public class BaseAuto extends LinearOpMode {
                 pincher2
         );
 
-        bot.runIntake(LOADING, 0.3);
+        bot.runIntake(LOADING, SPEED_INTAKE);
     }
 
     @Override
