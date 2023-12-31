@@ -73,7 +73,7 @@ public class AutoBlueFarLeft extends LinearOpMode {
         Find team prop
          */
 
-        if (propPos == "Right") {
+        if (propPos.equals("Right")) {
 
             bot.forward(24, 0.3);
             bot.turn(90, 0.3, RIGHT);
@@ -83,7 +83,7 @@ public class AutoBlueFarLeft extends LinearOpMode {
             bot.runIntake(TRAVELING, 0.3);
             bot.forward(-12, 0.3);
             bot.turn(90, 0.3, LEFT);
-        } else if (propPos == "Left") {
+        } else if (propPos.equals("Left")) {
 
             bot.forward(24, 0.3);
             bot.turn(90, 0.3, LEFT);
