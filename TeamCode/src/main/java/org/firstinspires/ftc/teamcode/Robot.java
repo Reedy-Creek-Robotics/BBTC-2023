@@ -129,12 +129,6 @@ public class Robot {
         }
 
         driveMotors(speed);
-
-        // Run motors for
-        driveFrontLeft.setMode(RUN_TO_POSITION);
-        driveFrontRight.setMode(RUN_TO_POSITION);
-        driveBackLeft.setMode(RUN_TO_POSITION);
-        driveBackRight.setMode(RUN_TO_POSITION);
     }
 
     public void turn(int degrees, double speed, Direction direction){
@@ -161,68 +155,56 @@ public class Robot {
         driveMotors(speed);
     }
 
+    public void runPincher1(double position) {
+        pincher1.setPosition(position);
+    }
+
+    public void runPincher2(double position) {
+        pincher2.setPosition(position);
+    }
+
     public void runIntake(IntakePositions IntakePositions, double speed){
         setup();
         int armDistance = 0;
         int slideDistance = 0;
         switch (IntakePositions){
             case LOADING:
-                intakeSlide1.setDirection(REVERSE);
-
                 slideDistance = SLIDE_LOADING_POSITION;
                 armDistance = ARM_LOADING_POSITION;
                 break;
             case PICKING:
-                intakeSlide1.setDirection(REVERSE);
-
                 slideDistance = SLIDE_PICKING_POSITION;
                 armDistance = ARM_PICKING_POSITION;
                 break;
             case TRAVELING:
-                intakeSlide1.setDirection(REVERSE);
-
                 slideDistance = SLIDE_TRAVELING_POSITION;
                 armDistance = ARM_TRAVELING_POSITION;
                 break;
             case LINE01:
-                intakeSlide1.setDirection(REVERSE);
-
                 slideDistance = SLIDE_LINE01_POSITION;
                 armDistance = ARM_LINE01_POSITION;
                 break;
             case LINE1:
-                intakeSlide1.setDirection(REVERSE);
-
                 slideDistance = SLIDE_LINE1_POSITION;
                 armDistance = ARM_LINE1_POSITION;
                 break;
             case LINE12:
-                intakeSlide1.setDirection(REVERSE);
-
                 slideDistance = SLIDE_LINE12_POSITION;
                 armDistance = ARM_LINE12_POSITION;
                 break;
             case LINE2:
-                intakeSlide1.setDirection(REVERSE);
-
                 slideDistance = SLIDE_LINE2_POSITION;
                 armDistance = ARM_LINE2_POSITION;
                 break;
             case LINE23:
-                intakeSlide1.setDirection(REVERSE);
-
                 slideDistance = SLIDE_LINE23_POSITION;
                 armDistance = ARM_LINE23_POSITION;
                 break;
             case LINE3:
-                intakeSlide1.setDirection(REVERSE);
-
                 slideDistance = SLIDE_LINE3_POSITION;
                 armDistance = ARM_LINE3_POSITION;
                 break;
             case TOP:
-                intakeSlide1.setDirection(REVERSE);
-
                 slideDistance = SLIDE_TOP_POSITION;
                 armDistance = ARM_TOP_POSITION;
                 break;
@@ -247,6 +229,7 @@ public class Robot {
         intakeArm.setZeroPowerBehavior(BRAKE);
         intakeSlide1.setZeroPowerBehavior(BRAKE);
         intakeSlide2.setZeroPowerBehavior(BRAKE);
+        intakeSlide1.setDirection(REVERSE);
 
     }
 

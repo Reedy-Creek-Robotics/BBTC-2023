@@ -8,6 +8,8 @@ import static org.firstinspires.ftc.teamcode.Robot.*;
 import static org.firstinspires.ftc.teamcode.IntakePositions.*;
 import static org.firstinspires.ftc.teamcode.Direction.*;
 
+import android.util.Size;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -16,89 +18,69 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.Direction;
 import org.firstinspires.ftc.teamcode.IntakePositions;
 import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.Auto.BaseAuto;
+import org.firstinspires.ftc.vision.VisionPortal;
+
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.opencv.core.Core;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvPipeline;
+import org.openftc.easyopencv.OpenCvWebcam;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Autonomous(name = "Auto Blue Far Left")
-public class AutoBlueFarLeft extends LinearOpMode {
+public class AutoBlueFarLeft extends BaseAuto {
 
-    private DcMotor driveFrontLeft;
-    private DcMotor driveFrontRight;
-    private DcMotor driveBackRight;
-    private DcMotor driveBackLeft;
-    private DcMotor intakeSlide1;
-    private DcMotor intakeSlide2;
-    private DcMotor intakeArm;
-    private Servo pincher1;
-    private Servo pincher2;
-
+    private static int RESOLUTION_WIDTH = 1280;
+    private static int RESOLUTION_HEIGHT = 720;
+    private static final double SPEED_INTAKE = .3;
     @Override
     public void runOpMode() throws InterruptedException {
-
-        driveFrontLeft = hardwareMap.get(DcMotor.class, "driveFrontLeft");
-        driveFrontRight = hardwareMap.get(DcMotor.class, "driveFrontRight");
-        driveBackLeft = hardwareMap.get(DcMotor.class, "driveBackLeft");
-        driveBackRight = hardwareMap.get(DcMotor.class, "driveBackRight");
-        intakeSlide1 = hardwareMap.get(DcMotor.class, "intakeSlide1");
-        intakeSlide2 = hardwareMap.get(DcMotor.class, "intakeSlide2");
-        intakeArm = hardwareMap.get(DcMotor.class, "intakeSlide1");
-        pincher1 = hardwareMap.get(Servo.class, "pincher1");
-        pincher2 = hardwareMap.get(Servo.class, "pincher2");
-
-        Robot bot = new Robot(
-                driveFrontLeft,
-                driveBackLeft,
-                driveBackRight,
-                driveFrontRight,
-                intakeSlide1,
-                intakeSlide2,
-                intakeArm,
-                pincher1,
-                pincher2
-        );
-
-        pincher1.setPosition(PINCHER_1_CLOSED);
-        pincher2.setPosition(PINCHER_2_CLOSED);
-
-        bot.runIntake(LOADING, 0.3);
-
-        bot.forward(12, 0.3);
-
-        /*
-        Find team prop
-        */
-        String propPos;
-        propPos = "Right";
-        propPos = "Left";
-        propPos = "Center";
         /*
         Find team prop
          */
 
-        if (propPos.equals("Right")) {
+        String propPos;
+        propPos = "Right";
+        propPos = "Left";
+        propPos = "Center";
 
-            bot.forward(24, 0.3);
+
+        bot.forward(24, 0.3);
+
+        if (propPos.equals("Right")) {
             bot.turn(90, 0.3, RIGHT);
             bot.forward(12, 0.3);
-            bot.runIntake(PICKING, 0.3);
-            pincher1.setPosition(PINCHER_1_OPEN);
-            bot.runIntake(TRAVELING, 0.3);
+            bot.runIntake(PICKING, SPEED_INTAKE);
+            bot.runPincher1(PINCHER_1_OPEN);
+            bot.runIntake(TRAVELING, SPEED_INTAKE);
             bot.forward(-12, 0.3);
             bot.turn(90, 0.3, LEFT);
-        } else if (propPos.equals("Left")) {
 
+        } else if (propPos.equals("Left")) {
             bot.forward(24, 0.3);
             bot.turn(90, 0.3, LEFT);
             bot.forward(12, 0.3);
-            bot.runIntake(PICKING, 0.3);
-            pincher1.setPosition(PINCHER_1_OPEN);
-            bot.runIntake(TRAVELING, 0.3);
+            bot.runIntake(PICKING, SPEED_INTAKE);
+            bot.runPincher1(PINCHER_1_OPEN);
+            bot.runIntake(TRAVELING, SPEED_INTAKE);
             bot.forward(-12, 0.3);
             bot.turn(90, 0.3, RIGHT);
         }else{
-
-            bot.forward(36, 0.3);
-            bot.runIntake(PICKING, 0.3);
-            pincher1.setPosition(PINCHER_1_OPEN);
-            bot.runIntake(TRAVELING, 0.3);
+            bot.forward(12, 0.3);
+            bot.runIntake(PICKING, SPEED_INTAKE);
+            bot.runPincher1(PINCHER_1_OPEN);
+            bot.runIntake(TRAVELING, SPEED_INTAKE);
             bot.forward(-12, 0.3);
         }
     }
