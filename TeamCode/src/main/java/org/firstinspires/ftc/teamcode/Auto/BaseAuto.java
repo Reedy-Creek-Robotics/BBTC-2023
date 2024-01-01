@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
 import static org.firstinspires.ftc.teamcode.IntakePositions.LOADING;
-import static org.firstinspires.ftc.teamcode.Robot.PINCHER_1_CLOSED;
-import static org.firstinspires.ftc.teamcode.Robot.PINCHER_2_CLOSED;
+import static org.firstinspires.ftc.teamcode.Robot.*;
 
 import android.util.Size;
 
@@ -13,6 +12,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.vision.VisionPortal;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvWebcam;
 
 public class BaseAuto extends LinearOpMode {
     Robot bot;
@@ -28,9 +29,9 @@ public class BaseAuto extends LinearOpMode {
     private Servo pincher2;
     private VisionPortal portal;
 
+
     private static int RESOLUTION_WIDTH = 1280;
     private static int RESOLUTION_HEIGHT = 720;
-    private static final double SPEED_INTAKE = .3;
 
     public BaseAuto() {
         super();
@@ -44,6 +45,7 @@ public class BaseAuto extends LinearOpMode {
         this.intakeArm = hardwareMap.get(DcMotor.class, "intakeSlide1");
         this.pincher1 = hardwareMap.get(Servo.class, "pincher1");
         this.pincher2 = hardwareMap.get(Servo.class, "pincher2");
+
 
         this.portal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam1"))
