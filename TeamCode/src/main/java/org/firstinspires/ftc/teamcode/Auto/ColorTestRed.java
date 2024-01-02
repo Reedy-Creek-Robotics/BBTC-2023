@@ -19,8 +19,8 @@ import org.openftc.easyopencv.OpenCvWebcam;
 import java.util.ArrayList;
 import java.util.List;
 
-@Autonomous(name = "Color Test")
-public class ColorTest extends LinearOpMode {
+@Autonomous(name = "Color Test R")
+public class ColorTestRed extends LinearOpMode {
 
     //HSV Red
     final Scalar LOW_RED1 = new Scalar(248, 100, 100);
@@ -73,7 +73,7 @@ public class ColorTest extends LinearOpMode {
 
                 Imgproc.findContours(merge, contours, hierarchy, Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
 
-                ColorTest.this.contoursRed = contours;
+                ColorTestRed.this.contoursRed = contours;
                 return input;
             }
         };
@@ -100,7 +100,7 @@ public class ColorTest extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            List<MatOfPoint> contoursRed = ColorTest.this.contoursRed;
+            List<MatOfPoint> contoursRed = ColorTestRed.this.contoursRed;
 
             webcam1.setPipeline(redProcessor);
 
