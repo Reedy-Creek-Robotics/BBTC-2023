@@ -43,6 +43,7 @@ public class AutoBlueFarLeft extends BaseAuto {
 
     private static int RESOLUTION_WIDTH = 1280;
     private static int RESOLUTION_HEIGHT = 720;
+    private static final double SPEED_INTAKE = .3;
     @Override
     public void runOpMode() throws InterruptedException {
         /*
@@ -54,29 +55,32 @@ public class AutoBlueFarLeft extends BaseAuto {
         propPos = "Left";
         propPos = "Center";
 
+
         bot.forward(24, 0.3);
 
-        if (propPos == "Right") {
+        if (propPos.equals("Right")) {
             bot.turn(90, 0.3, RIGHT);
             bot.forward(12, 0.3);
-            bot.runIntake(PICKING, 0.3);
+            bot.runIntake(PICKING, SPEED_INTAKE);
             bot.runPincher1(PINCHER_1_OPEN);
-            bot.runIntake(TRAVELING, 0.3);
+            bot.runIntake(TRAVELING, SPEED_INTAKE);
             bot.forward(-12, 0.3);
             bot.turn(90, 0.3, LEFT);
-        } else if (propPos == "Left") {
+
+        } else if (propPos.equals("Left")) {
+            bot.forward(24, 0.3);
             bot.turn(90, 0.3, LEFT);
             bot.forward(12, 0.3);
-            bot.runIntake(PICKING, 0.3);
+            bot.runIntake(PICKING, SPEED_INTAKE);
             bot.runPincher1(PINCHER_1_OPEN);
-            bot.runIntake(TRAVELING, 0.3);
+            bot.runIntake(TRAVELING, SPEED_INTAKE);
             bot.forward(-12, 0.3);
             bot.turn(90, 0.3, RIGHT);
         }else{
             bot.forward(12, 0.3);
-            bot.runIntake(PICKING, 0.3);
+            bot.runIntake(PICKING, SPEED_INTAKE);
             bot.runPincher1(PINCHER_1_OPEN);
-            bot.runIntake(TRAVELING, 0.3);
+            bot.runIntake(TRAVELING, SPEED_INTAKE);
             bot.forward(-12, 0.3);
         }
     }

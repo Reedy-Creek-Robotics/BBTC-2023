@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
+import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.*;
 import static org.firstinspires.ftc.teamcode.Robot.*;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -33,6 +36,8 @@ public class TeleOpDrive extends LinearOpMode {
     DcMotor driveFrontRight;
     DcMotor driveBackLeft;
     DcMotor driveBackRight;
+    DcMotor intakeSlide1;
+    DcMotor intakeSlide2;
     DcMotor intakeArm;
     Servo pincher1;
     Servo pincher2;
@@ -40,9 +45,9 @@ public class TeleOpDrive extends LinearOpMode {
     boolean pincher1Open;
     boolean pincher2Open;
     boolean droneLaunched;
+
     @Override
     public void runOpMode() throws InterruptedException {
-        // the robot should NOT move in this part of the program (its a penalty)
 
         initHardware();
 
@@ -80,7 +85,7 @@ public class TeleOpDrive extends LinearOpMode {
     }
 
     private void processControl(){
-        double intakeArmPower = (lt1 - rt1);
+        double intakeSlidePower = (rt1 - lt1);
 
         if(gamepad2.left_bumper && pinch1Debounce.milliseconds() > buttonDelay) {
             pincher1Open = !pincher1Open;
@@ -113,14 +118,8 @@ public class TeleOpDrive extends LinearOpMode {
             drone.setPosition(0.5);
         }
 
-        if(intakeArm.getCurrentPosition() < -700){
-            intakeArm.setPower(0.3);
-            telemetry.addLine("Test");
-        }else {
-            intakeArm.setPower(intakeArmPower);
-            telemetry.addData("powering", intakeArmPower);
-        }
-
+        intakeSlide1.setPower(intakeSlidePower);
+        intakeSlide2.setPower(intakeSlidePower);
     }
 
     private void processVariableUpdates(){
@@ -170,38 +169,49 @@ public class TeleOpDrive extends LinearOpMode {
 
     private void initHardware() {
         driveFrontLeft = hardwareMap.get(DcMotor.class, "driveFrontLeft");
-        driveFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        driveFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveFrontLeft.setMode(STOP_AND_RESET_ENCODER);
+        driveFrontLeft.setMode(RUN_USING_ENCODER);
         driveFrontLeft.setZeroPowerBehavior(BRAKE);
+        driveFrontLeft.setDirection(REVERSE);
 
         driveFrontRight = hardwareMap.get(DcMotor.class, "driveFrontRight");
-        driveFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        driveFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveFrontRight.setMode(STOP_AND_RESET_ENCODER);
+        driveFrontRight.setMode(RUN_USING_ENCODER);
         driveFrontRight.setZeroPowerBehavior(BRAKE);
 
         driveBackLeft = hardwareMap.get(DcMotor.class, "driveBackLeft");
-        driveBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        driveBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveBackLeft.setMode(STOP_AND_RESET_ENCODER);
+        driveBackLeft.setMode(RUN_USING_ENCODER);
         driveBackLeft.setZeroPowerBehavior(BRAKE);
+        driveBackLeft.setDirection(REVERSE);
 
         driveBackRight = hardwareMap.get(DcMotor.class, "driveBackRight");
-        driveBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        driveBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveBackRight.setMode(STOP_AND_RESET_ENCODER);
+        driveBackRight.setMode(RUN_USING_ENCODER);
         driveBackRight.setZeroPowerBehavior(BRAKE);
 
         intakeArm = hardwareMap.get(DcMotor.class, "intakeArm");
-        intakeArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        intakeArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        intakeArm.setMode(STOP_AND_RESET_ENCODER);
+        intakeArm.setMode(RUN_USING_ENCODER);
         intakeArm.setZeroPowerBehavior(BRAKE);
+
+        intakeSlide1 = hardwareMap.get(DcMotor.class, "intakeSlide1");
+        intakeSlide1.setMode(STOP_AND_RESET_ENCODER);
+        intakeSlide1.setMode(RUN_USING_ENCODER);
+        intakeSlide1.setZeroPowerBehavior(BRAKE);
+        intakeSlide1.setDirection(REVERSE);
+
+        intakeSlide2 = hardwareMap.get(DcMotor.class, "intakeSlide2");
+        intakeSlide2.setMode(STOP_AND_RESET_ENCODER);
+        intakeSlide2.setMode(RUN_USING_ENCODER);
+        intakeSlide2.setZeroPowerBehavior(BRAKE);
+
 
         pincher1 = hardwareMap.get(Servo.class, "pincher1");
         pincher2 = hardwareMap.get(Servo.class, "pincher2");
         drone = hardwareMap.get(Servo.class, "drone");
         pincher1Open = true;
         pincher2Open = true;
-
-        driveFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        driveBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
     }
 }
