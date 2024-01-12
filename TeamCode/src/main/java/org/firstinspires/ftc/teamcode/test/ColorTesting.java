@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.test;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.opencv.core.Core;
@@ -19,6 +22,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 import java.util.ArrayList;
 import java.util.List;
 
+@TeleOp
 public class ColorTesting extends LinearOpMode {
 
     //HSV Red
@@ -63,8 +67,7 @@ public class ColorTesting extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        OpenCvWebcam webcam1 = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Camera"), cameraMonitorViewId);
-        ;
+        OpenCvWebcam webcam1 = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "webcam1"), cameraMonitorViewId);
 
         OpenCvPipeline redProcessor = new OpenCvPipeline() {
             @Override
@@ -94,21 +97,47 @@ public class ColorTesting extends LinearOpMode {
             }
         };
 
-            webcam1.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+        webcam1.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
 
 
-                public void onOpened() {
-                    telemetry.addLine("INITIALIZATION SUCCESSFUL");
-                    telemetry.update();
+            public void onOpened() {
+                telemetry.addLine("INITIALIZATION SUCCESSFUL");
+                telemetry.update();
 
-                    webcam1.startStreaming(800, 600, OpenCvCameraRotation.UPRIGHT);
+                webcam1.startStreaming(800, 600, OpenCvCameraRotation.UPRIGHT);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+                telemetry.addData("ERROR UPON INITIALIZATION:", errorCode);
+                telemetry.update();
+            }
+        });
+
+        waitForStart();
+
+        while (opModeIsActive()) {
+
+            List<MatOfPoint> contoursRed = ColorTesting.this.contoursRed;
+
+            webcam1.setPipeline(redProcessor);
+
+            telemetry.addLine("Detecting RED Contours");
+
+            telemetry.addData("Webcam pipeline activity", webcam1.getPipelineTimeMs());
+
+            telemetry.addData("Contours Detected", contoursRed.size());
+
+            for (int i = 0; i < contoursRed.size(); i++) {
+                if (Imgproc.contourArea(contoursRed.get(i)) > 1500) {
+                    telemetry.addData("Element Detected! Area of Element:", Imgproc.contourArea(contoursRed.get(i)));
+                } else {
+                    telemetry.addData("Red Contour Area", Imgproc.contourArea(contoursRed.get(i)));
                 }
+            }
 
-                @Override
-                public void onError(int errorCode) {
-                    telemetry.addData("ERROR UPON INITIALIZATION:", errorCode);
-                    telemetry.update();
-                }
-            });
-    };
+            telemetry.update();
+
+        }
+    }
 }

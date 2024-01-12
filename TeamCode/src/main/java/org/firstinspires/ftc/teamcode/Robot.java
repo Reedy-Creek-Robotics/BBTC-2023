@@ -32,13 +32,11 @@ public class Robot {
 
     private static final double TURN_CONSTANT = 50.5d/90d; // distance per deg
 
-    public static final double SPEED_INTAKE = .3;
-
     public static final double
-            PINCHER_1_CLOSED = 0,
-            PINCHER_1_OPEN = 0,
-            PINCHER_2_CLOSED = 0,
-            PINCHER_2_OPEN = 0;
+            PINCHER_1_CLOSED = 0.6,
+            PINCHER_1_OPEN = 0.5,
+            PINCHER_2_CLOSED = 0.4,
+            PINCHER_2_OPEN = 0.5;
 
 
     // Linear Slide Position Constants

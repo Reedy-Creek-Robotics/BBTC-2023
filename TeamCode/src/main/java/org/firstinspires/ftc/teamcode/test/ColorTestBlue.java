@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Auto;
+package org.firstinspires.ftc.teamcode.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -23,25 +23,22 @@ import java.util.List;
 public class ColorTestBlue extends LinearOpMode {
 
     //HSV Blue
-    final Scalar LOW_BLUE = new Scalar(244, 100, 100);
-    final Scalar HIGH_BLUE = new Scalar(232, 73, 53);
+    final Scalar LOW_BLUE = new Scalar(100, 100, 100);
+    final Scalar HIGH_BLUE = new Scalar(130, 255, 255);
+
+    final Scalar RED = new Scalar(255, 0 ,0);
 
     Mat hsvMat1 = new Mat();
-    Mat hsvMat2 = new Mat();
 
     Mat inRangeMat1 = new Mat();
-    Mat inRangeMat2 = new Mat();
 
     Mat morph1 = new Mat();
-    Mat morph2 = new Mat();
 
     Mat hierarchy = new Mat();
 
     Mat kernel = Mat.ones(7, 7, CvType.CV_8UC1);
 
-    List<MatOfPoint> contoursRed = new ArrayList<>();
-
-    Mat merge = new Mat();
+    List<MatOfPoint> contoursBlue = new ArrayList<>();
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -53,24 +50,21 @@ public class ColorTestBlue extends LinearOpMode {
             public Mat processFrame(Mat input) {
 
                 Imgproc.cvtColor(input, hsvMat1, Imgproc.COLOR_RGB2HSV);
-                Imgproc.cvtColor(input, hsvMat2, Imgproc.COLOR_RGB2HSV);
 
                 Core.inRange(hsvMat1, LOW_BLUE, HIGH_BLUE, inRangeMat1);
-                Core.inRange(hsvMat2, LOW_BLUE, HIGH_BLUE,  inRangeMat2);
 
                 Imgproc.morphologyEx(inRangeMat1, morph1, Imgproc.MORPH_CLOSE, kernel);
                 Imgproc.morphologyEx(morph1, morph1, Imgproc.MORPH_OPEN, kernel);
 
-                Imgproc.morphologyEx(inRangeMat2, morph2, Imgproc.MORPH_CLOSE, kernel);
-                Imgproc.morphologyEx(morph2, morph2, Imgproc.MORPH_OPEN, kernel);
-
-                Core.bitwise_or(morph1, morph2, merge);
-
                 List<MatOfPoint> contours = new ArrayList<>();
 
-                Imgproc.findContours(merge, contours, hierarchy, Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
+                Imgproc.findContours(morph1, contours, hierarchy, Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
 
-                ColorTestBlue.this.contoursRed = contours;
+                ColorTestBlue.this.contoursBlue = contours;
+
+                for (int i = 0; i < contours.size(); i++) {
+                    Imgproc.drawContours(input, contours, i, RED, 5, 2);
+                }
                 return input;
             }
         };
@@ -97,21 +91,21 @@ public class ColorTestBlue extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            List<MatOfPoint> contoursRed = ColorTestBlue.this.contoursRed;
+            List<MatOfPoint> contoursRed = ColorTestBlue.this.contoursBlue;
 
             webcam1.setPipeline(redProcessor);
 
-            telemetry.addLine("Detecting RED Contours");
+            telemetry.addLine("Detecting BLUE Contours");
 
             telemetry.addData("Webcam pipeline activity", webcam1.getPipelineTimeMs());
 
             telemetry.addData("Contours Detected", contoursRed.size());
 
             for (int i = 0; i < contoursRed.size(); i++) {
-                if (Imgproc.contourArea(contoursRed.get(i)) > 1000) {
+                if (Imgproc.contourArea(contoursRed.get(i)) > 10000) {
                     telemetry.addData("Element Detected! Area of Element:", Imgproc.contourArea(contoursRed.get(i)));
                 } else {
-                    telemetry.addData("Red Contour Area", Imgproc.contourArea(contoursRed.get(i)));
+                    telemetry.addData("Blue Contour Area", Imgproc.contourArea(contoursRed.get(i)));
                 }
             }
 

@@ -1,5 +1,6 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.test;
 
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
@@ -14,11 +15,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name = "Tele-Op Driving")
-public class TeleOpDrive extends LinearOpMode {
+public class OneControllerTeleOp extends LinearOpMode {
 
     ElapsedTime pinch1Debounce;
     ElapsedTime pinch2Debounce;
     ElapsedTime speedFactorDebounce;
+    ElapsedTime intakeArmDebounce;
     static final int buttonDelay = 250;
     double speedFactor = 0.7;
     double ly1;
@@ -29,9 +31,7 @@ public class TeleOpDrive extends LinearOpMode {
     double lt1;
     double rt1;
     Gamepad currentGamepad1 = new Gamepad();
-    Gamepad currentGamepad2 = new Gamepad();
     Gamepad previousGamepad1 = new Gamepad();
-    Gamepad previousGamepad2 = new Gamepad();
     DcMotor driveFrontLeft;
     DcMotor driveFrontRight;
     DcMotor driveBackLeft;
@@ -45,6 +45,7 @@ public class TeleOpDrive extends LinearOpMode {
     boolean pincher1Open;
     boolean pincher2Open;
     boolean droneLaunched;
+    int intakeArmTarget;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -53,6 +54,7 @@ public class TeleOpDrive extends LinearOpMode {
 
         pinch1Debounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         pinch2Debounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+        intakeArmDebounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         speedFactorDebounce = new ElapsedTime();
 
         telemetry.addLine("> PRESS START");
@@ -85,15 +87,14 @@ public class TeleOpDrive extends LinearOpMode {
     }
 
     private void processControl(){
-        double intakeSlidePower = (rt2 - lt2);
-        double intakeArmPower = -gamepad2.left_stick_y;
+        double intakeSlidePower = (rt1 - lt1);
 
-        if(gamepad2.left_bumper && pinch1Debounce.milliseconds() > buttonDelay) {
+        if(gamepad1.left_bumper && pinch1Debounce.milliseconds() > buttonDelay) {
             pincher1Open = !pincher1Open;
             pinch1Debounce.reset();
         }
 
-        if(gamepad2.right_bumper && pinch2Debounce.milliseconds() > buttonDelay) {
+        if(gamepad1.right_bumper && pinch2Debounce.milliseconds() > buttonDelay) {
             pincher2Open = !pincher2Open;
             pinch2Debounce.reset();
         }
@@ -119,24 +120,29 @@ public class TeleOpDrive extends LinearOpMode {
             drone.setPosition(0.5);
         }
 
+        if(gamepad1.dpad_up && intakeArmDebounce.milliseconds() > 200){
+            intakeArmTarget = intakeArmTarget += 50;
+            intakeArmDebounce.reset();
+        }else if(gamepad1.dpad_down && intakeArmDebounce.milliseconds() > 200){
+            intakeArmTarget = intakeArmTarget -= 50;
+        }
+
         intakeSlide1.setPower(intakeSlidePower);
         intakeSlide2.setPower(intakeSlidePower);
-        intakeArm.setPower(intakeArmPower);
+        intakeArm.setPower(0.3);
+        intakeArm.setTargetPosition(intakeArmTarget);
+        intakeArm.setMode(RUN_TO_POSITION);
     }
 
     private void processVariableUpdates(){
         ly1 = -gamepad1.left_stick_y;
         lx1 = gamepad1.left_stick_x * 1.1;
         rx1 = gamepad1.right_stick_x;
-        lt2 = gamepad2.left_trigger;
-        rt2 = gamepad2.right_trigger;
         lt1 = gamepad1.left_trigger;
         rt1 = gamepad1.right_trigger;
 
         previousGamepad1.copy(currentGamepad1);
-        previousGamepad2.copy(currentGamepad2);
         currentGamepad1.copy(gamepad1);
-        currentGamepad2.copy(gamepad2);
 
         if (gamepad1.dpad_up && (speedFactorDebounce.milliseconds() >= buttonDelay)) {
             speedFactorDebounce.reset();
@@ -197,8 +203,9 @@ public class TeleOpDrive extends LinearOpMode {
 
         intakeArm = hardwareMap.get(DcMotor.class, "intakeArm");
         intakeArm.setMode(STOP_AND_RESET_ENCODER);
-        intakeArm.setMode(RUN_USING_ENCODER);
         intakeArm.setZeroPowerBehavior(BRAKE);
+        intakeArm.setTargetPosition(0);
+        intakeArmTarget = 0;
 
         intakeSlide1 = hardwareMap.get(DcMotor.class, "intakeSlide1");
         intakeSlide1.setMode(STOP_AND_RESET_ENCODER);

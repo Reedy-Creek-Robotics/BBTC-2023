@@ -66,8 +66,6 @@ public class BaseAuto extends LinearOpMode {
                 pincher1,
                 pincher2
         );
-
-        bot.runIntake(LOADING, SPEED_INTAKE);
     }
 
     @Override

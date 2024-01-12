@@ -43,12 +43,13 @@ public class AutoBlueFarLeft extends BaseAuto {
 
     private static int RESOLUTION_WIDTH = 1280;
     private static int RESOLUTION_HEIGHT = 720;
-    private static final double SPEED_INTAKE = .3;
+    private static final double SPEED_INTAKE = 0.3;
     @Override
     public void runOpMode() throws InterruptedException {
         /*
         Find team prop
          */
+        bot.runIntake(LOADING, SPEED_INTAKE);
 
         String propPos;
         propPos = "Right";
