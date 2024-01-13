@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name = "Tele-Op Driving")
+@TeleOp(name = "One Controller Tele-Op")
 public class OneControllerTeleOp extends LinearOpMode {
 
     ElapsedTime pinch1Debounce;
