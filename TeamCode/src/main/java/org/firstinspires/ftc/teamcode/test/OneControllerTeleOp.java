@@ -120,11 +120,12 @@ public class OneControllerTeleOp extends LinearOpMode {
             drone.setPosition(0.5);
         }
 
-        if(gamepad1.dpad_up && intakeArmDebounce.milliseconds() > 200){
+        if(gamepad1.y && intakeArmDebounce.milliseconds() > 200){
             intakeArmTarget = intakeArmTarget += 50;
             intakeArmDebounce.reset();
-        }else if(gamepad1.dpad_down && intakeArmDebounce.milliseconds() > 200){
+        }else if(gamepad1.x && intakeArmDebounce.milliseconds() > 200){
             intakeArmTarget = intakeArmTarget -= 50;
+            intakeArmDebounce.reset();
         }
 
         intakeSlide1.setPower(intakeSlidePower);

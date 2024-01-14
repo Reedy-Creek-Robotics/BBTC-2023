@@ -6,6 +6,8 @@ import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
 
+import static org.firstinspires.ftc.teamcode.IntakePositions.*;
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -40,28 +42,6 @@ public class Robot {
 
 
     // Linear Slide Position Constants
-    private static final int
-            SLIDE_LOADING_POSITION = 0,
-            SLIDE_PICKING_POSITION = 0,
-            SLIDE_TRAVELING_POSITION = 0,
-            SLIDE_LINE01_POSITION = 0,
-            SLIDE_LINE1_POSITION = 0,
-            SLIDE_LINE12_POSITION = 0,
-            SLIDE_LINE2_POSITION = 0,
-            SLIDE_LINE23_POSITION = 0,
-            SLIDE_LINE3_POSITION = 0,
-            SLIDE_TOP_POSITION = 0,
-
-            ARM_LOADING_POSITION = 0,
-            ARM_PICKING_POSITION = 0,
-            ARM_TRAVELING_POSITION = 0,
-            ARM_LINE01_POSITION = 0,
-            ARM_LINE1_POSITION = 0,
-            ARM_LINE12_POSITION = 0,
-            ARM_LINE2_POSITION = 0,
-            ARM_LINE23_POSITION = 0,
-            ARM_LINE3_POSITION = 0,
-            ARM_TOP_POSITION = 0;
 
     public Robot(
             DcMotor driveFrontLeft,
@@ -155,13 +135,14 @@ public class Robot {
         driveMotors(speed);
     }
 
-    public void runPincher1(double position) {
+    public void runPincher1(double position){
         pincher1.setPosition(position);
     }
 
-    public void runPincher2(double position) {
+    public void runPincher2(double position){
         pincher2.setPosition(position);
     }
+
 
     public void runIntake(IntakePositions IntakePositions, double speed){
         setup();
@@ -169,44 +150,32 @@ public class Robot {
         int slideDistance = 0;
         switch (IntakePositions){
             case LOADING:
-                slideDistance = SLIDE_LOADING_POSITION;
-                armDistance = ARM_LOADING_POSITION;
+                slideDistance = LOADING.getSlidePosition();
+                armDistance = LOADING.getArmPosition();
                 break;
             case PICKING:
-                slideDistance = SLIDE_PICKING_POSITION;
-                armDistance = ARM_PICKING_POSITION;
+                slideDistance = PICKING.getSlidePosition();
+                armDistance = PICKING.getArmPosition();
                 break;
             case TRAVELING:
-                slideDistance = SLIDE_TRAVELING_POSITION;
-                armDistance = ARM_TRAVELING_POSITION;
-                break;
-            case LINE01:
-                slideDistance = SLIDE_LINE01_POSITION;
-                armDistance = ARM_LINE01_POSITION;
+                slideDistance = TRAVELING.getSlidePosition();
+                armDistance = TRAVELING.getArmPosition();
                 break;
             case LINE1:
-                slideDistance = SLIDE_LINE1_POSITION;
-                armDistance = ARM_LINE1_POSITION;
-                break;
-            case LINE12:
-                slideDistance = SLIDE_LINE12_POSITION;
-                armDistance = ARM_LINE12_POSITION;
+                slideDistance = LINE1.getSlidePosition();
+                armDistance = LINE1.getArmPosition();
                 break;
             case LINE2:
-                slideDistance = SLIDE_LINE2_POSITION;
-                armDistance = ARM_LINE2_POSITION;
-                break;
-            case LINE23:
-                slideDistance = SLIDE_LINE23_POSITION;
-                armDistance = ARM_LINE23_POSITION;
+                slideDistance = LINE2.getSlidePosition();
+                armDistance = LINE2.getArmPosition();
                 break;
             case LINE3:
-                slideDistance = SLIDE_LINE3_POSITION;
-                armDistance = ARM_LINE3_POSITION;
+                slideDistance = LINE3.getSlidePosition();
+                armDistance = LINE3.getArmPosition();
                 break;
             case TOP:
-                slideDistance = SLIDE_TOP_POSITION;
-                armDistance = ARM_TOP_POSITION;
+                slideDistance = TOP.getSlidePosition();
+                armDistance = TOP.getArmPosition();
                 break;
         }
 
@@ -262,6 +231,13 @@ public class Robot {
         driveFrontRight.setMode(RUN_TO_POSITION);
         driveBackLeft.setMode(RUN_TO_POSITION);
         driveBackRight.setMode(RUN_TO_POSITION);
+    }
+
+    public void waitDrive(){
+        while(driveFrontLeft.isBusy() && driveFrontRight.isBusy() && driveBackLeft.isBusy() && driveBackRight.isBusy());
+    }
+    public void waitIntake(){
+        while(intakeArm.isBusy() && intakeSlide1.isBusy() && intakeSlide2.isBusy());
     }
 
     private void intakeMotors(double power){

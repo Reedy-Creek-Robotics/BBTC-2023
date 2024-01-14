@@ -8,20 +8,23 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 @Autonomous
 public class EncoderTest extends LinearOpMode {
     DcMotor intakeArm;
+    DcMotor intakeSlide1;
+    DcMotor intakeSlide2;
 
     @Override
     public void runOpMode() throws InterruptedException {
         waitForStart();
         intakeArm = hardwareMap.get(DcMotor.class, "intakeArm");
         intakeArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        intakeArm.setDirection(DcMotorSimple.Direction.FORWARD);
-        intakeArm.setTargetPosition(300);
-        intakeArm.setPower(-.3);
-        intakeArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        intakeSlide1 = hardwareMap.get(DcMotor.class, "intakeSlide1");
+        intakeSlide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        intakeSlide2 = hardwareMap.get(DcMotor.class, "intakeSlide2");
+        intakeSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         while(opModeIsActive()){
-            telemetry.addData("Encoder Value", intakeArm.getCurrentPosition());
+            telemetry.addData("Arm", intakeArm.getCurrentPosition());
+            telemetry.addData("Slide 1", intakeSlide1.getCurrentPosition());
+            telemetry.addData("Slide 2", intakeSlide2.getCurrentPosition());
             telemetry.update();
         }
     }

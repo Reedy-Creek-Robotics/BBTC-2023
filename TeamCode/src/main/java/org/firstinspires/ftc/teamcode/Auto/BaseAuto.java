@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
-import static org.firstinspires.ftc.teamcode.IntakePositions.LOADING;
 import static org.firstinspires.ftc.teamcode.Robot.*;
 
 import android.util.Size;
@@ -35,7 +34,10 @@ public class BaseAuto extends LinearOpMode {
 
     public BaseAuto() {
         super();
+    }
 
+    @Override
+    public void runOpMode() throws InterruptedException {
         this.driveFrontLeft = hardwareMap.get(DcMotor.class, "driveFrontLeft");
         this.driveFrontRight = hardwareMap.get(DcMotor.class, "driveFrontRight");
         this.driveBackLeft = hardwareMap.get(DcMotor.class, "driveBackLeft");
@@ -46,11 +48,12 @@ public class BaseAuto extends LinearOpMode {
         this.pincher1 = hardwareMap.get(Servo.class, "pincher1");
         this.pincher2 = hardwareMap.get(Servo.class, "pincher2");
 
-
         this.portal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam1"))
                 .setCameraResolution(new Size(RESOLUTION_WIDTH, RESOLUTION_HEIGHT))
                 .build();
+
+        waitForStart();
 
         this.pincher1.setPosition(PINCHER_1_CLOSED);
         this.pincher2.setPosition(PINCHER_2_CLOSED);
@@ -67,7 +70,4 @@ public class BaseAuto extends LinearOpMode {
                 pincher2
         );
     }
-
-    @Override
-    public void runOpMode() throws InterruptedException {}
 }

@@ -13,13 +13,19 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import java.util.Arrays;
+import java.util.List;
+
 @TeleOp(name = "Tele-Op Driving")
 public class TeleOpDrive extends LinearOpMode {
 
+    Robot bot;
     ElapsedTime pinch1Debounce;
     ElapsedTime pinch2Debounce;
     ElapsedTime speedFactorDebounce;
+    private ElapsedTime intakeDebounce;
     static final int buttonDelay = 250;
+    private int intakePosition = 0;
     double speedFactor = 0.7;
     double ly1;
     double lx1;
@@ -45,6 +51,7 @@ public class TeleOpDrive extends LinearOpMode {
     boolean pincher1Open;
     boolean pincher2Open;
     boolean droneLaunched;
+    IntakePositions intakePositions[] = IntakePositions.values();
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -53,7 +60,8 @@ public class TeleOpDrive extends LinearOpMode {
 
         pinch1Debounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         pinch2Debounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
-        speedFactorDebounce = new ElapsedTime();
+        speedFactorDebounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+        intakeDebounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
 
         telemetry.addLine("> PRESS START");
         waitForStart();
@@ -85,8 +93,6 @@ public class TeleOpDrive extends LinearOpMode {
     }
 
     private void processControl(){
-        double intakeSlidePower = (rt2 - lt2);
-        double intakeArmPower = -gamepad2.left_stick_y;
 
         if(gamepad2.left_bumper && pinch1Debounce.milliseconds() > buttonDelay) {
             pincher1Open = !pincher1Open;
@@ -119,9 +125,19 @@ public class TeleOpDrive extends LinearOpMode {
             drone.setPosition(0.5);
         }
 
-        intakeSlide1.setPower(intakeSlidePower);
-        intakeSlide2.setPower(intakeSlidePower);
-        intakeArm.setPower(intakeArmPower);
+        if (gamepad2.dpad_up && intakeDebounce.milliseconds() > 200){
+            intakePosition++;
+            intakeDebounce.reset();
+        } else if(gamepad2.dpad_down && intakeDebounce.milliseconds() > 200){
+            intakePosition--;
+            intakeDebounce.reset();
+        }
+
+        if (intakePosition > 6){intakePosition = 6;}
+        else if(intakePosition < 0){intakePosition = 0;}
+
+        bot.runIntake(intakePositions[intakePosition],0.5);
+
     }
 
     private void processVariableUpdates(){
@@ -217,6 +233,18 @@ public class TeleOpDrive extends LinearOpMode {
         drone = hardwareMap.get(Servo.class, "drone");
         pincher1Open = true;
         pincher2Open = true;
+
+        bot = new Robot(
+                driveFrontLeft,
+                driveBackLeft,
+                driveBackRight,
+                driveFrontRight,
+                intakeSlide1,
+                intakeSlide2,
+                intakeArm,
+                pincher1,
+                pincher2
+        );
 
     }
 }

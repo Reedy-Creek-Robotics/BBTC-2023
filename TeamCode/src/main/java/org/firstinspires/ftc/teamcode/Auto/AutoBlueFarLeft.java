@@ -43,46 +43,63 @@ public class AutoBlueFarLeft extends BaseAuto {
 
     private static int RESOLUTION_WIDTH = 1280;
     private static int RESOLUTION_HEIGHT = 720;
-    private static final double SPEED_INTAKE = 0.3;
+    private static final double SPEED_INTAKE = 0.5;
     @Override
     public void runOpMode() throws InterruptedException {
+        super.runOpMode();
         /*
         Find team prop
          */
         bot.runIntake(LOADING, SPEED_INTAKE);
+        bot.waitIntake();
 
         String propPos;
         propPos = "Right";
         propPos = "Left";
-        propPos = "Center";
 
 
         bot.forward(24, 0.3);
+        bot.waitDrive();
 
         if (propPos.equals("Right")) {
             bot.turn(90, 0.3, RIGHT);
+            bot.waitDrive();
             bot.forward(12, 0.3);
+            bot.waitDrive();
             bot.runIntake(PICKING, SPEED_INTAKE);
             bot.runPincher1(PINCHER_1_OPEN);
             bot.runIntake(TRAVELING, SPEED_INTAKE);
+            bot.waitIntake();
             bot.forward(-12, 0.3);
+            bot.waitDrive();
             bot.turn(90, 0.3, LEFT);
+            bot.waitDrive();
 
         } else if (propPos.equals("Left")) {
             bot.forward(24, 0.3);
+            bot.waitDrive();
             bot.turn(90, 0.3, LEFT);
+            bot.waitDrive();
             bot.forward(12, 0.3);
+            bot.waitDrive();
             bot.runIntake(PICKING, SPEED_INTAKE);
             bot.runPincher1(PINCHER_1_OPEN);
             bot.runIntake(TRAVELING, SPEED_INTAKE);
+            bot.waitIntake();
             bot.forward(-12, 0.3);
+            bot.waitDrive();
             bot.turn(90, 0.3, RIGHT);
+            bot.waitDrive();
         }else{
             bot.forward(12, 0.3);
-            bot.runIntake(PICKING, SPEED_INTAKE);
+            bot.waitDrive();
+            bot.runIntake(LOADING, SPEED_INTAKE);
+            bot.waitIntake();
             bot.runPincher1(PINCHER_1_OPEN);
             bot.runIntake(TRAVELING, SPEED_INTAKE);
+            bot.waitIntake();
             bot.forward(-12, 0.3);
+            bot.waitDrive();
         }
     }
 }
