@@ -184,11 +184,6 @@ public class Robot {
     }
 
     private void setup(){
-        // Reset the motor encoder so that it reads zero ticks
-        driveFrontLeft.setMode(STOP_AND_RESET_ENCODER);
-        driveFrontRight.setMode(STOP_AND_RESET_ENCODER);
-        driveBackLeft.setMode(STOP_AND_RESET_ENCODER);
-        driveBackRight.setMode(STOP_AND_RESET_ENCODER);
 
         // Behavior when motor stops
         driveFrontLeft.setZeroPowerBehavior(BRAKE);
