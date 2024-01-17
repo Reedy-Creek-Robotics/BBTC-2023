@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 import static org.firstinspires.ftc.teamcode.Robot.*;
 
 import android.util.Size;
@@ -11,6 +12,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.vision.VisionPortal;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
 
 public class BaseAuto extends LinearOpMode {
     Robot bot;
@@ -25,13 +28,10 @@ public class BaseAuto extends LinearOpMode {
     private Servo pincher1;
     private Servo pincher2;
     private VisionPortal portal;
+    private OpenCvCamera webcam1;
 
     private static int RESOLUTION_WIDTH = 1280;
     private static int RESOLUTION_HEIGHT = 720;
-
-    public BaseAuto() {
-        super();
-    }
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -55,6 +55,9 @@ public class BaseAuto extends LinearOpMode {
         this.pincher1.setPosition(PINCHER_1_CLOSED);
         this.pincher2.setPosition(PINCHER_2_CLOSED);
 
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        webcam1 = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam1"), cameraMonitorViewId);
+
         this.bot = new Robot(
                 driveFrontLeft,
                 driveBackLeft,
@@ -64,7 +67,8 @@ public class BaseAuto extends LinearOpMode {
                 intakeSlide2,
                 intakeArm,
                 pincher1,
-                pincher2
+                pincher2,
+                webcam1
         );
     }
 }

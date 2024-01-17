@@ -1,16 +1,33 @@
 package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
-import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
-import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD;
-import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
-
+import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.*;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 import static org.firstinspires.ftc.teamcode.IntakePositions.*;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.test.ColorTestBlue;
+import org.opencv.core.Core;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvPipeline;
+import org.openftc.easyopencv.OpenCvWebcam;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Disabled
 public class Robot {
@@ -26,13 +43,33 @@ public class Robot {
     private Servo pincher1;
     private Servo pincher2;
 
+    private OpenCvCamera webcam1;
+
     private static final double TICKS_PER_CM = 17.83; // 17.83 tics/cm traveled(Strafer)
 
     private static final double TICKS_PER_INCH = 45.2847909135; //17.83 cm / 2.54 = inches per cm
 
     private static final double ROTATION_CORRECTION = 1.2; //(62/90);
 
-    private static final double TURN_CONSTANT = 50.5d/90d; // distance per deg
+    private static final double TURN_CONSTANT = 50.5d / 90d; // distance per deg
+
+    //HSV Blue
+    final Scalar LOW_BLUE = new Scalar(100, 100, 100);
+    final Scalar HIGH_BLUE = new Scalar(130, 255, 255);
+
+    final Scalar RED = new Scalar(255, 0 ,0);
+
+    Mat hsvMat1 = new Mat();
+
+    Mat inRangeMat1 = new Mat();
+
+    Mat morph1 = new Mat();
+
+    Mat hierarchy = new Mat();
+
+    Mat kernel = Mat.ones(7, 7, CvType.CV_8UC1);
+
+    List<MatOfPoint> contoursBlue = new ArrayList<>();
 
     public static final double
             PINCHER_1_CLOSED = 0.6,
@@ -40,6 +77,7 @@ public class Robot {
             PINCHER_2_CLOSED = 0.4,
             PINCHER_2_OPEN = 0.5;
 
+    //Todo: remove
     public Robot(
             DcMotor driveFrontLeft,
             DcMotor driveBackLeft,
@@ -63,7 +101,32 @@ public class Robot {
         this.pincher2 = pincher2;
     }
 
-    public void forward(double distanceInches, double speed){
+    public Robot(
+            DcMotor driveFrontLeft,
+            DcMotor driveBackLeft,
+            DcMotor driveBackRight,
+            DcMotor driveFrontRight,
+            DcMotor intakeSlide1,
+            DcMotor intakeSlide2,
+            DcMotor intakeArm,
+            Servo pincher1,
+            Servo pincher2,
+            OpenCvCamera webcam1
+    ) {
+
+        this.driveFrontLeft = driveFrontLeft;
+        this.driveFrontRight = driveFrontRight;
+        this.driveBackRight = driveBackRight;
+        this.driveBackLeft = driveBackLeft;
+        this.intakeSlide1 = intakeSlide1;
+        this.intakeSlide2 = intakeSlide2;
+        this.intakeArm = intakeArm;
+        this.pincher1 = pincher1;
+        this.pincher2 = pincher2;
+        this.webcam1 = webcam1;
+    }
+
+    public void forward(double distanceInches, double speed) {
         setup();
         int distanceTicks = inchesToTicks(distanceInches);
 
@@ -83,7 +146,7 @@ public class Robot {
         int distanceTicks = inchesToTicks(distanceInches);
 
 
-        switch(direction){
+        switch (direction) {
             case LEFT:
                 // Strafe Left
                 driveFrontLeft.setDirection(FORWARD);
@@ -108,10 +171,10 @@ public class Robot {
         driveMotors(speed);
     }
 
-    public void turn(int degrees, double speed, Direction direction){
+    public void turn(int degrees, double speed, Direction direction) {
         setup();
         int distanceTicks = degreesToDistance(degrees);
-        switch(direction){
+        switch (direction) {
             case LEFT:
                 driveFrontLeft.setDirection(FORWARD);
                 driveFrontRight.setDirection(FORWARD);
@@ -132,19 +195,19 @@ public class Robot {
         driveMotors(speed);
     }
 
-    public void runPincher1(double position){
+    public void runPincher1(double position) {
         pincher1.setPosition(position);
     }
 
-    public void runPincher2(double position){
+    public void runPincher2(double position) {
         pincher2.setPosition(position);
     }
 
-    public void runIntake(IntakePositions IntakePositions, double speed){
+    public void runIntake(IntakePositions IntakePositions, double speed) {
         setup();
         int armDistance = 0;
         int slideDistance = 0;
-        switch (IntakePositions){
+        switch (IntakePositions) {
             case LOADING:
                 slideDistance = LOADING.getSlidePosition();
                 armDistance = LOADING.getArmPosition();
@@ -177,6 +240,78 @@ public class Robot {
 
         intakeTargetPositions(armDistance, slideDistance);
         intakeMotors(speed);
+    }
+
+    public String colorDetectionBlue() {
+            OpenCvWebcam webcam1;
+            OpenCvPipeline redProcessor = new OpenCvPipeline() {
+
+                @Override
+                public Mat processFrame(Mat input) {
+
+                    Imgproc.cvtColor(input, hsvMat1, Imgproc.COLOR_RGB2HSV);
+
+                    Core.inRange(hsvMat1, LOW_BLUE, HIGH_BLUE, inRangeMat1);
+
+                    Imgproc.morphologyEx(inRangeMat1, morph1, Imgproc.MORPH_CLOSE, kernel);
+                    Imgproc.morphologyEx(morph1, morph1, Imgproc.MORPH_OPEN, kernel);
+
+                    List<MatOfPoint> contours = new ArrayList<>();
+
+                    Imgproc.findContours(morph1, contours, hierarchy, Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
+
+                    this.contoursBlue = contours;
+
+                    for (int i = 0; i < contours.size(); i++) {
+                        Imgproc.drawContours(input, contours, i, RED, 5, 2);
+                    }
+                    return input;
+                }
+            };
+
+            int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+            webcam1 = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam1"), cameraMonitorViewId);
+
+            webcam1.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+                @Override
+                public void onOpened() {
+                    telemetry.addLine("Camera Init Successful");
+                    telemetry.update();
+
+                    webcam1.startStreaming(800, 600, OpenCvCameraRotation.UPRIGHT);
+                }
+
+                @Override
+                public void onError(int errorCode) {
+                    telemetry.addData("Camera Load Failed | ERROR CODE", " " + errorCode);
+                }
+            });
+
+            while (True) {
+
+                List<MatOfPoint> contoursBlue = ColorTestBlue.this.contoursBlue;
+
+                webcam1.setPipeline(redProcessor);
+
+                telemetry.addLine("Detecting BLUE Contours");
+
+                telemetry.addData("Webcam pipeline activity", webcam1.getPipelineTimeMs());
+
+                telemetry.addData("Contours Detected", contoursBlue.size());
+
+                for (int i = 0; i < contoursBlue.size(); i++) {
+                    if (Imgproc.contourArea(contoursBlue.get(i)) > 10000) {
+                        Rect rect = Imgproc.boundingRect(contoursBlue.get(i));
+                        Point contourCent = new Point(((rect.width - rect.x) / 2.0) + rect.x, ((rect.height - rect.y) / 2.0) + rect.y);
+                        telemetry.addData("Area of Element:", Imgproc.contourArea(contoursBlue.get(i)));
+                        telemetry.addData("Location of Element:", contourCent.x);
+                    }
+                }
+
+                telemetry.update();
+
+            }
+        }
     }
 
     private void setup(){

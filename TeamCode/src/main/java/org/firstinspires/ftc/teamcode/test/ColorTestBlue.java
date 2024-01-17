@@ -8,6 +8,8 @@ import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -91,7 +93,7 @@ public class ColorTestBlue extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            List<MatOfPoint> contoursRed = ColorTestBlue.this.contoursBlue;
+            List<MatOfPoint> contoursBlue = ColorTestBlue.this.contoursBlue;
 
             webcam1.setPipeline(redProcessor);
 
@@ -99,13 +101,14 @@ public class ColorTestBlue extends LinearOpMode {
 
             telemetry.addData("Webcam pipeline activity", webcam1.getPipelineTimeMs());
 
-            telemetry.addData("Contours Detected", contoursRed.size());
+            telemetry.addData("Contours Detected", contoursBlue.size());
 
-            for (int i = 0; i < contoursRed.size(); i++) {
-                if (Imgproc.contourArea(contoursRed.get(i)) > 10000) {
-                    telemetry.addData("Element Detected! Area of Element:", Imgproc.contourArea(contoursRed.get(i)));
-                } else {
-                    telemetry.addData("Blue Contour Area", Imgproc.contourArea(contoursRed.get(i)));
+            for (int i = 0; i < contoursBlue.size(); i++) {
+                if (Imgproc.contourArea(contoursBlue.get(i)) > 10000) {
+                    Rect rect = Imgproc.boundingRect(contoursBlue.get(i));
+                    Point contourCent = new Point(((rect.width - rect.x) / 2.0) + rect.x, ((rect.height - rect.y) / 2.0) + rect.y);
+                    telemetry.addData("Area of Element:", Imgproc.contourArea(contoursBlue.get(i)));
+                    telemetry.addData("Location of Element:", contourCent.x);
                 }
             }
 
