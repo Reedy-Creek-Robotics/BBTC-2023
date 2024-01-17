@@ -40,9 +40,6 @@ public class Robot {
             PINCHER_2_CLOSED = 0.4,
             PINCHER_2_OPEN = 0.5;
 
-
-    // Linear Slide Position Constants
-
     public Robot(
             DcMotor driveFrontLeft,
             DcMotor driveBackLeft,
@@ -142,7 +139,6 @@ public class Robot {
     public void runPincher2(double position){
         pincher2.setPosition(position);
     }
-
 
     public void runIntake(IntakePositions IntakePositions, double speed){
         setup();

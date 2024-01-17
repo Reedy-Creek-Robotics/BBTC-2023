@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
 public enum IntakePositions {
     LOADING(41,33),
     PICKING(33,33),
@@ -9,8 +7,7 @@ public enum IntakePositions {
     LINE1(295,848),
     LINE2(295,1769),
     LINE3(295,2585),
-    TOP(295,3010),
-    ;
+    TOP(295,3010);
 
     int slidePosition;
     int armPosition;

@@ -11,8 +11,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.vision.VisionPortal;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvWebcam;
 
 public class BaseAuto extends LinearOpMode {
     Robot bot;
@@ -27,7 +25,6 @@ public class BaseAuto extends LinearOpMode {
     private Servo pincher1;
     private Servo pincher2;
     private VisionPortal portal;
-
 
     private static int RESOLUTION_WIDTH = 1280;
     private static int RESOLUTION_HEIGHT = 720;
