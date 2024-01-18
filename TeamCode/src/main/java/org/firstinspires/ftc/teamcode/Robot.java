@@ -2,21 +2,15 @@ package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
-import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD;
-import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-import static org.firstinspires.ftc.teamcode.IntakePositions.LINE1;
-import static org.firstinspires.ftc.teamcode.IntakePositions.LINE2;
-import static org.firstinspires.ftc.teamcode.IntakePositions.LINE3;
-import static org.firstinspires.ftc.teamcode.IntakePositions.LOADING;
-import static org.firstinspires.ftc.teamcode.IntakePositions.PICKING;
-import static org.firstinspires.ftc.teamcode.IntakePositions.TOP;
-import static org.firstinspires.ftc.teamcode.IntakePositions.TRAVELING;
+import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.*;
+import static org.firstinspires.ftc.teamcode.IntakePositions.*;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -60,7 +54,7 @@ public class Robot {
     final Scalar LOW_BLUE = new Scalar(100, 100, 100);
     final Scalar HIGH_BLUE = new Scalar(130, 255, 255);
 
-    final Scalar RED = new Scalar(255, 0 ,0);
+    final Scalar RED = new Scalar(255, 0, 0);
 
     Mat hsvMat1 = new Mat();
 
@@ -72,7 +66,14 @@ public class Robot {
 
     Mat kernel = Mat.ones(7, 7, CvType.CV_8UC1);
 
-    List<MatOfPoint> contoursBlue = new ArrayList<>();
+    int frameCount = 0;
+
+    List<MatOfPoint> contoursBlue;
+
+    Telemetry telemetry;
+
+    LinearOpMode opMode;
+
 
     public static final double
             PINCHER_1_CLOSED = 0.6,
@@ -114,7 +115,9 @@ public class Robot {
             DcMotor intakeArm,
             Servo pincher1,
             Servo pincher2,
-            OpenCvCamera webcam1
+            OpenCvCamera webcam1,
+            Telemetry telemetry,
+            LinearOpMode opMode
     ) {
 
         this.driveFrontLeft = driveFrontLeft;
@@ -127,6 +130,8 @@ public class Robot {
         this.pincher1 = pincher1;
         this.pincher2 = pincher2;
         this.webcam1 = webcam1;
+        this.telemetry = telemetry;
+        this.opMode = opMode;
     }
 
     public void forward(double distanceInches, double speed) {
@@ -252,6 +257,7 @@ public class Robot {
 
             @Override
             public Mat processFrame(Mat input) {
+                frameCount++;
 
                 Imgproc.cvtColor(input, hsvMat1, Imgproc.COLOR_RGB2HSV);
 
@@ -273,55 +279,43 @@ public class Robot {
             }
         };
 
-        webcam1.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
-            @Override
-            public void onOpened() {
-                telemetry.addLine("Camera Init Successful");
-                telemetry.update();
+        Point contourCent;
 
-                webcam1.startStreaming(800, 600, OpenCvCameraRotation.UPRIGHT);
-            }
-
-            @Override
-            public void onError(int errorCode) {
-                telemetry.addData("Camera Load Failed | ERROR CODE", " " + errorCode);
-            }
-        });
-
-            List<MatOfPoint> contoursBlue = this.contoursBlue;
-
+        int count = 0;
+        while (this.contoursBlue == null && !opMode.isStopRequested()) {
             webcam1.setPipeline(blueProcessor);
 
-            telemetry.addLine("Detecting BLUE Contours");
+            telemetry.addData("waiting for contours", count++);
+            telemetry.addData("frames processed", frameCount);
+            telemetry.update();
 
-            telemetry.addData("Webcam pipeline activity", webcam1.getPipelineTimeMs());
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
-            telemetry.addData("Contours Detected", contoursBlue.size());
+        List<MatOfPoint> contoursBlue = this.contoursBlue;
 
-            Point contourCent;
+        for (int i = 0; i < contoursBlue.size(); i++) {
+            if (Imgproc.contourArea(contoursBlue.get(i)) > 1000) {
+                Rect rect = Imgproc.boundingRect(contoursBlue.get(i));
+                contourCent = new Point(((rect.width - rect.x) / 2.0) + rect.x, ((rect.height - rect.y) / 2.0) + rect.y);
 
-            for (int i = 0; i < contoursBlue.size(); i++) {
-                if (Imgproc.contourArea(contoursBlue.get(i)) > 10000) {
-                    Rect rect = Imgproc.boundingRect(contoursBlue.get(i));
-                    contourCent = new Point(((rect.width - rect.x) / 2.0) + rect.x, ((rect.height - rect.y) / 2.0) + rect.y);
-                    telemetry.addData("Area of Element:", Imgproc.contourArea(contoursBlue.get(i)));
-                    telemetry.addData("Location of Element:", contourCent.x);
-
-                    if(contourCent.x > 300){
-                        propPos = "Right";
-                    }else if(contourCent.x < 300){
-                        propPos = "Center";
-                    }
-                    else {
-                        propPos = "Left";
-                    }
+                if (contourCent.x > 300) {
+                    propPos = "Right";
+                } else if (contourCent.x < 300) {
+                    propPos = "Center";
+                } else {
+                    propPos = "Left";
                 }
             }
-        telemetry.update();
-        return(propPos);
+        }
+        return (propPos);
     }
 
-    private void setup(){
+    private void setup() {
 
         // Behavior when motor stops
         driveFrontLeft.setZeroPowerBehavior(BRAKE);
@@ -347,14 +341,14 @@ public class Robot {
         return distanceTicks;
     }
 
-    private void driveMotors(double power){
+    private void driveMotors(double power) {
         driveFrontLeft.setPower(power);
         driveFrontRight.setPower(power);
         driveBackLeft.setPower(power);
         driveBackRight.setPower(power);
     }
 
-    private void driveTargetPositions(int distanceTicks){
+    private void driveTargetPositions(int distanceTicks) {
         driveFrontLeft.setTargetPosition(distanceTicks);
         driveFrontRight.setTargetPosition(distanceTicks);
         driveBackLeft.setTargetPosition(distanceTicks);
@@ -366,20 +360,22 @@ public class Robot {
         driveBackRight.setMode(RUN_TO_POSITION);
     }
 
-    public void waitDrive(){
-        while(driveFrontLeft.isBusy() && driveFrontRight.isBusy() && driveBackLeft.isBusy() && driveBackRight.isBusy());
-    }
-    public void waitIntake(){
-        while(intakeArm.isBusy() && intakeSlide1.isBusy() && intakeSlide2.isBusy());
+    public void waitDrive() {
+        while (driveFrontLeft.isBusy() && driveFrontRight.isBusy() && driveBackLeft.isBusy() && driveBackRight.isBusy())
+            ;
     }
 
-    private void intakeMotors(double power){
+    public void waitIntake() {
+        while (intakeArm.isBusy() && intakeSlide1.isBusy() && intakeSlide2.isBusy()) ;
+    }
+
+    private void intakeMotors(double power) {
         intakeArm.setPower(power);
         intakeSlide1.setPower(power);
         intakeSlide2.setPower(power);
     }
 
-    private void intakeTargetPositions(int armDistance, int slideDistance){
+    private void intakeTargetPositions(int armDistance, int slideDistance) {
         intakeArm.setTargetPosition(armDistance);
         intakeSlide1.setTargetPosition(slideDistance);
         intakeSlide2.setTargetPosition(slideDistance);

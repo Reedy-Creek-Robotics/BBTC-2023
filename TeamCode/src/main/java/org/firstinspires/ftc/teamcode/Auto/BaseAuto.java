@@ -12,11 +12,20 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.vision.VisionPortal;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvPipeline;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BaseAuto extends LinearOpMode {
-    Robot bot;
+    public Robot bot;
 
     private DcMotor driveFrontLeft;
     private DcMotor driveFrontRight;
@@ -50,13 +59,26 @@ public class BaseAuto extends LinearOpMode {
                 .setCameraResolution(new Size(RESOLUTION_WIDTH, RESOLUTION_HEIGHT))
                 .build();
 
-        waitForStart();
-
-        this.pincher1.setPosition(PINCHER_1_CLOSED);
-        this.pincher2.setPosition(PINCHER_2_CLOSED);
-
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam1 = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam1"), cameraMonitorViewId);
+
+
+        webcam1.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                telemetry.addLine("Camera Init Successful");
+                telemetry.update();
+
+                webcam1.startStreaming(800, 600, OpenCvCameraRotation.UPRIGHT);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+                telemetry.addData("Error", errorCode);
+                telemetry.update();
+            }
+        });
+
 
         this.bot = new Robot(
                 driveFrontLeft,
@@ -68,7 +90,15 @@ public class BaseAuto extends LinearOpMode {
                 intakeArm,
                 pincher1,
                 pincher2,
-                webcam1
+                webcam1,
+                telemetry,
+                this
         );
+
+        waitForStart();
+
+        this.pincher1.setPosition(PINCHER_1_CLOSED);
+        this.pincher2.setPosition(PINCHER_2_CLOSED);
+
     }
 }
