@@ -2,16 +2,21 @@ package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
-import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.*;
+import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD;
+import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-import static org.firstinspires.ftc.teamcode.IntakePositions.*;
+import static org.firstinspires.ftc.teamcode.IntakePositions.LINE1;
+import static org.firstinspires.ftc.teamcode.IntakePositions.LINE2;
+import static org.firstinspires.ftc.teamcode.IntakePositions.LINE3;
+import static org.firstinspires.ftc.teamcode.IntakePositions.LOADING;
+import static org.firstinspires.ftc.teamcode.IntakePositions.PICKING;
+import static org.firstinspires.ftc.teamcode.IntakePositions.TOP;
+import static org.firstinspires.ftc.teamcode.IntakePositions.TRAVELING;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.test.ColorTestBlue;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -21,10 +26,8 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
-import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -243,75 +246,79 @@ public class Robot {
     }
 
     public String colorDetectionBlue() {
-            OpenCvWebcam webcam1;
-            OpenCvPipeline redProcessor = new OpenCvPipeline() {
+        String propPos = null;
 
-                @Override
-                public Mat processFrame(Mat input) {
+        OpenCvPipeline blueProcessor = new OpenCvPipeline() {
 
-                    Imgproc.cvtColor(input, hsvMat1, Imgproc.COLOR_RGB2HSV);
+            @Override
+            public Mat processFrame(Mat input) {
 
-                    Core.inRange(hsvMat1, LOW_BLUE, HIGH_BLUE, inRangeMat1);
+                Imgproc.cvtColor(input, hsvMat1, Imgproc.COLOR_RGB2HSV);
 
-                    Imgproc.morphologyEx(inRangeMat1, morph1, Imgproc.MORPH_CLOSE, kernel);
-                    Imgproc.morphologyEx(morph1, morph1, Imgproc.MORPH_OPEN, kernel);
+                Core.inRange(hsvMat1, LOW_BLUE, HIGH_BLUE, inRangeMat1);
 
-                    List<MatOfPoint> contours = new ArrayList<>();
+                Imgproc.morphologyEx(inRangeMat1, morph1, Imgproc.MORPH_CLOSE, kernel);
+                Imgproc.morphologyEx(morph1, morph1, Imgproc.MORPH_OPEN, kernel);
 
-                    Imgproc.findContours(morph1, contours, hierarchy, Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
+                List<MatOfPoint> contours = new ArrayList<>();
 
-                    this.contoursBlue = contours;
+                Imgproc.findContours(morph1, contours, hierarchy, Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
 
-                    for (int i = 0; i < contours.size(); i++) {
-                        Imgproc.drawContours(input, contours, i, RED, 5, 2);
-                    }
-                    return input;
+                contoursBlue = contours;
+
+                for (int i = 0; i < contours.size(); i++) {
+                    Imgproc.drawContours(input, contours, i, RED, 5, 2);
                 }
-            };
+                return input;
+            }
+        };
 
-            int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-            webcam1 = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam1"), cameraMonitorViewId);
-
-            webcam1.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
-                @Override
-                public void onOpened() {
-                    telemetry.addLine("Camera Init Successful");
-                    telemetry.update();
-
-                    webcam1.startStreaming(800, 600, OpenCvCameraRotation.UPRIGHT);
-                }
-
-                @Override
-                public void onError(int errorCode) {
-                    telemetry.addData("Camera Load Failed | ERROR CODE", " " + errorCode);
-                }
-            });
-
-            while (True) {
-
-                List<MatOfPoint> contoursBlue = ColorTestBlue.this.contoursBlue;
-
-                webcam1.setPipeline(redProcessor);
-
-                telemetry.addLine("Detecting BLUE Contours");
-
-                telemetry.addData("Webcam pipeline activity", webcam1.getPipelineTimeMs());
-
-                telemetry.addData("Contours Detected", contoursBlue.size());
-
-                for (int i = 0; i < contoursBlue.size(); i++) {
-                    if (Imgproc.contourArea(contoursBlue.get(i)) > 10000) {
-                        Rect rect = Imgproc.boundingRect(contoursBlue.get(i));
-                        Point contourCent = new Point(((rect.width - rect.x) / 2.0) + rect.x, ((rect.height - rect.y) / 2.0) + rect.y);
-                        telemetry.addData("Area of Element:", Imgproc.contourArea(contoursBlue.get(i)));
-                        telemetry.addData("Location of Element:", contourCent.x);
-                    }
-                }
-
+        webcam1.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                telemetry.addLine("Camera Init Successful");
                 telemetry.update();
 
+                webcam1.startStreaming(800, 600, OpenCvCameraRotation.UPRIGHT);
             }
-        }
+
+            @Override
+            public void onError(int errorCode) {
+                telemetry.addData("Camera Load Failed | ERROR CODE", " " + errorCode);
+            }
+        });
+
+            List<MatOfPoint> contoursBlue = this.contoursBlue;
+
+            webcam1.setPipeline(blueProcessor);
+
+            telemetry.addLine("Detecting BLUE Contours");
+
+            telemetry.addData("Webcam pipeline activity", webcam1.getPipelineTimeMs());
+
+            telemetry.addData("Contours Detected", contoursBlue.size());
+
+            Point contourCent;
+
+            for (int i = 0; i < contoursBlue.size(); i++) {
+                if (Imgproc.contourArea(contoursBlue.get(i)) > 10000) {
+                    Rect rect = Imgproc.boundingRect(contoursBlue.get(i));
+                    contourCent = new Point(((rect.width - rect.x) / 2.0) + rect.x, ((rect.height - rect.y) / 2.0) + rect.y);
+                    telemetry.addData("Area of Element:", Imgproc.contourArea(contoursBlue.get(i)));
+                    telemetry.addData("Location of Element:", contourCent.x);
+
+                    if(contourCent.x > 300){
+                        propPos = "Right";
+                    }else if(contourCent.x < 300){
+                        propPos = "Center";
+                    }
+                    else {
+                        propPos = "Left";
+                    }
+                }
+            }
+        telemetry.update();
+        return(propPos);
     }
 
     private void setup(){
