@@ -11,9 +11,12 @@ public class ColorPropTestBlue extends BaseAuto {
     public void runOpMode() throws InterruptedException {
         super.runOpMode();
 
-        String propPos = bot.colorDetectionBlue();
-        telemetry.addData("Position", propPos);
-        telemetry.update();
-        while(opModeIsActive());
+        while(opModeIsActive()) {
+            String propPos = bot.detectPropPosition("red");
+            telemetry.addData("Position", propPos);
+            telemetry.update();
+
+            sleep(50);
+        }
     }
 }

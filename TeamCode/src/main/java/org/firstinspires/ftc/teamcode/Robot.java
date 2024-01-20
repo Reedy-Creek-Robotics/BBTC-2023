@@ -50,26 +50,6 @@ public class Robot {
 
     private static final double TURN_CONSTANT = 50.5d / 90d; // distance per deg
 
-    //HSV Blue
-    final Scalar LOW_BLUE = new Scalar(100, 100, 100);
-    final Scalar HIGH_BLUE = new Scalar(130, 255, 255);
-
-    final Scalar RED = new Scalar(255, 0, 0);
-
-    Mat hsvMat1 = new Mat();
-
-    Mat inRangeMat1 = new Mat();
-
-    Mat morph1 = new Mat();
-
-    Mat hierarchy = new Mat();
-
-    Mat kernel = Mat.ones(7, 7, CvType.CV_8UC1);
-
-    int frameCount = 0;
-
-    List<MatOfPoint> contoursBlue;
-
     Telemetry telemetry;
 
     LinearOpMode opMode;
@@ -250,43 +230,17 @@ public class Robot {
         intakeMotors(speed);
     }
 
-    public String colorDetectionBlue() {
-        String propPos = null;
+    public String detectPropPosition(String colorToDetect) {
+        String propPos = "Left";
 
-        OpenCvPipeline blueProcessor = new OpenCvPipeline() {
+        WebcamPipeline colorDetector = new WebcamPipeline(colorToDetect);
+        webcam1.setPipeline(colorDetector);
 
-            @Override
-            public Mat processFrame(Mat input) {
-                frameCount++;
-
-                Imgproc.cvtColor(input, hsvMat1, Imgproc.COLOR_RGB2HSV);
-
-                Core.inRange(hsvMat1, LOW_BLUE, HIGH_BLUE, inRangeMat1);
-
-                Imgproc.morphologyEx(inRangeMat1, morph1, Imgproc.MORPH_CLOSE, kernel);
-                Imgproc.morphologyEx(morph1, morph1, Imgproc.MORPH_OPEN, kernel);
-
-                List<MatOfPoint> contours = new ArrayList<>();
-
-                Imgproc.findContours(morph1, contours, hierarchy, Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
-
-                contoursBlue = contours;
-
-                for (int i = 0; i < contours.size(); i++) {
-                    Imgproc.drawContours(input, contours, i, RED, 5, 2);
-                }
-                return input;
-            }
-        };
-
-        Point contourCent;
+        propPos = colorDetector.getPropPos();
 
         int count = 0;
-        while (this.contoursBlue == null && !opMode.isStopRequested()) {
-            webcam1.setPipeline(blueProcessor);
-
+        while(propPos == "" && !opMode.isStopRequested()) {
             telemetry.addData("waiting for contours", count++);
-            telemetry.addData("frames processed", frameCount);
             telemetry.update();
 
             try {
@@ -294,25 +248,18 @@ public class Robot {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-        }
 
-        List<MatOfPoint> contoursBlue = this.contoursBlue;
+            propPos = colorDetector.getPropPos();
 
-        for (int i = 0; i < contoursBlue.size(); i++) {
-            if (Imgproc.contourArea(contoursBlue.get(i)) > 1000) {
-                Rect rect = Imgproc.boundingRect(contoursBlue.get(i));
-                contourCent = new Point(((rect.width - rect.x) / 2.0) + rect.x, ((rect.height - rect.y) / 2.0) + rect.y);
-
-                if (contourCent.x > 300) {
-                    propPos = "Right";
-                } else if (contourCent.x < 300) {
-                    propPos = "Center";
-                } else {
-                    propPos = "Left";
-                }
+            if (count > 5) {
+                telemetry.addData("waiting for contours failed after 5 retries, move on", count++);
+                telemetry.update();
+                propPos = "Center";
+                break;
             }
         }
-        return (propPos);
+
+        return propPos;
     }
 
     private void setup() {
