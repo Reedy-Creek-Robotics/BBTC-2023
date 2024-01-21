@@ -82,7 +82,7 @@ public class WebcamPipeline extends OpenCvPipeline {
         }
 
         for (int i = 0; i < contours.size(); i++) {
-            Imgproc.drawContours(input, contours, i, (colorToDetect == "blue"? RED : BLUE), 5, 2);
+            Imgproc.drawContours(input, contours, i, (RED), 5, 2);
         }
 
         // analyze

@@ -48,9 +48,6 @@ public class BaseAuto extends LinearOpMode {
         this.driveFrontRight = hardwareMap.get(DcMotor.class, "driveFrontRight");
         this.driveBackLeft = hardwareMap.get(DcMotor.class, "driveBackLeft");
         this.driveBackRight = hardwareMap.get(DcMotor.class, "driveBackRight");
-        this.intakeSlide1 = hardwareMap.get(DcMotor.class, "intakeSlide1");
-        this.intakeSlide2 = hardwareMap.get(DcMotor.class, "intakeSlide2");
-        this.intakeArm = hardwareMap.get(DcMotor.class, "intakeSlide1");
         this.pincher1 = hardwareMap.get(Servo.class, "pincher1");
         this.pincher2 = hardwareMap.get(Servo.class, "pincher2");
 
@@ -85,9 +82,6 @@ public class BaseAuto extends LinearOpMode {
                 driveBackLeft,
                 driveBackRight,
                 driveFrontRight,
-                intakeSlide1,
-                intakeSlide2,
-                intakeArm,
                 pincher1,
                 pincher2,
                 webcam1,
