@@ -62,28 +62,6 @@ public class Robot {
             PINCHER_2_OPEN = 0.5;
 
     //Todo: remove
-    public Robot(
-            DcMotor driveFrontLeft,
-            DcMotor driveBackLeft,
-            DcMotor driveBackRight,
-            DcMotor driveFrontRight,
-            DcMotor intakeSlide1,
-            DcMotor intakeSlide2,
-            DcMotor intakeArm,
-            Servo pincher1,
-            Servo pincher2
-    ) {
-
-        this.driveFrontLeft = driveFrontLeft;
-        this.driveFrontRight = driveFrontRight;
-        this.driveBackRight = driveBackRight;
-        this.driveBackLeft = driveBackLeft;
-        this.intakeSlide1 = intakeSlide1;
-        this.intakeSlide2 = intakeSlide2;
-        this.intakeArm = intakeArm;
-        this.pincher1 = pincher1;
-        this.pincher2 = pincher2;
-    }
 
     public Robot(
             DcMotor driveFrontLeft,
@@ -93,7 +71,6 @@ public class Robot {
             Servo pincher1,
             Servo pincher2,
             OpenCvCamera webcam1,
-            Telemetry telemetry,
             LinearOpMode opMode
     ) {
 

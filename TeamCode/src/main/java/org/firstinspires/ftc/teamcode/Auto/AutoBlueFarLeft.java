@@ -41,8 +41,6 @@ import java.util.List;
 @Autonomous(name = "Auto Blue Far Left")
 public class AutoBlueFarLeft extends BaseAuto {
 
-    private static int RESOLUTION_WIDTH = 1280;
-    private static int RESOLUTION_HEIGHT = 720;
     private static final double SPEED_INTAKE = 0.5;
     @Override
     public void runOpMode() throws InterruptedException {
@@ -53,15 +51,13 @@ public class AutoBlueFarLeft extends BaseAuto {
         bot.runIntake(LOADING, SPEED_INTAKE);
         bot.waitIntake();
 
-        String propPos;
-        propPos = "Right";
-        propPos = "Left";
+        String propPos = bot.detectPropPosition("blue");
 
 
         bot.forward(24, 0.3);
         bot.waitDrive();
 
-        if (propPos.equals("Right")) {
+        if (propPos.equals("right")) {
             bot.turn(90, 0.3, RIGHT);
             bot.waitDrive();
             bot.forward(12, 0.3);
@@ -75,7 +71,7 @@ public class AutoBlueFarLeft extends BaseAuto {
             bot.turn(90, 0.3, LEFT);
             bot.waitDrive();
 
-        } else if (propPos.equals("Left")) {
+        } else if (propPos.equals("left")) {
             bot.forward(24, 0.3);
             bot.waitDrive();
             bot.turn(90, 0.3, LEFT);

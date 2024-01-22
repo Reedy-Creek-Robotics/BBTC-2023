@@ -13,6 +13,8 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.openftc.easyopencv.OpenCvCamera;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,6 +50,7 @@ public class TeleOpDrive extends LinearOpMode {
     Servo pincher1;
     Servo pincher2;
     Servo drone;
+    OpenCvCamera webcam1;
     boolean pincher1Open;
     boolean pincher2Open;
     boolean droneLaunched;
@@ -234,16 +237,15 @@ public class TeleOpDrive extends LinearOpMode {
         pincher1Open = true;
         pincher2Open = true;
 
-        bot = new Robot(
+        this.bot = new Robot(
                 driveFrontLeft,
                 driveBackLeft,
                 driveBackRight,
                 driveFrontRight,
-                intakeSlide1,
-                intakeSlide2,
-                intakeArm,
                 pincher1,
-                pincher2
+                pincher2,
+                webcam1,
+                this
         );
 
     }

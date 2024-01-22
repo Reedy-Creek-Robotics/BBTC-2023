@@ -39,9 +39,6 @@ public class BaseAuto extends LinearOpMode {
     private VisionPortal portal;
     private OpenCvCamera webcam1;
 
-    private static int RESOLUTION_WIDTH = 1280;
-    private static int RESOLUTION_HEIGHT = 720;
-
     @Override
     public void runOpMode() throws InterruptedException {
         this.driveFrontLeft = hardwareMap.get(DcMotor.class, "driveFrontLeft");
@@ -77,7 +74,7 @@ public class BaseAuto extends LinearOpMode {
         });
 
 
-        this.bot = new Robot(
+       this .bot = new Robot(
                 driveFrontLeft,
                 driveBackLeft,
                 driveBackRight,
@@ -85,9 +82,8 @@ public class BaseAuto extends LinearOpMode {
                 pincher1,
                 pincher2,
                 webcam1,
-                telemetry,
                 this
-        );
+        );;
 
         waitForStart();
 
