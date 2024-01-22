@@ -5,18 +5,18 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Auto.BaseAuto;
 
-@TeleOp(name = "Color Prop Test Blue")
-public class ColorPropTestBlue extends BaseAuto {
+@TeleOp(name = "Color Prop Test Red")
+public class ColorPropTestRed extends BaseAuto {
 
     @Override
     public void runOpMode() throws InterruptedException {
         super.runOpMode();
 
         while(opModeIsActive()) {
-            String propPos = bot.detectPropPosition("blue");
-            telemetry.addLine("Detecting Blue");
+            String propPos = bot.detectPropPosition("red");
+            telemetry.addLine("Detecting Red");
             telemetry.addData("Position", propPos);
             telemetry.update();
-            }
         }
     }
+}
