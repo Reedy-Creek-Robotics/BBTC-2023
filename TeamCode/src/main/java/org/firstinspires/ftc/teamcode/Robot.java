@@ -230,17 +230,18 @@ public class Robot {
         WebcamPipeline colorDetector = new WebcamPipeline(colorToDetect);
         webcam1.setPipeline(colorDetector);
 
+        int count = 0;
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         propPos = colorDetector.getPropPos();
 
-        int count = 0;
         while(propPos == "" && !opMode.isStopRequested()) {
             telemetry.addData("waiting for contours", count++);
-
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
 
             propPos = colorDetector.getPropPos();
 
