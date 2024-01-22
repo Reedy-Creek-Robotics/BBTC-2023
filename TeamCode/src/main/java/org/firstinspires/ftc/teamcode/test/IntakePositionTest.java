@@ -13,6 +13,7 @@ import static org.firstinspires.ftc.teamcode.Robot.PINCHER_2_OPEN;
 import org.firstinspires.ftc.teamcode.IntakePositions;
 import org.firstinspires.ftc.teamcode.IntakePositions.*;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -23,6 +24,7 @@ import org.firstinspires.ftc.teamcode.Robot;
 
 import java.util.*;
 @TeleOp(name = "Intake Position Test")
+@Disabled
 public class IntakePositionTest extends LinearOpMode {
     Robot bot;
 

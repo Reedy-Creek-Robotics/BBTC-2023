@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Autonomous(name = "Color Test R")
+@Disabled
 public class ColorTestRed extends LinearOpMode {
 
     final Scalar BLUE = new Scalar(0, 0, 255);

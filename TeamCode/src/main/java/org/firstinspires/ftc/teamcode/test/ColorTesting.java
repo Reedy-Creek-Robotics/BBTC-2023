@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.test;
 import android.graphics.Color;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @TeleOp
+@Disabled
 public class ColorTesting extends LinearOpMode {
 
     //HSV Red
