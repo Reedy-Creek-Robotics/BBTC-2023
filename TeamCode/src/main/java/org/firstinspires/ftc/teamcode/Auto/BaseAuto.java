@@ -45,15 +45,12 @@ public class BaseAuto extends LinearOpMode {
         this.driveFrontRight = hardwareMap.get(DcMotor.class, "driveFrontRight");
         this.driveBackLeft = hardwareMap.get(DcMotor.class, "driveBackLeft");
         this.driveBackRight = hardwareMap.get(DcMotor.class, "driveBackRight");
+        this.intakeSlide1 = hardwareMap.get(DcMotor.class, "intakeSlide1");
+        this.intakeSlide2 = hardwareMap.get(DcMotor.class, "intakeSlide2");
+        this.intakeArm = hardwareMap.get(DcMotor.class, "intakeArm");
         this.pincher1 = hardwareMap.get(Servo.class, "pincher1");
         this.pincher2 = hardwareMap.get(Servo.class, "pincher2");
 
-        /*
-        this.portal = new VisionPortal.Builder()
-                .setCamera(hardwareMap.get(WebcamName.class, "Webcam1"))
-                .setCameraResolution(new Size(RESOLUTION_WIDTH, RESOLUTION_HEIGHT))
-                .build();
-        */
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam1 = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam1"), cameraMonitorViewId);
 
@@ -74,14 +71,18 @@ public class BaseAuto extends LinearOpMode {
         });
 
 
-       this .bot = new Robot(
-                driveFrontLeft,
+       this.bot = new Robot(
+                 driveFrontLeft,
                 driveBackLeft,
                 driveBackRight,
                 driveFrontRight,
+                intakeSlide1,
+                intakeSlide2,
+                intakeArm,
                 pincher1,
                 pincher2,
                 webcam1,
+                telemetry,
                 this
         );;
 

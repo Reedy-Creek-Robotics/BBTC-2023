@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 public enum IntakePositions {
-    LOADING(41,33),
-    PICKING(33,33),
-    TRAVELING(137,33),
-    LINE1(295,848),
-    LINE2(295,1769),
-    LINE3(295,2585),
-    TOP(295,3010);
+    PICKING(10,90),
+    LOADING(0,15),
+    TRAVELING(100,15),
+    BOTTOM(200, 380),
+    LINE1(200,850),
+    LINE2(200,1800),
+    LINE3(200,2650),
+    TOP(200,3070);
 
     int slidePosition;
     int armPosition;

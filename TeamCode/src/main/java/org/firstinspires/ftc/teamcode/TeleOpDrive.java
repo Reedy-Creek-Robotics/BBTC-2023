@@ -97,12 +97,12 @@ public class TeleOpDrive extends LinearOpMode {
 
     private void processControl(){
 
-        if(gamepad2.left_bumper && pinch1Debounce.milliseconds() > buttonDelay) {
+        if(gamepad2.left_bumper && !previousGamepad2.left_bumper && pinch1Debounce.milliseconds() > buttonDelay) {
             pincher1Open = !pincher1Open;
             pinch1Debounce.reset();
         }
 
-        if(gamepad2.right_bumper && pinch2Debounce.milliseconds() > buttonDelay) {
+        if(gamepad2.right_bumper && !previousGamepad2.right_bumper && pinch2Debounce.milliseconds() > buttonDelay) {
             pincher2Open = !pincher2Open;
             pinch2Debounce.reset();
         }
@@ -175,16 +175,27 @@ public class TeleOpDrive extends LinearOpMode {
     }
 
     private void processTelemetry(){
-        double displayVal = intakeArm.getCurrentPosition();
-        telemetry.addData("Left Stick ly1", ly1);
-        telemetry.addData("Left Stick lx1", lx1);
-        telemetry.addData("Right Stick lx1", rx1);
         telemetry.addData("Speed Factor", speedFactor);
-        telemetry.addData("intakeArm:", displayVal);
+        telemetry.addData("intakeArm", intakeArm.getCurrentPosition());
+        telemetry.addData("Slide Position", intakeSlide1.getCurrentPosition());
+        telemetry.addData("Intake Position", intakePosition);
         if(droneLaunched){
             telemetry.addLine("DRONE LAUNCHED");
         }
-        telemetry.addData("Distance", driveFrontRight.getCurrentPosition());
+
+        if(pincher1Open){
+            telemetry.addLine("LEFT PINCHER OPEN");
+        }else{
+            telemetry.addLine("LEFT PINCHER CLOSED");
+        }
+
+        if(pincher2Open){
+            telemetry.addLine("RIGHT PINCHER OPEN");
+        }else{
+            telemetry.addLine("RIGHT PINCHER CLOSED");
+        }
+
+        telemetry.addLine();
 
         telemetry.update();
     }
@@ -238,13 +249,17 @@ public class TeleOpDrive extends LinearOpMode {
         pincher2Open = true;
 
         this.bot = new Robot(
-                driveFrontLeft,
+                 driveFrontLeft,
                 driveBackLeft,
                 driveBackRight,
                 driveFrontRight,
+                intakeSlide1,
+                intakeSlide2,
+                intakeArm,
                 pincher1,
                 pincher2,
                 webcam1,
+                telemetry,
                 this
         );
 

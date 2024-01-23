@@ -21,6 +21,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
+import org.openftc.easyopencv.OpenCvCamera;
 
 import java.util.*;
 @TeleOp(name = "Intake Position Test")
@@ -39,6 +40,7 @@ public class IntakePositionTest extends LinearOpMode {
     private DcMotor intakeArm;
     private Servo pincher1;
     private Servo pincher2;
+    private OpenCvCamera webcam1;
     private boolean pincher1Open;
     private boolean pincher2Open;
     private int intakePosition = 0;
@@ -107,7 +109,10 @@ public class IntakePositionTest extends LinearOpMode {
                 intakeSlide2,
                 intakeArm,
                 pincher1,
-                pincher2
+                pincher2,
+                webcam1,
+                telemetry,
+                this
         );
 
         waitForStart();
@@ -143,7 +148,7 @@ public class IntakePositionTest extends LinearOpMode {
                 intakeDebounce.reset();
             }
 
-            if (intakePosition > 6){intakePosition = 6;}
+            if (intakePosition > 7){intakePosition = 7;}
             else if(intakePosition < 0){intakePosition = 0;}
 
             bot.runIntake(intakePositions[intakePosition],0.5);
