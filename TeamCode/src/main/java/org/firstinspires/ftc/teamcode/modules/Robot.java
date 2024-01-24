@@ -237,6 +237,8 @@ public class Robot {
             }
         }
 
+
+        webcam1.stopStreaming();
         return propPos;
     }
 
@@ -271,13 +273,15 @@ public class Robot {
         driveFrontRight.setPower(power);
         driveBackLeft.setPower(power);
         driveBackRight.setPower(power);
+
+        waitDrive();
     }
 
     private void driveTargetPositions(int distanceTicks) {
-        driveFrontLeft.setTargetPosition(distanceTicks);
-        driveFrontRight.setTargetPosition(distanceTicks);
-        driveBackLeft.setTargetPosition(distanceTicks);
-        driveBackRight.setTargetPosition(distanceTicks);
+        driveFrontLeft.setTargetPosition(driveFrontLeft.getCurrentPosition() + distanceTicks);
+        driveFrontRight.setTargetPosition(driveFrontRight.getCurrentPosition() + distanceTicks);
+        driveBackLeft.setTargetPosition(driveBackLeft.getCurrentPosition() + distanceTicks);
+        driveBackRight.setTargetPosition(driveBackRight.getCurrentPosition() + distanceTicks);
 
         driveFrontLeft.setMode(RUN_TO_POSITION);
         driveFrontRight.setMode(RUN_TO_POSITION);
@@ -285,11 +289,11 @@ public class Robot {
         driveBackRight.setMode(RUN_TO_POSITION);
     }
 
-    public void waitDrive() {
+    private void waitDrive() {
         while (driveFrontLeft.isBusy() && driveFrontRight.isBusy() && driveBackLeft.isBusy() && driveBackRight.isBusy() && opMode.opModeIsActive()) ;
     }
 
-    public void waitIntake() {
+    private void waitIntake() {
         while (intakeArm.isBusy() && intakeSlide1.isBusy() && intakeSlide2.isBusy() && opMode.opModeIsActive()) {
             // Intake has moved to target position, reset encoders in case we had any
             // slipping while running
@@ -301,6 +305,8 @@ public class Robot {
         intakeArm.setPower(power);
         intakeSlide1.setPower(power);
         intakeSlide2.setPower(power);
+
+        waitIntake();
     }
 
     private void intakeTargetPositions(int armDistance, int slideDistance) {

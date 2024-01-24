@@ -6,8 +6,8 @@ import static org.firstinspires.ftc.teamcode.modules.Direction.*;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name = "Auto Blue Far Left", preselectTeleOp = "TeleOpDrive")
-public class AutoBlueFarLeft extends BaseAuto {
+@Autonomous(name = "Auto", preselectTeleOp = "TeleOpDrive")
+public class Auto extends BaseAuto {
 
     @Override
     public void runOpMode() throws InterruptedException {
