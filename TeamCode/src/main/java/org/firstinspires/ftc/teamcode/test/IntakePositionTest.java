@@ -5,13 +5,12 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENC
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
 
-import static org.firstinspires.ftc.teamcode.Robot.PINCHER_1_CLOSED;
-import static org.firstinspires.ftc.teamcode.Robot.PINCHER_1_OPEN;
-import static org.firstinspires.ftc.teamcode.Robot.PINCHER_2_CLOSED;
-import static org.firstinspires.ftc.teamcode.Robot.PINCHER_2_OPEN;
+import static org.firstinspires.ftc.teamcode.modules.Robot.PINCHER_1_CLOSED;
+import static org.firstinspires.ftc.teamcode.modules.Robot.PINCHER_1_OPEN;
+import static org.firstinspires.ftc.teamcode.modules.Robot.PINCHER_2_CLOSED;
+import static org.firstinspires.ftc.teamcode.modules.Robot.PINCHER_2_OPEN;
 
-import org.firstinspires.ftc.teamcode.IntakePositions;
-import org.firstinspires.ftc.teamcode.IntakePositions.*;
+import org.firstinspires.ftc.teamcode.modules.IntakePositions;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -21,10 +20,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.modules.Robot;
 import org.openftc.easyopencv.OpenCvCamera;
 
-import java.util.*;
 @TeleOp(name = "Intake Position Test")
 @Disabled
 public class IntakePositionTest extends LinearOpMode {

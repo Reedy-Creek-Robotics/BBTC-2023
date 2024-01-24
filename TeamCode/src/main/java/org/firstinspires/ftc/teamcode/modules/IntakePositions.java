@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.modules;
 
 public enum IntakePositions {
     PICKING(0,0), // rotation arm all the way, slides all the way down
@@ -10,8 +10,8 @@ public enum IntakePositions {
     LINE3(200,2650), // Same as above, except above line 3
     TOP(200,3070); // Same as above, except highest can go
 
-    int slidePosition;
-    int armPosition;
+    public int slidePosition;
+    public int armPosition;
 
     public int getSlidePosition() {
         return slidePosition;
