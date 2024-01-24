@@ -1,14 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 public enum IntakePositions {
-    PICKING(10,90),
-    LOADING(0,15),
-    TRAVELING(100,15),
-    BOTTOM(200, 380),
-    LINE1(200,850),
-    LINE2(200,1800),
-    LINE3(200,2650),
-    TOP(200,3070);
+    PICKING(0,0), // rotation arm all the way, slides all the way down
+    LOADING(10,90), // arm position to pick up pixel, slides are slightly up above pixel
+    TRAVELING(100,0), // arm positioned out from robot, slides all the way down
+    BOTTOM(200, 380), // arm is aiming for backdrop, slides extended below bottom white line
+    LINE1(200,850), // Same as above, except above line 1
+    LINE2(200,1800), // Same as above, except above line 2
+    LINE3(200,2650), // Same as above, except above line 3
+    TOP(200,3070); // Same as above, except highest can go
 
     int slidePosition;
     int armPosition;

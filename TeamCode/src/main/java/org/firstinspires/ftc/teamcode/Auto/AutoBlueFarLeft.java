@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Autonomous(name = "Auto Blue Far Left")
+@Autonomous(name = "Auto Blue Far Left", preselectTeleOp = "TeleOpDrive")
 public class AutoBlueFarLeft extends BaseAuto {
 
     private static final double SPEED_INTAKE = 0.5;

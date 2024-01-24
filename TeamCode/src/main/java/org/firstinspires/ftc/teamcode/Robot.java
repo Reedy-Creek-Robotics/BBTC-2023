@@ -1,30 +1,21 @@
 package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
-import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.*;
+import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD;
+import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
 import static org.firstinspires.ftc.teamcode.IntakePositions.*;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.opencv.core.Core;
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.Point;
-import org.opencv.core.Rect;
-import org.opencv.core.Scalar;
-import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvPipeline;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Disabled
 public class Robot {
@@ -37,8 +28,11 @@ public class Robot {
     private DcMotor intakeSlide2;
     private DcMotor intakeArm;
 
+
     private Servo pincher1;
     private Servo pincher2;
+
+    private TouchSensor slideSwitch;
 
     private OpenCvCamera webcam1;
 
@@ -50,18 +44,20 @@ public class Robot {
 
     private static final double TURN_CONSTANT = 50.5d / 90d; // distance per deg
 
+    boolean switchPressed;
+    boolean previousSwitchPressed;
+
+    IntakePositions intakePositions[] = IntakePositions.values();
+
     Telemetry telemetry;
 
     LinearOpMode opMode;
-
 
     public static final double
             PINCHER_1_CLOSED = 0.6,
             PINCHER_1_OPEN = 0.44,
             PINCHER_2_CLOSED = 0.4,
             PINCHER_2_OPEN = 0.54;
-
-    //Todo: remove
 
     public Robot(
             DcMotor driveFrontLeft,
@@ -73,6 +69,7 @@ public class Robot {
             DcMotor intakeArm,
             Servo pincher1,
             Servo pincher2,
+            TouchSensor slideSwitch,
             OpenCvCamera webcam1,
             Telemetry telemetry,
             LinearOpMode opMode
@@ -87,6 +84,7 @@ public class Robot {
         this.intakeArm = intakeArm;
         this.pincher1 = pincher1;
         this.pincher2 = pincher2;
+        this.slideSwitch = slideSwitch;
         this.webcam1 = webcam1;
         this.telemetry = telemetry;
         this.opMode = opMode;
@@ -170,7 +168,7 @@ public class Robot {
     }
 
     public void runIntake(IntakePositions IntakePositions, double speed) {
-        setup();
+        //setup();
         int armDistance = 0;
         int slideDistance = 0;
         switch (IntakePositions) {
@@ -185,6 +183,10 @@ public class Robot {
             case TRAVELING:
                 slideDistance = TRAVELING.getSlidePosition();
                 armDistance = TRAVELING.getArmPosition();
+                break;
+            case BOTTOM:
+                slideDistance = BOTTOM.getSlidePosition();
+                armDistance = BOTTOM.getArmPosition();
                 break;
             case LINE1:
                 slideDistance = LINE1.getSlidePosition();
@@ -285,12 +287,15 @@ public class Robot {
     }
 
     public void waitDrive() {
-        while (driveFrontLeft.isBusy() && driveFrontRight.isBusy() && driveBackLeft.isBusy() && driveBackRight.isBusy())
-            ;
+        while (driveFrontLeft.isBusy() && driveFrontRight.isBusy() && driveBackLeft.isBusy() && driveBackRight.isBusy() && opMode.opModeIsActive()) ;
     }
 
     public void waitIntake() {
-        while (intakeArm.isBusy() && intakeSlide1.isBusy() && intakeSlide2.isBusy()) ;
+        while (intakeArm.isBusy() && intakeSlide1.isBusy() && intakeSlide2.isBusy() && opMode.opModeIsActive()) {
+            // Intake has moved to target position, reset encoders in case we had any
+            // slipping while running
+            resetSlidePositions();
+        }
     }
 
     private void intakeMotors(double power) {
@@ -307,5 +312,18 @@ public class Robot {
         intakeArm.setMode(RUN_TO_POSITION);
         intakeSlide1.setMode(RUN_TO_POSITION);
         intakeSlide2.setMode(RUN_TO_POSITION);
+    }
+
+    public void resetSlidePositions(){
+        switchPressed = slideSwitch.isPressed();
+        if(intakeSlide1.getTargetPosition() <= 90 || intakeSlide2.getTargetPosition() <= 90) {
+            if(slideSwitch.isPressed()) {
+                telemetry.addData("Reset Encoders", true);
+                telemetry.update();
+                intakeSlide1.setMode(STOP_AND_RESET_ENCODER);
+                intakeSlide2.setMode(STOP_AND_RESET_ENCODER);
+            }
+        }
+        previousSwitchPressed = slideSwitch.isPressed();
     }
 }

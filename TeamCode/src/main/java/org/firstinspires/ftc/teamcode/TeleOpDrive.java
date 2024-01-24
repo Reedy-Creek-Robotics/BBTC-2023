@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.openftc.easyopencv.OpenCvCamera;
@@ -50,10 +51,13 @@ public class TeleOpDrive extends LinearOpMode {
     Servo pincher1;
     Servo pincher2;
     Servo drone;
+    TouchSensor slideSwitch;
     OpenCvCamera webcam1;
     boolean pincher1Open;
     boolean pincher2Open;
     boolean droneLaunched;
+    boolean switchPressed;
+    boolean previousSwitchPressed;
     IntakePositions intakePositions[] = IntakePositions.values();
 
     @Override
@@ -78,6 +82,7 @@ public class TeleOpDrive extends LinearOpMode {
             processControl();
             processTelemetry();
 
+            resetSlidePositions();
         }
     }
 
@@ -136,7 +141,7 @@ public class TeleOpDrive extends LinearOpMode {
             intakeDebounce.reset();
         }
 
-        if (intakePosition > 6){intakePosition = 6;}
+        if (intakePosition > 7){intakePosition = 7;}
         else if(intakePosition < 0){intakePosition = 0;}
 
         bot.runIntake(intakePositions[intakePosition],0.5);
@@ -178,7 +183,11 @@ public class TeleOpDrive extends LinearOpMode {
         telemetry.addData("Speed Factor", speedFactor);
         telemetry.addData("intakeArm", intakeArm.getCurrentPosition());
         telemetry.addData("Slide Position", intakeSlide1.getCurrentPosition());
+        telemetry.addData("Slide Target From Enum", intakePositions[intakePosition].slidePosition);
+        telemetry.addData("Slide Target From Motor1", intakeSlide1.getTargetPosition());
+        telemetry.addData("Slide Target From Motor2", intakeSlide2.getTargetPosition());
         telemetry.addData("Intake Position", intakePosition);
+        telemetry.addData("switch", slideSwitch.isPressed());
         if(droneLaunched){
             telemetry.addLine("DRONE LAUNCHED");
         }
@@ -248,8 +257,10 @@ public class TeleOpDrive extends LinearOpMode {
         pincher1Open = true;
         pincher2Open = true;
 
+        slideSwitch = hardwareMap.get(TouchSensor.class, "slideSwitch");
+
         this.bot = new Robot(
-                 driveFrontLeft,
+                driveFrontLeft,
                 driveBackLeft,
                 driveBackRight,
                 driveFrontRight,
@@ -258,10 +269,21 @@ public class TeleOpDrive extends LinearOpMode {
                 intakeArm,
                 pincher1,
                 pincher2,
+                slideSwitch,
                 webcam1,
                 telemetry,
                 this
         );
 
+    }
+    private void resetSlidePositions(){
+        switchPressed = slideSwitch.isPressed();
+        if(intakePosition == 0 || intakePosition == 2) {
+            if(switchPressed) {
+                intakeSlide1.setMode(STOP_AND_RESET_ENCODER);
+                intakeSlide2.setMode(STOP_AND_RESET_ENCODER);
+            }
+        }
+        previousSwitchPressed = slideSwitch.isPressed();
     }
 }

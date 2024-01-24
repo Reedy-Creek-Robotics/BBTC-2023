@@ -18,6 +18,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
@@ -41,6 +42,7 @@ public class IntakePositionTest extends LinearOpMode {
     private Servo pincher1;
     private Servo pincher2;
     private OpenCvCamera webcam1;
+    private TouchSensor slideSwitch;
     private boolean pincher1Open;
     private boolean pincher2Open;
     private int intakePosition = 0;
@@ -100,6 +102,8 @@ public class IntakePositionTest extends LinearOpMode {
         pincher1Open = true;
         pincher2Open = true;
 
+        slideSwitch = hardwareMap.get(TouchSensor.class, "touchSensor");
+
         bot = new Robot(
                 driveFrontLeft,
                 driveBackLeft,
@@ -110,6 +114,7 @@ public class IntakePositionTest extends LinearOpMode {
                 intakeArm,
                 pincher1,
                 pincher2,
+                slideSwitch,
                 webcam1,
                 telemetry,
                 this

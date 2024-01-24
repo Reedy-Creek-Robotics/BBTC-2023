@@ -8,6 +8,7 @@ import android.util.Size;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Robot;
@@ -36,6 +37,7 @@ public class BaseAuto extends LinearOpMode {
     private DcMotor intakeArm;
     private Servo pincher1;
     private Servo pincher2;
+    private TouchSensor slideSwitch;
     private VisionPortal portal;
     private OpenCvCamera webcam1;
 
@@ -50,7 +52,7 @@ public class BaseAuto extends LinearOpMode {
         this.intakeArm = hardwareMap.get(DcMotor.class, "intakeArm");
         this.pincher1 = hardwareMap.get(Servo.class, "pincher1");
         this.pincher2 = hardwareMap.get(Servo.class, "pincher2");
-
+        this.slideSwitch = hardwareMap.get(TouchSensor.class, "slideSwitch");
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam1 = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam1"), cameraMonitorViewId);
 
@@ -81,10 +83,11 @@ public class BaseAuto extends LinearOpMode {
                 intakeArm,
                 pincher1,
                 pincher2,
+                slideSwitch,
                 webcam1,
                 telemetry,
                 this
-        );;
+        );
 
         waitForStart();
 
