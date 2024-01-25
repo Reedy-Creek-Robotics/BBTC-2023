@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.Auto;
 
 import static org.firstinspires.ftc.teamcode.modules.Direction.LEFT;
 import static org.firstinspires.ftc.teamcode.modules.Direction.RIGHT;
+import static org.firstinspires.ftc.teamcode.modules.IntakePositions.BOTTOM;
+import static org.firstinspires.ftc.teamcode.modules.IntakePositions.LINE1;
 import static org.firstinspires.ftc.teamcode.modules.IntakePositions.LOADING;
 import static org.firstinspires.ftc.teamcode.modules.IntakePositions.PICKING;
 import static org.firstinspires.ftc.teamcode.modules.IntakePositions.TRAVELING;
@@ -35,8 +37,8 @@ public class BaseAuto extends LinearOpMode {
     private TouchSensor slideSwitch;
     private VisionPortal portal;
     private OpenCvCamera webcam1;
-    private static final double SPEED_INTAKE = 0.5;
-    private static final double SPEED_DRIVE = 0.3;
+    protected static final double SPEED_INTAKE = 0.3;
+    protected static final double SPEED_DRIVE = 0.3;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -103,41 +105,5 @@ public class BaseAuto extends LinearOpMode {
         Thread.sleep(1000);
 
         bot.runIntake(PICKING, SPEED_INTAKE);
-
-        String propPos = bot.detectPropPosition("red");
-        
-        telemetry.addData("Prop Pos", propPos);
-        telemetry.update();
-
-        if (propPos.equals("Right")) {
-            bot.forward(24, SPEED_DRIVE);
-            bot.turn(90, SPEED_DRIVE, RIGHT);
-            bot.forward(7, SPEED_DRIVE);
-            bot.runPincher1(PINCHER_1_OPEN);
-            /*bot.runIntake(TRAVELING, SPEED_INTAKE);
-            bot.forward(-12, SPEED_DRIVE);
-            bot.turn(90, SPEED_DRIVE, LEFT);
-            */
-
-        } else if (propPos.equals("Left")) {
-            bot.forward(24, SPEED_DRIVE);
-            bot.turn(90, SPEED_DRIVE, LEFT);
-            bot.forward(7, SPEED_DRIVE);
-            bot.runPincher1(PINCHER_1_OPEN);
-            /*bot.runIntake(TRAVELING, SPEED_INTAKE);
-            bot.forward(-12, SPEED_DRIVE);
-            bot.turn(90, SPEED_DRIVE, RIGHT);
-            */
-        }else{
-            bot.forward(35.5, SPEED_DRIVE);
-            bot.runPincher1(PINCHER_1_OPEN);
-            bot.forward(-10, SPEED_DRIVE);
-            bot.strafe(16, SPEED_DRIVE, LEFT);
-            bot.forward(30,SPEED_DRIVE);
-            bot.turn(92, SPEED_DRIVE, RIGHT);
-            bot.forward(72, SPEED_DRIVE);
-            
-        }
-
     }
 }

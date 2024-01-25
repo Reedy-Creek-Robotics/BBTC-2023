@@ -239,6 +239,7 @@ public class Robot {
 
 
         webcam1.stopStreaming();
+        webcam1.closeCameraDevice();
         return propPos;
     }
 
