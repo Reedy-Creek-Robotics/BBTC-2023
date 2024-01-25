@@ -1,13 +1,19 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
-import static org.firstinspires.ftc.teamcode.modules.Robot.*;
-import static org.firstinspires.ftc.teamcode.modules.IntakePositions.*;
-import static org.firstinspires.ftc.teamcode.modules.Direction.*;
+import static org.firstinspires.ftc.teamcode.modules.Direction.LEFT;
+import static org.firstinspires.ftc.teamcode.modules.Direction.RIGHT;
+import static org.firstinspires.ftc.teamcode.modules.IntakePositions.BOTTOM;
+import static org.firstinspires.ftc.teamcode.modules.IntakePositions.LINE1;
+import static org.firstinspires.ftc.teamcode.modules.IntakePositions.LOADING;
+import static org.firstinspires.ftc.teamcode.modules.Robot.PINCHER_1_OPEN;
+import static org.firstinspires.ftc.teamcode.modules.Robot.PINCHER_2_OPEN;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name = "Auto", preselectTeleOp = "TeleOpDrive")
-public class Auto extends BaseAuto {
+import org.firstinspires.ftc.teamcode.modules.BaseAuto;
+
+@Autonomous(name = "Blue Near")
+public class BlueNear extends BaseAuto {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -28,13 +34,12 @@ public class Auto extends BaseAuto {
             bot.forward(10, SPEED_DRIVE);
             bot.strafe(5, SPEED_DRIVE, RIGHT);
             bot.runIntake(BOTTOM, SPEED_INTAKE);
-            bot.forward(6, 0.2);
+            bot.forward(7, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);
             bot.forward(-7, SPEED_DRIVE);
             bot.runIntake(LOADING, SPEED_INTAKE);
             bot.strafe(30, SPEED_DRIVE, LEFT);
-            bot.forward(16, SPEED_DRIVE);
 
         } else if (propPos.equals("Left")) {
             bot.strafe(24, SPEED_DRIVE, LEFT);
@@ -53,7 +58,6 @@ public class Auto extends BaseAuto {
             bot.forward(-7, SPEED_DRIVE);
             bot.runIntake(LOADING, SPEED_INTAKE);
             bot.strafe(16, SPEED_DRIVE, LEFT);
-            bot.forward(16, SPEED_DRIVE);
 
         }else{
             bot.forward(33.5, SPEED_DRIVE);
@@ -64,13 +68,12 @@ public class Auto extends BaseAuto {
             bot.strafe(5, SPEED_DRIVE, RIGHT);
             bot.turn(3, SPEED_DRIVE, RIGHT);
             bot.runIntake(BOTTOM, SPEED_INTAKE);
-            bot.forward(9, 0.2);
+            bot.forward(8.5, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);
             bot.forward(-4, SPEED_DRIVE);
             bot.runIntake(LOADING, SPEED_INTAKE);
             bot.strafe(25, SPEED_DRIVE, LEFT);
-            bot.forward(16, SPEED_DRIVE);
         }
     }
 }

@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Autonomous
+@Disabled
 public class EncoderTest extends LinearOpMode {
     DcMotor intakeArm;
     DcMotor intakeSlide1;

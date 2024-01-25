@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Auto;
+package org.firstinspires.ftc.teamcode.modules;
 
 import static org.firstinspires.ftc.teamcode.modules.Direction.LEFT;
 import static org.firstinspires.ftc.teamcode.modules.Direction.RIGHT;

@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name = "Auto Red Near Left")
-public class AutoRedNearLeft extends BaseAuto {
+import org.firstinspires.ftc.teamcode.modules.BaseAuto;
+
+@Autonomous(name = "Blue Far")
+public class BlueFar extends BaseAuto {
 
     @Override
     public void runOpMode() throws InterruptedException {
