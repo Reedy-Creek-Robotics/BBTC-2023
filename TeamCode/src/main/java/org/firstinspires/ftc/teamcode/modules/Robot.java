@@ -226,12 +226,7 @@ public class Robot {
     public String detectPropPosition(String colorToDetect) throws InterruptedException {
         String propPos = "Right";
 
-        WebcamPipeline colorDetector = new WebcamPipeline(colorToDetect);
-        webcam1.setPipeline(colorDetector);
-
         int count = 0;
-
-        Thread.sleep(2000);
 
         propPos = colorDetector.getPropPos();
 
