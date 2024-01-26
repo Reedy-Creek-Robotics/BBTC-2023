@@ -98,10 +98,6 @@ public class BaseAuto extends LinearOpMode {
                 telemetry,
                 this
         );
-        WebcamPipeline colorDetector = new WebcamPipeline(colorToDetect);
-        webcam1.setPipeline(colorDetector);
-
-        Thread.sleep(2000);
 
         waitForStart();
 

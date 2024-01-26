@@ -228,6 +228,11 @@ public class Robot {
 
         int count = 0;
 
+        WebcamPipeline colorDetector = new WebcamPipeline(colorToDetect);
+        webcam1.setPipeline(colorDetector);
+
+        Thread.sleep(2000);
+
         propPos = colorDetector.getPropPos();
 
         while(propPos == "" && opMode.opModeIsActive()){

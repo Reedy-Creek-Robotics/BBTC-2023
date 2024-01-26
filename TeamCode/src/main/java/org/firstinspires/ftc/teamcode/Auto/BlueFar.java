@@ -24,20 +24,21 @@ public class BlueFar extends BaseAuto {
         if (bluePropPos.equals("Left")) {
             bot.forward(24, SPEED_DRIVE);
             bot.turn(90, SPEED_DRIVE, LEFT);
-            bot.forward(7, SPEED_DRIVE);
+            bot.forward(8, SPEED_DRIVE);
             bot.runPincher1(PINCHER_1_OPEN);
-            bot.forward(-7, SPEED_DRIVE);
+            bot.forward(-8, SPEED_DRIVE);
             bot.strafe(30, SPEED_DRIVE, RIGHT);
+            bot.turn(3, SPEED_DRIVE, RIGHT);
             bot.forward(80, SPEED_DRIVE);
-            bot.strafe(40, SPEED_DRIVE, LEFT);
+            bot.strafe(38, SPEED_DRIVE, LEFT);
             bot.turn(3, SPEED_DRIVE, LEFT);
             bot.runIntake(BOTTOM, SPEED_INTAKE);
-            bot.forward(7, 0.2);
+            bot.forward(10, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);
-            bot.forward(-5);
+            bot.forward(-5, SPEED_DRIVE);
             bot.runIntake(LOADING, SPEED_INTAKE);
-            bot.strafe(30, SPEED_DRIVE, RIGHT);
+            bot.strafe(35, SPEED_DRIVE, RIGHT);
             bot.forward(15, SPEED_DRIVE);
 
         } else if (bluePropPos.equals("Right")) {
@@ -49,15 +50,15 @@ public class BlueFar extends BaseAuto {
             bot.strafe(30, SPEED_DRIVE, LEFT);
             bot.turn(187, SPEED_DRIVE, LEFT);
             bot.forward(80, SPEED_DRIVE);
-            bot.strafe(40, SPEED_DRIVE, LEFT);
+            bot.strafe(30, SPEED_DRIVE, LEFT);
             bot.turn(3, SPEED_DRIVE, LEFT);
             bot.runIntake(BOTTOM, SPEED_INTAKE);
-            bot.forward(7, 0.2);
+            bot.forward(8, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);
-            bot.forward(-5);
+            bot.forward(-5, SPEED_DRIVE);
             bot.runIntake(LOADING, SPEED_INTAKE);
-            bot.strafe(30, SPEED_DRIVE, RIGHT);
+            bot.strafe(26, SPEED_DRIVE, RIGHT);
             bot.forward(15, SPEED_DRIVE);
 
         }else{
@@ -68,7 +69,7 @@ public class BlueFar extends BaseAuto {
             bot.forward(33,SPEED_DRIVE);
             bot.turn(90, SPEED_DRIVE, LEFT);
             bot.forward(90, SPEED_DRIVE);
-            bot.strafe(32, SPEED_DRIVE, LEFT);
+            bot.strafe(34, SPEED_DRIVE, LEFT);
             bot.forward(12, SPEED_DRIVE);
             bot.turn(3, SPEED_DRIVE, RIGHT);
             bot.runIntake(BOTTOM, SPEED_INTAKE);
@@ -77,7 +78,7 @@ public class BlueFar extends BaseAuto {
             Thread.sleep(1000);
             bot.forward(-4, 0.2);
             bot.runIntake(LOADING, SPEED_INTAKE);
-            bot.strafe(30, SPEED_DRIVE, RIGHT);
+            bot.strafe(35, SPEED_DRIVE, RIGHT);
             bot.forward(16, SPEED_DRIVE);
         }
     }

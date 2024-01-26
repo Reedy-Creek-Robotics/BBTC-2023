@@ -31,7 +31,7 @@ public class RedFar extends BaseAuto {
             bot.forward(7, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);
-            bot.forward(-5);
+            bot.forward(-5, SPEED_DRIVE);
             bot.runIntake(LOADING, SPEED_INTAKE);
             bot.strafe(30, SPEED_DRIVE, LEFT);
             bot.forward(15, SPEED_DRIVE);
@@ -51,7 +51,7 @@ public class RedFar extends BaseAuto {
             bot.forward(7, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);
-            bot.forward(-5);
+            bot.forward(-5, SPEED_DRIVE);
             bot.runIntake(LOADING, SPEED_INTAKE);
             bot.strafe(30, SPEED_DRIVE, RIGHT);
             bot.forward(15, SPEED_DRIVE);
