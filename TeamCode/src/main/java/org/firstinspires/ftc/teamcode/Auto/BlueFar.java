@@ -26,6 +26,19 @@ public class BlueFar extends BaseAuto {
             bot.turn(90, SPEED_DRIVE, LEFT);
             bot.forward(7, SPEED_DRIVE);
             bot.runPincher1(PINCHER_1_OPEN);
+            bot.forward(-7, SPEED_DRIVE);
+            bot.strafe(30, SPEED_DRIVE, RIGHT);
+            bot.forward(80, SPEED_DRIVE);
+            bot.strafe(40, SPEED_DRIVE, LEFT);
+            bot.turn(3, SPEED_DRIVE, LEFT);
+            bot.runIntake(BOTTOM, SPEED_INTAKE);
+            bot.forward(7, 0.2);
+            bot.runPincher2(PINCHER_2_OPEN);
+            Thread.sleep(1000);
+            bot.forward(-5);
+            bot.runIntake(LOADING, SPEED_INTAKE);
+            bot.strafe(30, SPEED_DRIVE, RIGHT);
+            bot.forward(15, SPEED_DRIVE);
 
         } else if (bluePropPos.equals("Right")) {
             bot.forward(24, SPEED_DRIVE);
@@ -45,6 +58,7 @@ public class BlueFar extends BaseAuto {
             bot.forward(-5);
             bot.runIntake(LOADING, SPEED_INTAKE);
             bot.strafe(30, SPEED_DRIVE, RIGHT);
+            bot.forward(15, SPEED_DRIVE);
 
         }else{
             bot.forward(34, SPEED_DRIVE);
