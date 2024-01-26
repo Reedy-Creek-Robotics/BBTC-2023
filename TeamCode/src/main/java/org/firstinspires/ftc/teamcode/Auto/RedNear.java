@@ -72,7 +72,7 @@ public class RedNear extends BaseAuto {
             Thread.sleep(1000);
             bot.forward(-4, SPEED_DRIVE);
             bot.runIntake(LOADING, SPEED_INTAKE);
-            bot.strafe(30, SPEED_DRIVE, RIGHT);
+            bot.strafe(30 , SPEED_DRIVE, RIGHT);
         }
     }
 }

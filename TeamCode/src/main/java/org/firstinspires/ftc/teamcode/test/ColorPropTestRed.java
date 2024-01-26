@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.modules.BaseAuto;
 
 @TeleOp(name = "Color Prop Test Red")
+@Disabled
 public class ColorPropTestRed extends BaseAuto {
 
     @Override
