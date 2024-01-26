@@ -90,8 +90,6 @@ public class TeleOpDrive extends LinearOpMode {
             processDriving();
             processControl();
             processTelemetry();
-
-            resetSlidePositions();
         }
     }
 
@@ -110,6 +108,14 @@ public class TeleOpDrive extends LinearOpMode {
     }
 
     private void processControl(){
+        if(gamepad2.x && gamepad2.b){
+            intakeSlide1.setTargetPosition(0);
+            intakeSlide2.setTargetPosition(0);
+            intakeSlide1.setPower(0.3);
+            intakeSlide2.setPower(0.3);
+            resetSlidePositions();
+        }
+
         if(gamepad2.left_bumper && !previousGamepad2.left_bumper && pinch1Debounce.milliseconds() > buttonDelay) {
             pincher1Open = !pincher1Open;
             pinch1Debounce.reset();
@@ -310,12 +316,11 @@ public class TeleOpDrive extends LinearOpMode {
     }
     private void resetSlidePositions(){
         switchPressed = slideSwitch.isPressed();
-        if(intakePosition == 0 || intakePosition == 2) {
-            if(switchPressed) {
-                intakeSlide1.setMode(STOP_AND_RESET_ENCODER);
-                intakeSlide2.setMode(STOP_AND_RESET_ENCODER);
+            while(!switchPressed) {
+                telemetry.addLine("WAITING FOR INTAKE RESET");
+                telemetry.update();
             }
-        }
-        previousSwitchPressed = slideSwitch.isPressed();
+        intakeSlide1.setMode(STOP_AND_RESET_ENCODER);
+        intakeSlide2.setMode(STOP_AND_RESET_ENCODER);
     }
 }

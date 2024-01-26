@@ -50,15 +50,15 @@ public class BlueFar extends BaseAuto {
             bot.strafe(30, SPEED_DRIVE, LEFT);
             bot.turn(187, SPEED_DRIVE, LEFT);
             bot.forward(80, SPEED_DRIVE);
-            bot.strafe(30, SPEED_DRIVE, LEFT);
+            bot.strafe(40, SPEED_DRIVE, LEFT);
             bot.turn(3, SPEED_DRIVE, LEFT);
             bot.runIntake(BOTTOM, SPEED_INTAKE);
-            bot.forward(8, 0.2);
+            bot.forward(7, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);
             bot.forward(-5, SPEED_DRIVE);
             bot.runIntake(LOADING, SPEED_INTAKE);
-            bot.strafe(26, SPEED_DRIVE, RIGHT);
+            bot.strafe(30, SPEED_DRIVE, RIGHT);
             bot.forward(15, SPEED_DRIVE);
 
         }else{

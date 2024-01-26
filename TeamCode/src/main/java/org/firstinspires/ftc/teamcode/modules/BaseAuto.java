@@ -38,7 +38,7 @@ public class BaseAuto extends LinearOpMode {
     private VisionPortal portal;
     private OpenCvCamera webcam1;
     protected static final double SPEED_INTAKE = 0.3;
-    protected static final double SPEED_DRIVE = 0.3;
+    protected static final double SPEED_DRIVE = 0.4;
     protected String bluePropPos;
     protected String redPropPos;
 
@@ -61,6 +61,11 @@ public class BaseAuto extends LinearOpMode {
         this.intakeSlide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.intakeSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.intakeArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        this.driveFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.driveBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.driveFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.driveBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         this.slideSwitch = hardwareMap.get(TouchSensor.class, "slideSwitch");
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -104,7 +109,6 @@ public class BaseAuto extends LinearOpMode {
         bluePropPos = bot.detectPropPosition("blue");
         redPropPos = bot.detectPropPosition("red");
 
-        webcam1.stopStreaming();
         webcam1.closeCameraDevice();
 
         this.pincher1.setPosition(PINCHER_1_CLOSED);

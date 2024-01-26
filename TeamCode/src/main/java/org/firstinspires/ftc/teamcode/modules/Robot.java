@@ -104,7 +104,7 @@ public class Robot {
         driveMotors(speed);
     }
 
-    public void strafe(int distanceInches, double speed, Direction direction) {
+    public void strafe(double distanceInches, double speed, Direction direction) {
         setup();
         int distanceTicks = inchesToTicks(distanceInches);
 
