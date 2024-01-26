@@ -39,6 +39,8 @@ public class BaseAuto extends LinearOpMode {
     private OpenCvCamera webcam1;
     protected static final double SPEED_INTAKE = 0.3;
     protected static final double SPEED_DRIVE = 0.3;
+    protected String bluePropPos;
+    protected String redPropPos;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -70,7 +72,7 @@ public class BaseAuto extends LinearOpMode {
                 telemetry.addLine("Camera Init Successful");
                 telemetry.update();
 
-                webcam1.startStreaming(800, 600, OpenCvCameraRotation.UPRIGHT);
+                webcam1.startStreaming(800, 600, OpenCvCameraRotation.UPSIDE_DOWN);
             }
 
             @Override
@@ -96,13 +98,24 @@ public class BaseAuto extends LinearOpMode {
                 telemetry,
                 this
         );
-
         waitForStart();
+
+        bluePropPos = bot.detectPropPosition("blue");
+        redPropPos = bot.detectPropPosition("red");
+
+        telemetry.clear();
+        telemetry.addData("Red Prop Pos", redPropPos);
+        telemetry.addData("Blue Prop Pos", bluePropPos);
+        telemetry.update();
+
+
+        webcam1.stopStreaming();
+        webcam1.closeCameraDevice();
 
         this.pincher1.setPosition(PINCHER_1_CLOSED);
         this.pincher2.setPosition(PINCHER_2_CLOSED);
 
-        Thread.sleep(1000);
+        Thread.sleep(100);
 
         bot.runIntake(PICKING, SPEED_INTAKE);
     }

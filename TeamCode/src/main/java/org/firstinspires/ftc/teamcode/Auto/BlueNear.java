@@ -19,12 +19,10 @@ public class BlueNear extends BaseAuto {
     public void runOpMode() throws InterruptedException {
         super.runOpMode();
 
-        String propPos = bot.detectPropPosition("blue");
-
-        telemetry.addData("Prop Pos", propPos);
+        telemetry.addData("Blue Prop Pos", bluePropPos);
         telemetry.update();
 
-        if (propPos.equals("Right")) {
+        if (bluePropPos.equals("Right")) {
             bot.forward(24, SPEED_DRIVE);
             bot.turn(90, SPEED_DRIVE, RIGHT);
             bot.forward(10, SPEED_DRIVE); //failing
@@ -41,7 +39,7 @@ public class BlueNear extends BaseAuto {
             bot.runIntake(LOADING, SPEED_INTAKE);
             bot.strafe(30, SPEED_DRIVE, LEFT);
 
-        } else if (propPos.equals("Left")) {
+        } else if (bluePropPos.equals("Left")) {
             bot.strafe(24, SPEED_DRIVE, LEFT);
             bot.forward(27, SPEED_DRIVE);
             bot.turn(90, SPEED_DRIVE, RIGHT);

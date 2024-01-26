@@ -209,40 +209,6 @@ public class Robot {
         intakeMotors(speed);
     }
 
-    public String detectPropPosition(String colorToDetect) {
-        String propPos = "Left";
-
-        WebcamPipeline colorDetector = new WebcamPipeline(colorToDetect);
-        webcam1.setPipeline(colorDetector);
-
-        int count = 0;
-
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        propPos = colorDetector.getPropPos();
-
-        while(propPos == "" && !opMode.isStopRequested()) {
-            telemetry.addData("waiting for contours", count++);
-
-            propPos = colorDetector.getPropPos();
-
-            if (count > 5) {
-                telemetry.addData("waiting for contours failed after 5 retries, move on", count++);
-                propPos = "Left";
-                break;
-            }
-        }
-
-
-        webcam1.stopStreaming();
-        webcam1.closeCameraDevice();
-        return propPos;
-    }
-
     private void setup() {
 
         // Behavior when motor stops
@@ -255,6 +221,33 @@ public class Robot {
         intakeSlide2.setZeroPowerBehavior(BRAKE);
         intakeSlide1.setDirection(REVERSE);
 
+    }
+
+    public String detectPropPosition(String colorToDetect) throws InterruptedException {
+        String propPos = "Right";
+
+        WebcamPipeline colorDetector = new WebcamPipeline(colorToDetect);
+        webcam1.setPipeline(colorDetector);
+
+        int count = 0;
+
+        Thread.sleep(2000);
+
+        propPos = colorDetector.getPropPos();
+
+        while(propPos == "" && opMode.opModeIsActive()){
+
+            propPos = colorDetector.getPropPos();
+
+            count++;
+
+            if (count > 5) {
+                propPos = "Right";
+                break;
+            }
+        }
+
+        return propPos;
     }
 
     private int degreesToDistance(int degrees) {

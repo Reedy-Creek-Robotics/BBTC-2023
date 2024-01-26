@@ -10,23 +10,20 @@ import org.firstinspires.ftc.teamcode.modules.BaseAuto;
 
 @Autonomous(name = "Red Far", preselectTeleOp = "TeleOpDrive")
 public class RedFar extends BaseAuto {
-
     @Override
     public void runOpMode() throws InterruptedException {
         super.runOpMode();
 
-        String propPos = bot.detectPropPosition("red");
-
-        telemetry.addData("Prop Pos", propPos);
+        telemetry.addData("Red Prop Pos", redPropPos);
         telemetry.update();
 
-        if (propPos.equals("Right")) {
+        if (redPropPos.equals("Right")) {
             bot.forward(24, SPEED_DRIVE);
             bot.turn(90, SPEED_DRIVE, RIGHT);
             bot.forward(7, SPEED_DRIVE);
             bot.runPincher1(PINCHER_1_OPEN);
 
-        } else if (propPos.equals("Left")) {
+        } else if (redPropPos.equals("Left")) {
             bot.forward(24, SPEED_DRIVE);
             bot.turn(90, SPEED_DRIVE, LEFT);
             bot.forward(7, SPEED_DRIVE);
