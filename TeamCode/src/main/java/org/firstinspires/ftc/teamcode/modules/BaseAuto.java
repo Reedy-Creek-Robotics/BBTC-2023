@@ -103,12 +103,6 @@ public class BaseAuto extends LinearOpMode {
         bluePropPos = bot.detectPropPosition("blue");
         redPropPos = bot.detectPropPosition("red");
 
-        telemetry.clear();
-        telemetry.addData("Red Prop Pos", redPropPos);
-        telemetry.addData("Blue Prop Pos", bluePropPos);
-        telemetry.update();
-
-
         webcam1.stopStreaming();
         webcam1.closeCameraDevice();
 
