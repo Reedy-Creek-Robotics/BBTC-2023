@@ -25,12 +25,14 @@ public class TeleOpDrive extends LinearOpMode {
     ElapsedTime pinch1Debounce;
     ElapsedTime pinch2Debounce;
     ElapsedTime speedFactorDebounce;
+    ElapsedTime intakeSpeedFactorDebounce;
     private ElapsedTime intakeDebounce;
 
     static final int buttonDelay = 250;
     private int intakePosition = 0;
 
     double speedFactor = 0.7;
+    double intakeSpeedFactor = 0.5;
     double ly1;
     double lx1;
     double rx1;
@@ -63,9 +65,9 @@ public class TeleOpDrive extends LinearOpMode {
     boolean pincher1Open;
     boolean pincher2Open;
     boolean droneLaunched;
-    boolean switchPressed;
-    boolean previousSwitchPressed;
     boolean manualControl;
+    Boolean hangPrimed = false;
+    Boolean hangInitiated = false;
 
     IntakePositions intakePositions[] = IntakePositions.values();
 
@@ -77,6 +79,7 @@ public class TeleOpDrive extends LinearOpMode {
         pinch1Debounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         pinch2Debounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         speedFactorDebounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+        intakeSpeedFactorDebounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         intakeDebounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
 
         telemetry.addLine("> PRESS START");
@@ -90,6 +93,8 @@ public class TeleOpDrive extends LinearOpMode {
             processDriving();
             processControl();
             processTelemetry();
+
+            passiveResetSlidePositions();
         }
     }
 
@@ -108,12 +113,8 @@ public class TeleOpDrive extends LinearOpMode {
     }
 
     private void processControl(){
-        if(gamepad2.x && gamepad2.b){
-            intakeSlide1.setTargetPosition(0);
-            intakeSlide2.setTargetPosition(0);
-            intakeSlide1.setPower(0.3);
-            intakeSlide2.setPower(0.3);
-            resetSlidePositions();
+        if(gamepad2.left_stick_button){
+            activeResetSlidePositions();
         }
 
         if(gamepad2.left_bumper && !previousGamepad2.left_bumper && pinch1Debounce.milliseconds() > buttonDelay) {
@@ -139,12 +140,12 @@ public class TeleOpDrive extends LinearOpMode {
         }
 
         if(gamepad1.x && gamepad1.b){
-            drone.setPosition(1);
+            drone.setPosition(0.7);
             droneLaunched = true;
         }
 
         if(!droneLaunched){
-            drone.setPosition(0.5);
+            drone.setPosition(0);
         }
 
         if(manualControl) {
@@ -153,12 +154,16 @@ public class TeleOpDrive extends LinearOpMode {
 
             intakeSlide1.setMode(RUN_USING_ENCODER);
             intakeSlide2.setMode(RUN_USING_ENCODER);
+            intakeArm.setMode(RUN_USING_ENCODER);
 
             intakeSlide1.setPower(intakeSlidePower);
             intakeSlide2.setPower(intakeSlidePower);
             intakeArm.setPower(intakeArmPower);
 
-            if(gamepad2.back && !previousGamepad2.back){
+            if (gamepad2.back && !previousGamepad2.back) {
+                if (intakePosition > 10) {
+                    intakePosition = 10;
+                }
                 manualControl = false;
                 intakeSlide1.setMode(STOP_AND_RESET_ENCODER);
                 intakeSlide2.setMode(STOP_AND_RESET_ENCODER);
@@ -177,17 +182,39 @@ public class TeleOpDrive extends LinearOpMode {
                 intakeDebounce.reset();
             }
 
-            if (intakePosition > 7) {
-                intakePosition = 7;
+            if (intakePosition > 10) {
+                intakePosition = 10;
             } else if (intakePosition < 0) {
                 intakePosition = 0;
             }
 
-            bot.runIntake(intakePositions[intakePosition], 0.5);
+            if(gamepad2.x && gamepad2.b){
+                hangPrimed = true;
+            }
+
+            if(hangPrimed){
+                intakePosition = 11;
+                telemetry.addLine("READY TO HANG");
+            }
+
+            if(hangPrimed && gamepad2.y && gamepad2.a){
+                hangInitiated = true;
+            }
+
+            if(hangInitiated){
+                intakePosition = 12;
+                telemetry.clearAll();
+                telemetry.addLine("I really hope this works");
+                telemetry.addLine("and we are haning right now");
+                telemetry.addLine("- Cohen");
+                telemetry.update();
+            }
+
+            bot.runIntake(intakePositions[intakePosition], intakeSpeedFactor);
         }
     }
 
-    private void processVariableUpdates(){
+    private void processVariableUpdates() {
         ly1 = -gamepad1.left_stick_y;
         lx1 = gamepad1.left_stick_x * 1.1;
         rx1 = gamepad1.right_stick_x;
@@ -216,36 +243,58 @@ public class TeleOpDrive extends LinearOpMode {
         } else if (speedFactor <= 0) {
             speedFactor = 0.1;
         }
+
+        if (gamepad2.dpad_right && (intakeSpeedFactorDebounce.milliseconds() >= buttonDelay)) {
+            intakeSpeedFactorDebounce.reset();
+            intakeSpeedFactor += 0.1;
+        }
+
+        if (gamepad2.dpad_left && (intakeSpeedFactorDebounce.milliseconds() >= buttonDelay)) {
+            intakeSpeedFactorDebounce.reset();
+            intakeSpeedFactor -= 0.1;
+        }
+
+        if (intakeSpeedFactor > 1) {
+            intakeSpeedFactor = 1;
+        } else if (intakeSpeedFactor <= 0) {
+            intakeSpeedFactor = 0.1;
+        }
     }
 
     private void processTelemetry(){
-        telemetry.addData("Speed Factor", speedFactor);
-        telemetry.addData("intakeArm", intakeArm.getCurrentPosition());
-        telemetry.addData("Slide Position", intakeSlide1.getCurrentPosition());
-        telemetry.addData("Slide Target From Enum", intakePositions[intakePosition].slidePosition);
-        telemetry.addData("Slide Target From Motor1", intakeSlide1.getTargetPosition());
-        telemetry.addData("Slide Target From Motor2", intakeSlide2.getTargetPosition());
-        telemetry.addData("Intake Position", intakePosition);
-        telemetry.addData("switch", slideSwitch.isPressed());
-        if(droneLaunched){
-            telemetry.addLine("DRONE LAUNCHED");
-        }
+if(!hangInitiated) {
+    telemetry.addLine("DRIVER:");
+    telemetry.addData("Speed Factor", speedFactor);
+    if (droneLaunched) {
+        telemetry.addLine("DRONE LAUNCHED");
+    }
 
-        if(pincher1Open){
-            telemetry.addLine("LEFT PINCHER OPEN");
-        }else{
-            telemetry.addLine("LEFT PINCHER CLOSED");
-        }
+    telemetry.addLine();
+    telemetry.addLine();
 
-        if(pincher2Open){
-            telemetry.addLine("RIGHT PINCHER OPEN");
-        }else{
-            telemetry.addLine("RIGHT PINCHER CLOSED");
-        }
+    telemetry.addLine("CONTROLLER:");
+    telemetry.addData("Intake Speed", intakeSpeedFactor);
+    telemetry.addLine();
+    telemetry.addData("Intake Position",intakePositions[intakePosition]);
+    telemetry.addData("Arm Position", intakeArm.getCurrentPosition());
+    telemetry.addData("Arm Power", intakeArm.getPower());
+    telemetry.addData("Slide Position", intakeSlide1.getCurrentPosition());
+    telemetry.addData("Slides At Bottom", slideSwitch.isPressed());
+    telemetry.addLine();
+    if (pincher1Open) {
+        telemetry.addLine("LEFT PINCHER OPEN");
+    } else {
+        telemetry.addLine("LEFT PINCHER CLOSED");
+    }
 
-        telemetry.addLine();
+    if (pincher2Open) {
+        telemetry.addLine("RIGHT PINCHER OPEN");
+    } else {
+        telemetry.addLine("RIGHT PINCHER CLOSED");
+    }
 
-        telemetry.update();
+    telemetry.update();
+}
     }
     private void initHardware() {
         driveFrontLeft = hardwareMap.get(DcMotor.class, "driveFrontLeft");
@@ -314,13 +363,25 @@ public class TeleOpDrive extends LinearOpMode {
         );
 
     }
-    private void resetSlidePositions(){
-        switchPressed = slideSwitch.isPressed();
-            while(!switchPressed) {
+    private void activeResetSlidePositions(){
+        intakeSlide1.setMode(RUN_USING_ENCODER);
+        intakeSlide2.setMode(RUN_USING_ENCODER);
+        intakeSlide1.setPower(-0.5);
+        intakeSlide2.setPower(-0.5);
+            while(!slideSwitch.isPressed() && opModeIsActive()) {
                 telemetry.addLine("WAITING FOR INTAKE RESET");
                 telemetry.update();
             }
         intakeSlide1.setMode(STOP_AND_RESET_ENCODER);
         intakeSlide2.setMode(STOP_AND_RESET_ENCODER);
+        telemetry.addLine("Encoders Reset!");
+    }
+
+    private void passiveResetSlidePositions(){
+        if(slideSwitch.isPressed() && intakePosition == 0 || intakePosition == 2) {
+            intakeSlide1.setMode(STOP_AND_RESET_ENCODER);
+            intakeSlide2.setMode(STOP_AND_RESET_ENCODER);
+            telemetry.addLine("Encoders Reset!");
+        }
     }
 }

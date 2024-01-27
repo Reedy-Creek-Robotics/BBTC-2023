@@ -87,7 +87,8 @@ public class WebcamPipeline extends OpenCvPipeline {
 
             // analyze
             for (int i = 0; i < contours.size(); i++) {
-                if (Imgproc.contourArea(contours.get(i)) > 12500) {
+
+                if (Imgproc.contourArea(contours.get(i)) > 10000) {
                     Rect rect = Imgproc.boundingRect(contours.get(i));
                     contourCent = new Point(((rect.width - rect.x) / 2.0) + rect.x, ((rect.height - rect.y) / 2.0) + rect.y);
 

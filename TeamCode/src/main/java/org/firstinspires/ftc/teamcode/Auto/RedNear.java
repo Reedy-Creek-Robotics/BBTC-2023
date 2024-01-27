@@ -2,8 +2,7 @@ package org.firstinspires.ftc.teamcode.Auto;
 
 import static org.firstinspires.ftc.teamcode.modules.Direction.RIGHT;
 import static org.firstinspires.ftc.teamcode.modules.Direction.LEFT;
-import static org.firstinspires.ftc.teamcode.modules.IntakePositions.BOTTOM;
-import static org.firstinspires.ftc.teamcode.modules.IntakePositions.LOADING;
+import static org.firstinspires.ftc.teamcode.modules.IntakePositions.*;
 import static org.firstinspires.ftc.teamcode.modules.Robot.PINCHER_1_OPEN;
 import static org.firstinspires.ftc.teamcode.modules.Robot.PINCHER_2_OPEN;
 
@@ -31,7 +30,7 @@ public class RedNear extends BaseAuto {
             bot.forward(10, SPEED_DRIVE);
             bot.strafe(13, SPEED_DRIVE, LEFT);
             bot.turn(5, SPEED_DRIVE, LEFT);
-            bot.runIntake(BOTTOM, SPEED_INTAKE);
+            bot.runIntake(STAGE1, SPEED_INTAKE);
             bot.forward(3, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);
@@ -50,7 +49,7 @@ public class RedNear extends BaseAuto {
             bot.forward(15, SPEED_DRIVE);
             bot.strafe(6 , SPEED_DRIVE, RIGHT);
             bot.turn(5,SPEED_DRIVE,LEFT);
-            bot.runIntake(BOTTOM, SPEED_INTAKE);
+            bot.runIntake(STAGE1, SPEED_INTAKE);
             bot.forward(2, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);
@@ -66,7 +65,7 @@ public class RedNear extends BaseAuto {
             bot.forward(32, SPEED_INTAKE);
             bot.strafe(15, SPEED_DRIVE, LEFT);
             bot.turn(7, SPEED_DRIVE, LEFT);
-            bot.runIntake(BOTTOM, SPEED_INTAKE);
+            bot.runIntake(STAGE1, SPEED_INTAKE);
             bot.forward(9, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);

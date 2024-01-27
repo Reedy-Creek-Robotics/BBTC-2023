@@ -2,8 +2,7 @@ package org.firstinspires.ftc.teamcode.Auto;
 
 import static org.firstinspires.ftc.teamcode.modules.Direction.RIGHT;
 import static org.firstinspires.ftc.teamcode.modules.Direction.LEFT;
-import static org.firstinspires.ftc.teamcode.modules.IntakePositions.BOTTOM;
-import static org.firstinspires.ftc.teamcode.modules.IntakePositions.LOADING;
+import static org.firstinspires.ftc.teamcode.modules.IntakePositions.*;
 import static org.firstinspires.ftc.teamcode.modules.Robot.PINCHER_1_OPEN;
 import static org.firstinspires.ftc.teamcode.modules.Robot.PINCHER_2_OPEN;
 
@@ -32,7 +31,7 @@ public class BlueFar extends BaseAuto {
             bot.forward(80, SPEED_DRIVE);
             bot.strafe(38, SPEED_DRIVE, LEFT);
             bot.turn(3, SPEED_DRIVE, LEFT);
-            bot.runIntake(BOTTOM, SPEED_INTAKE);
+            bot.runIntake(STAGE1, SPEED_INTAKE);
             bot.forward(10, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);
@@ -47,18 +46,18 @@ public class BlueFar extends BaseAuto {
             bot.forward(9, SPEED_DRIVE);
             bot.runPincher1(PINCHER_1_OPEN);
             bot.forward(-7, SPEED_DRIVE);
-            bot.strafe(30, SPEED_DRIVE, LEFT);
+            bot.strafe(28, SPEED_DRIVE, LEFT);
             bot.turn(187, SPEED_DRIVE, LEFT);
             bot.forward(80, SPEED_DRIVE);
-            bot.strafe(40, SPEED_DRIVE, LEFT);
+            bot.strafe(25, SPEED_DRIVE, LEFT);
             bot.turn(3, SPEED_DRIVE, LEFT);
-            bot.runIntake(BOTTOM, SPEED_INTAKE);
-            bot.forward(7, 0.2);
+            bot.runIntake(STAGE1, SPEED_INTAKE);
+            bot.forward(8, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);
             bot.forward(-5, SPEED_DRIVE);
             bot.runIntake(LOADING, SPEED_INTAKE);
-            bot.strafe(30, SPEED_DRIVE, RIGHT);
+            bot.strafe(20, SPEED_DRIVE, RIGHT);
             bot.forward(15, SPEED_DRIVE);
 
         }else{
@@ -72,7 +71,7 @@ public class BlueFar extends BaseAuto {
             bot.strafe(34, SPEED_DRIVE, LEFT);
             bot.forward(12, SPEED_DRIVE);
             bot.turn(3, SPEED_DRIVE, RIGHT);
-            bot.runIntake(BOTTOM, SPEED_INTAKE);
+            bot.runIntake(STAGE1, SPEED_INTAKE);
             bot.forward(3, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);

@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode.modules;
 
-import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
-import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.*;
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
-import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD;
-import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
+import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.*;
 import static org.firstinspires.ftc.teamcode.modules.IntakePositions.*;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -41,10 +39,7 @@ public class Robot {
 
     private static final double ROTATION_CORRECTION = 1.2; //(62/90);
 
-    private static final double TURN_CONSTANT = 50.5d / 90d; // distance per deg
-
-    boolean switchPressed;
-    boolean previousSwitchPressed;
+    private static final double TURN_CONSTANT = 50.5d / 90d; // distance per deg b
 
     IntakePositions intakePositions[] = IntakePositions.values();
 
@@ -53,9 +48,9 @@ public class Robot {
     LinearOpMode opMode;
 
     public static final double
-            PINCHER_1_CLOSED = 0.6,
+            PINCHER_1_CLOSED = 0.55 ,
             PINCHER_1_OPEN = 0.44,
-            PINCHER_2_CLOSED = 0.4,
+            PINCHER_2_CLOSED = 0.45,
             PINCHER_2_OPEN = 0.54;
 
     public Robot(
@@ -179,29 +174,49 @@ public class Robot {
                 slideDistance = PICKING.getSlidePosition();
                 armDistance = PICKING.getArmPosition();
                 break;
-            case TRAVELING:
-                slideDistance = TRAVELING.getSlidePosition();
-                armDistance = TRAVELING.getArmPosition();
+            case STAGE0:
+                slideDistance = STAGE0.getSlidePosition();
+                armDistance = STAGE0.getArmPosition();
                 break;
-            case BOTTOM:
-                slideDistance = BOTTOM.getSlidePosition();
-                armDistance = BOTTOM.getArmPosition();
+            case STAGE1:
+                slideDistance = STAGE1.getSlidePosition();
+                armDistance = STAGE1.getArmPosition();
                 break;
-            case LINE1:
-                slideDistance = LINE1.getSlidePosition();
-                armDistance = LINE1.getArmPosition();
+            case STAGE2:
+                slideDistance = STAGE2.getSlidePosition();
+                armDistance = STAGE2.getArmPosition();
                 break;
-            case LINE2:
-                slideDistance = LINE2.getSlidePosition();
-                armDistance = LINE2.getArmPosition();
+            case STAGE3:
+                slideDistance = STAGE3.getSlidePosition();
+                armDistance = STAGE3.getArmPosition();
                 break;
-            case LINE3:
-                slideDistance = LINE3.getSlidePosition();
-                armDistance = LINE3.getArmPosition();
+            case STAGE4:
+                slideDistance = STAGE4.getSlidePosition();
+                armDistance = STAGE4.getArmPosition();
                 break;
-            case TOP:
-                slideDistance = TOP.getSlidePosition();
-                armDistance = TOP.getArmPosition();
+            case STAGE5:
+                slideDistance = STAGE5.getSlidePosition();
+                armDistance = STAGE5.getArmPosition();
+                break;
+            case STAGE6:
+                slideDistance = STAGE6.getSlidePosition();
+                armDistance = STAGE6.getArmPosition();
+                break;
+            case STAGE7:
+                slideDistance = STAGE7.getSlidePosition();
+                armDistance = STAGE7.getArmPosition();
+                break;
+            case STAGE8:
+                slideDistance = STAGE8.getSlidePosition();
+                armDistance = STAGE8.getArmPosition();
+                break;
+            case PRIME_HANGING:
+                slideDistance = PRIME_HANGING.getSlidePosition();
+                armDistance = PRIME_HANGING.getArmPosition();
+                break;
+            case HANGING:
+                slideDistance = HANGING.getSlidePosition();
+                armDistance = HANGING.getArmPosition();
                 break;
         }
 
@@ -289,9 +304,6 @@ public class Robot {
 
     private void waitIntake() {
         while (intakeArm.isBusy() && intakeSlide1.isBusy() && intakeSlide2.isBusy() && opMode.opModeIsActive()) {
-            // Intake has moved to target position, reset encoders in case we had any
-            // slipping while running
-            resetSlidePositions();
         }
     }
 
@@ -311,18 +323,5 @@ public class Robot {
         intakeArm.setMode(RUN_TO_POSITION);
         intakeSlide1.setMode(RUN_TO_POSITION);
         intakeSlide2.setMode(RUN_TO_POSITION);
-    }
-
-    public void resetSlidePositions(){
-        switchPressed = slideSwitch.isPressed();
-        if(intakeSlide1.getTargetPosition() <= 90 || intakeSlide2.getTargetPosition() <= 90) {
-            if(slideSwitch.isPressed()) {
-                telemetry.addData("Reset Encoders", true);
-                telemetry.update();
-                intakeSlide1.setMode(STOP_AND_RESET_ENCODER);
-                intakeSlide2.setMode(STOP_AND_RESET_ENCODER);
-            }
-        }
-        previousSwitchPressed = slideSwitch.isPressed();
     }
 }

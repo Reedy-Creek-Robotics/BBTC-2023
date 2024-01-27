@@ -2,11 +2,7 @@ package org.firstinspires.ftc.teamcode.modules;
 
 import static org.firstinspires.ftc.teamcode.modules.Direction.LEFT;
 import static org.firstinspires.ftc.teamcode.modules.Direction.RIGHT;
-import static org.firstinspires.ftc.teamcode.modules.IntakePositions.BOTTOM;
-import static org.firstinspires.ftc.teamcode.modules.IntakePositions.LINE1;
-import static org.firstinspires.ftc.teamcode.modules.IntakePositions.LOADING;
-import static org.firstinspires.ftc.teamcode.modules.IntakePositions.PICKING;
-import static org.firstinspires.ftc.teamcode.modules.IntakePositions.TRAVELING;
+import static org.firstinspires.ftc.teamcode.modules.IntakePositions.*;
 import static org.firstinspires.ftc.teamcode.modules.Robot.*;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;

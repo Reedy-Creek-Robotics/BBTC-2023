@@ -68,7 +68,7 @@ public class CoachTimTestServo extends LinearOpMode {
 
         // Connect to servo (Assume Robot Left Hand)
         // Change the text in quotes to match any servo name on your robot.
-        servo = hardwareMap.get(Servo.class, "pincher2");
+        servo = hardwareMap.get(Servo.class, "drone");
 
         // Wait for the start button
         telemetry.addData(">", "Press Start to scan Servo." );

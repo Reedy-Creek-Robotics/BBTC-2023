@@ -2,9 +2,7 @@ package org.firstinspires.ftc.teamcode.Auto;
 
 import static org.firstinspires.ftc.teamcode.modules.Direction.LEFT;
 import static org.firstinspires.ftc.teamcode.modules.Direction.RIGHT;
-import static org.firstinspires.ftc.teamcode.modules.IntakePositions.BOTTOM;
-import static org.firstinspires.ftc.teamcode.modules.IntakePositions.LINE1;
-import static org.firstinspires.ftc.teamcode.modules.IntakePositions.LOADING;
+import static org.firstinspires.ftc.teamcode.modules.IntakePositions.*;
 import static org.firstinspires.ftc.teamcode.modules.Robot.PINCHER_1_OPEN;
 import static org.firstinspires.ftc.teamcode.modules.Robot.PINCHER_2_OPEN;
 
@@ -31,7 +29,7 @@ public class BlueNear extends BaseAuto {
             bot.turn(180, SPEED_DRIVE, LEFT);
             bot.forward(10, SPEED_DRIVE);
             bot.strafe(5, SPEED_DRIVE, RIGHT);
-            bot.runIntake(BOTTOM, SPEED_INTAKE);
+            bot.runIntake(STAGE1, SPEED_INTAKE);
             bot.forward(7, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);
@@ -43,13 +41,13 @@ public class BlueNear extends BaseAuto {
             bot.strafe(24, SPEED_DRIVE, LEFT);
             bot.forward(27, SPEED_DRIVE);
             bot.turn(90, SPEED_DRIVE, RIGHT);
-            bot.forward(12, SPEED_DRIVE);
+            bot.forward(11 , SPEED_DRIVE);
             bot.runPincher1(PINCHER_1_OPEN);
             bot.forward(-10, SPEED_DRIVE);
             bot.turn(180, SPEED_DRIVE, LEFT);
             bot.forward(15, SPEED_DRIVE);
             bot.strafe(12 , SPEED_DRIVE, LEFT);
-            bot.runIntake(BOTTOM, SPEED_INTAKE);
+            bot.runIntake(STAGE1, SPEED_INTAKE);
             bot.forward(3, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);
@@ -63,9 +61,9 @@ public class BlueNear extends BaseAuto {
             bot.forward(-10, SPEED_DRIVE);
             bot.turn(90, SPEED_DRIVE, LEFT);
             bot.forward(32, SPEED_INTAKE);
-            bot.strafe(5, SPEED_DRIVE, RIGHT);
-            bot.turn(3, SPEED_DRIVE, RIGHT);
-            bot.runIntake(BOTTOM, SPEED_INTAKE);
+            bot.strafe(7, SPEED_DRIVE, RIGHT);
+            bot.turn(6, SPEED_DRIVE, RIGHT);
+            bot.runIntake(STAGE1, SPEED_INTAKE);
             bot.forward(8.5, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);
