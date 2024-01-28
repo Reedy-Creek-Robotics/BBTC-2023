@@ -29,6 +29,6 @@ public enum IntakePositions {
     IntakePositions(int armPosition, int slidePosition) {
         this.slidePosition = slidePosition;
         this.armPosition = armPosition;
-        
+
     }
 }

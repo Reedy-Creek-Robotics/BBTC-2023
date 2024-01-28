@@ -19,7 +19,7 @@ public class RedNear extends BaseAuto {
 
         telemetry.addData("Red Prop Pos", redPropPos);
         telemetry.update();
-        
+
         if (redPropPos.equals("Left")) {
             bot.forward(24, SPEED_DRIVE);
             bot.turn(90, SPEED_DRIVE, LEFT);
