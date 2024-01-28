@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
@@ -364,13 +365,19 @@ if(!hangInitiated) {
 
     }
     private void activeResetSlidePositions(){
+        intakeArm.setTargetPosition(20);
+        intakeArm.setMode(RUN_TO_POSITION);
+        intakeArm.setPower(0.5);
+
         intakeSlide1.setMode(RUN_USING_ENCODER);
         intakeSlide2.setMode(RUN_USING_ENCODER);
         intakeSlide1.setPower(-0.5);
         intakeSlide2.setPower(-0.5);
+
             while(!slideSwitch.isPressed() && opModeIsActive()) {
                 telemetry.addLine("WAITING FOR INTAKE RESET");
                 telemetry.update();
+                if(gamepad2.right_stick_button){return;}
             }
         intakeSlide1.setMode(STOP_AND_RESET_ENCODER);
         intakeSlide2.setMode(STOP_AND_RESET_ENCODER);
