@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.modules;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;

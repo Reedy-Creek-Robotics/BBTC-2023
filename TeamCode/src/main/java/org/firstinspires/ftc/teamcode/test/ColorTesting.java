@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.teamcode.test;
 
-import android.graphics.Color;
-
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -31,13 +28,8 @@ public class ColorTesting extends LinearOpMode {
     final Scalar LOW_RED1 = new Scalar(248, 100, 100);
     final Scalar HIGH_RED1 = new Scalar(0, 255, 255);
 
-    final Scalar TEST_HIGH = new Scalar(255, 255, 255);
-    final Scalar TEST_LOW = new Scalar(0, 0, 0);
-
     final Scalar LOW_RED2 = new Scalar(0, 100, 100);
     final Scalar HIGH_RED2 = new Scalar(5, 255, 255);
-
-    final Scalar BLUE = new Scalar(0, 255, 0);
 
     //--------------------------------------------------------
 
@@ -57,8 +49,6 @@ public class ColorTesting extends LinearOpMode {
     Mat hierarchy = new Mat();
 
     Mat kernel = Mat.ones(7, 7, CvType.CV_8UC1);
-
-    double redContourArea;
 
     List<MatOfPoint> contoursRed = new ArrayList<>();
 
