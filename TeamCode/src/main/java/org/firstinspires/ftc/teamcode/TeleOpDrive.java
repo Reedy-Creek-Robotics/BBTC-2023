@@ -183,8 +183,8 @@ public class TeleOpDrive extends LinearOpMode {
                 intakeDebounce.reset();
             }
 
-            if (intakePosition > 10) {
-                intakePosition = 10;
+            if (intakePosition > 6) {
+                intakePosition = 6;
             } else if (intakePosition < 0) {
                 intakePosition = 0;
             }
@@ -206,7 +206,7 @@ public class TeleOpDrive extends LinearOpMode {
                 intakePosition = 12;
                 telemetry.clearAll();
                 telemetry.addLine("I really hope this works");
-                telemetry.addLine("and we are haning right now");
+                telemetry.addLine("and we are hanging right now");
                 telemetry.addLine("- Cohen");
                 telemetry.update();
             }

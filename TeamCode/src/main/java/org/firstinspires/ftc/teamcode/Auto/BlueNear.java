@@ -30,7 +30,7 @@ public class BlueNear extends BaseAuto {
             bot.forward(10, SPEED_DRIVE);
             bot.strafe(5, SPEED_DRIVE, RIGHT);
             bot.runIntake(STAGE1, SPEED_INTAKE);
-            bot.forward(7, 0.2);
+            bot.forward(8, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);
             bot.forward(-7, SPEED_DRIVE);
@@ -41,14 +41,14 @@ public class BlueNear extends BaseAuto {
             bot.strafe(24, SPEED_DRIVE, LEFT);
             bot.forward(27, SPEED_DRIVE);
             bot.turn(90, SPEED_DRIVE, RIGHT);
-            bot.forward(11 , SPEED_DRIVE);
+            bot.forward(10 , SPEED_DRIVE);
             bot.runPincher1(PINCHER_1_OPEN);
             bot.forward(-10, SPEED_DRIVE);
             bot.turn(180, SPEED_DRIVE, LEFT);
             bot.forward(15, SPEED_DRIVE);
-            bot.strafe(12 , SPEED_DRIVE, LEFT);
+            bot.strafe(8 , SPEED_DRIVE, LEFT);
             bot.runIntake(STAGE1, SPEED_INTAKE);
-            bot.forward(3, 0.2);
+            bot.forward(4, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);
             bot.forward(-7, SPEED_DRIVE);
@@ -64,7 +64,7 @@ public class BlueNear extends BaseAuto {
             bot.strafe(7, SPEED_DRIVE, RIGHT);
             bot.turn(6, SPEED_DRIVE, RIGHT);
             bot.runIntake(STAGE1, SPEED_INTAKE);
-            bot.forward(8.5, 0.2);
+            bot.forward(9.5, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);
             bot.forward(-4, SPEED_DRIVE);

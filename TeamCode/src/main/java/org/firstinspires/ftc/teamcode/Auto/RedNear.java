@@ -31,7 +31,7 @@ public class RedNear extends BaseAuto {
             bot.strafe(13, SPEED_DRIVE, LEFT);
             bot.turn(5, SPEED_DRIVE, LEFT);
             bot.runIntake(STAGE1, SPEED_INTAKE);
-            bot.forward(3, 0.2);
+            bot.forward(4, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);
             bot.forward(-7, SPEED_DRIVE);
@@ -50,7 +50,7 @@ public class RedNear extends BaseAuto {
             bot.strafe(6 , SPEED_DRIVE, RIGHT);
             bot.turn(5,SPEED_DRIVE,LEFT);
             bot.runIntake(STAGE1, SPEED_INTAKE);
-            bot.forward(2, 0.2);
+            bot.forward(3, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);
             bot.forward(-7, SPEED_DRIVE);
@@ -66,7 +66,7 @@ public class RedNear extends BaseAuto {
             bot.strafe(15, SPEED_DRIVE, LEFT);
             bot.turn(7, SPEED_DRIVE, LEFT);
             bot.runIntake(STAGE1, SPEED_INTAKE);
-            bot.forward(9, 0.2);
+            bot.forward(10, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);
             bot.forward(-4, SPEED_DRIVE);
