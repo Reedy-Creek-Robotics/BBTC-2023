@@ -84,8 +84,8 @@ public class BaseAuto extends LinearOpMode {
         });
 
 
-       this.bot = new Robot(
-                 driveFrontLeft,
+        this.bot = new Robot(
+                driveFrontLeft,
                 driveBackLeft,
                 driveBackRight,
                 driveFrontRight,

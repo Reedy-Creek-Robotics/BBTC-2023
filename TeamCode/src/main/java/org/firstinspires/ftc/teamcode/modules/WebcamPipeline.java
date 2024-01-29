@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.modules;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -84,22 +85,22 @@ public class WebcamPipeline extends OpenCvPipeline {
             Imgproc.drawContours(input, contours, i, (RED), 5, 2);
         }
 
-            // analyze
-            for (int i = 0; i < contours.size(); i++) {
+        // analyze
+        for (int i = 0; i < contours.size(); i++) {
 
-                if (Imgproc.contourArea(contours.get(i)) > 10000) {
-                    Rect rect = Imgproc.boundingRect(contours.get(i));
-                    contourCent = new Point(((rect.width - rect.x) / 2.0) + rect.x, ((rect.height - rect.y) / 2.0) + rect.y);
+            if (Imgproc.contourArea(contours.get(i)) > 10000) {
+                Rect rect = Imgproc.boundingRect(contours.get(i));
+                contourCent = new Point(((rect.width - rect.x) / 2.0) + rect.x, ((rect.height - rect.y) / 2.0) + rect.y);
 
-                    if (contourCent.x < 200) {
-                        this.propPos = "Left";
-                    } else if (contourCent.x > 200) {
-                        this.propPos = "Center";
-                    } else {
-                        this.propPos = "Right";
-                    }
+                if (contourCent.x < 200) {
+                    this.propPos = "Left";
+                } else if (contourCent.x > 200) {
+                    this.propPos = "Center";
+                } else {
+                    this.propPos = "Right";
                 }
             }
+        }
 
 
         contours.clear();
