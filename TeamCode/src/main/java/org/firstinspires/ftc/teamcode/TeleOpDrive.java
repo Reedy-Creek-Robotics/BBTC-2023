@@ -173,6 +173,7 @@ public class TeleOpDrive extends LinearOpMode {
         }else {
             if(gamepad2.back && !previousGamepad2.back){
                 manualControl = true;
+                return;
             }
 
             if (gamepad2.dpad_up && intakeDebounce.milliseconds() > 200) {
@@ -194,7 +195,7 @@ public class TeleOpDrive extends LinearOpMode {
             }
 
             if(hangPrimed){
-                intakePosition = 11;
+                intakePosition = 7;
                 telemetry.addLine("READY TO HANG");
             }
 
@@ -203,7 +204,7 @@ public class TeleOpDrive extends LinearOpMode {
             }
 
             if(hangInitiated){
-                intakePosition = 12;
+                intakePosition = 8;
                 telemetry.clearAll();
                 telemetry.addLine("I really hope this works");
                 telemetry.addLine("and we are haning right now");
@@ -419,6 +420,7 @@ public class TeleOpDrive extends LinearOpMode {
             intakeSlide1.setMode(STOP_AND_RESET_ENCODER);
             intakeSlide2.setMode(STOP_AND_RESET_ENCODER);
             telemetry.addLine("Encoders Reset!");
+
         }
     }
 }
