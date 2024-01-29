@@ -19,18 +19,17 @@ import org.firstinspires.ftc.teamcode.modules.IntakePositions;
 import org.firstinspires.ftc.teamcode.modules.Robot;
 import org.openftc.easyopencv.OpenCvCamera;
 
-@TeleOp(name = "Tele-Op Driving")
-public class TeleOpDrive extends LinearOpMode {
+@TeleOp(name = "Salem Tele-Op Driving")
+public class SalemTeleOpDrive extends LinearOpMode {
 
     Robot bot;
     ElapsedTime pinch1Debounce;
     ElapsedTime pinch2Debounce;
     ElapsedTime speedFactorDebounce;
-    ElapsedTime intakeSpeedFactorDebounce;
-    private ElapsedTime intakeDebounce;
 
     static final int buttonDelay = 250;
-    private int intakePosition = 0;
+    private int intakeSlideTargetPosition = 0;
+    private int intakeArmTargetPosition = 0;
 
     double speedFactor = 0.7;
     double intakeSpeedFactor = 0.5;
@@ -67,10 +66,6 @@ public class TeleOpDrive extends LinearOpMode {
     boolean pincher2Open;
     boolean droneLaunched;
     boolean manualControl;
-    Boolean hangPrimed = false;
-    Boolean hangInitiated = false;
-
-    IntakePositions intakePositions[] = IntakePositions.values();
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -80,33 +75,29 @@ public class TeleOpDrive extends LinearOpMode {
         pinch1Debounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         pinch2Debounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         speedFactorDebounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
-        intakeSpeedFactorDebounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
-        intakeDebounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+        ;
 
         telemetry.addLine("> PRESS START");
         waitForStart();
 
         telemetry.addLine("> PROGRAM STARTED");
-        while(opModeIsActive()) {
+        while (opModeIsActive()) {
 
             processVariableUpdates();
 
             processDriving();
             processControl();
             processTelemetry();
-
-            passiveResetSlidePositions();
         }
     }
 
-    private void processDriving(){
+    private void processDriving() {
 
         double denominator = Math.max(Math.abs(ly1) + Math.abs(lx1) + Math.abs(rx1), 1);
-        // Used square function to add fine grain control
-        double frontLeftPower = Math.pow(((ly1 + lx1 + rx1) / denominator), 2);
-        double backLeftPower = Math.pow(((ly1 - lx1 + rx1) / denominator), 2);
-        double frontRightPower = Math.pow(((ly1 - lx1 - rx1) / denominator), 2);
-        double backRightPower = Math.pow(((ly1 + lx1 - rx1) / denominator), 2);
+        double frontLeftPower = (ly1 + lx1 + rx1) / denominator;
+        double backLeftPower = (ly1 - lx1 + rx1) / denominator;
+        double frontRightPower = (ly1 - lx1 - rx1) / denominator;
+        double backRightPower = (ly1 + lx1 - rx1) / denominator;
 
         driveFrontLeft.setPower(frontLeftPower * speedFactor);
         driveBackLeft.setPower(backLeftPower * speedFactor);
@@ -114,109 +105,68 @@ public class TeleOpDrive extends LinearOpMode {
         driveBackRight.setPower(backRightPower * speedFactor);
     }
 
-
-    /**
-     * Processes the control of systems besides driving
-     */
-    private void processControl(){
-        if(gamepad2.left_stick_button){
+    private void processControl() {
+        if (gamepad2.left_stick_button) {
             activeResetSlidePositions();
         }
 
-        if(gamepad2.left_bumper && !previousGamepad2.left_bumper && pinch1Debounce.milliseconds() > buttonDelay) {
+        if (gamepad2.left_bumper && !previousGamepad2.left_bumper && pinch1Debounce.milliseconds() > buttonDelay) {
             pincher1Open = !pincher1Open;
             pinch1Debounce.reset();
         }
 
-        if(gamepad2.right_bumper && !previousGamepad2.right_bumper && pinch2Debounce.milliseconds() > buttonDelay) {
+        if (gamepad2.right_bumper && !previousGamepad2.right_bumper && pinch2Debounce.milliseconds() > buttonDelay) {
             pincher2Open = !pincher2Open;
             pinch2Debounce.reset();
         }
 
-        if(pincher1Open){
+        if (pincher1Open) {
             pincher1.setPosition(PINCHER_1_OPEN);
         } else {
             pincher1.setPosition(PINCHER_1_CLOSED);
         }
 
-        if(pincher2Open){
+        if (pincher2Open) {
             pincher2.setPosition(PINCHER_2_OPEN);
         } else {
             pincher2.setPosition(PINCHER_2_CLOSED);
         }
 
-        if(gamepad1.x && gamepad1.b){
+        if (gamepad1.x && gamepad1.b) {
             drone.setPosition(0.7);
             droneLaunched = true;
         }
 
-        if(!droneLaunched){
+        if (!droneLaunched) {
             drone.setPosition(0);
         }
 
-        if(manualControl) {
-            double intakeSlidePower = -gamepad2.left_stick_y;
-            double intakeArmPower = -gamepad2.right_stick_y;
-
+        if (-gamepad2.left_stick_y > 0.1 || -gamepad2.left_stick_y < -0.1) {
+            double intakeSlidePower = -gamepad2.left_stick_y * 0.3;
             intakeSlide1.setMode(RUN_USING_ENCODER);
             intakeSlide2.setMode(RUN_USING_ENCODER);
-            intakeArm.setMode(RUN_USING_ENCODER);
-
             intakeSlide1.setPower(intakeSlidePower);
             intakeSlide2.setPower(intakeSlidePower);
+            intakeSlideTargetPosition = intakeSlide1.getCurrentPosition();
+
+        } else {
+            intakeSlide1.setTargetPosition(intakeSlideTargetPosition);
+            intakeSlide2.setTargetPosition(intakeSlideTargetPosition);
+            intakeSlide1.setMode(RUN_TO_POSITION);
+            intakeSlide2.setMode(RUN_TO_POSITION);
+            intakeSlide1.setPower(0.3);
+            intakeSlide2.setPower(0.3);
+        }
+
+        if (-gamepad2.right_stick_y > 0.1 || -gamepad2.right_stick_y < -0.1) {
+            double intakeArmPower = -gamepad2.right_stick_y * 0.3;
+            intakeArm.setMode(RUN_USING_ENCODER);
             intakeArm.setPower(intakeArmPower);
-
-            if (gamepad2.back && !previousGamepad2.back) {
-                if (intakePosition > 10) {
-                    intakePosition = 10;
-                }
-                manualControl = false;
-                intakeSlide1.setMode(STOP_AND_RESET_ENCODER);
-                intakeSlide2.setMode(STOP_AND_RESET_ENCODER);
-                intakeArm.setMode(STOP_AND_RESET_ENCODER);
-            }
-        }else {
-            if(gamepad2.back && !previousGamepad2.back){
-                manualControl = true;
-            }
-
-            if (gamepad2.dpad_up && intakeDebounce.milliseconds() > 200) {
-                intakePosition++;
-                intakeDebounce.reset();
-            } else if (gamepad2.dpad_down && intakeDebounce.milliseconds() > 200) {
-                intakePosition--;
-                intakeDebounce.reset();
-            }
-
-            if (intakePosition > 6) {
-                intakePosition = 6;
-            } else if (intakePosition < 0) {
-                intakePosition = 0;
-            }
-
-            if(gamepad2.x && gamepad2.b){
-                hangPrimed = true;
-            }
-
-            if(hangPrimed){
-                intakePosition = 11;
-                telemetry.addLine("READY TO HANG");
-            }
-
-            if(hangPrimed && gamepad2.y && gamepad2.a){
-                hangInitiated = true;
-            }
-
-            if(hangInitiated){
-                intakePosition = 12;
-                telemetry.clearAll();
-                telemetry.addLine("I really hope this works");
-                telemetry.addLine("and we are hanging right now");
-                telemetry.addLine("- Cohen");
-                telemetry.update();
-            }
-
-            bot.runIntake(intakePositions[intakePosition], intakeSpeedFactor);
+            intakeArmTargetPosition = intakeArm.getCurrentPosition();
+        } else {
+            intakeArm.setTargetPosition(intakeArmTargetPosition);
+            intakeArm.setMode(RUN_TO_POSITION);
+            intakeArm.setPower(0.3);
         }
     }
 
@@ -249,58 +199,37 @@ public class TeleOpDrive extends LinearOpMode {
         } else if (speedFactor <= 0) {
             speedFactor = 0.1;
         }
+    }
 
-        if (gamepad2.dpad_right && (intakeSpeedFactorDebounce.milliseconds() >= buttonDelay)) {
-            intakeSpeedFactorDebounce.reset();
-            intakeSpeedFactor += 0.1;
+    private void processTelemetry() {
+        if (droneLaunched) {
+            telemetry.addLine("DRONE LAUNCHED");
         }
 
-        if (gamepad2.dpad_left && (intakeSpeedFactorDebounce.milliseconds() >= buttonDelay)) {
-            intakeSpeedFactorDebounce.reset();
-            intakeSpeedFactor -= 0.1;
+        telemetry.addLine();
+        telemetry.addLine();
+
+        telemetry.addLine("CONTROLLER:");
+        telemetry.addData("Intake Speed", intakeSpeedFactor);
+        telemetry.addLine();
+        telemetry.addData("Arm Position", intakeArm.getCurrentPosition());
+        telemetry.addData("Arm Power", intakeArm.getPower());
+        telemetry.addData("Slide Position", intakeSlide1.getCurrentPosition());
+        telemetry.addData("Slides At Bottom", slideSwitch.isPressed());
+        telemetry.addLine();
+        if (pincher1Open) {
+            telemetry.addLine("LEFT PINCHER OPEN");
+        } else {
+            telemetry.addLine("LEFT PINCHER CLOSED");
         }
 
-        if (intakeSpeedFactor > 1) {
-            intakeSpeedFactor = 1;
-        } else if (intakeSpeedFactor <= 0) {
-            intakeSpeedFactor = 0.1;
+        if (pincher2Open) {
+            telemetry.addLine("RIGHT PINCHER OPEN");
+        } else {
+            telemetry.addLine("RIGHT PINCHER CLOSED");
         }
-    }
 
-    private void processTelemetry(){
-if(!hangInitiated) {
-    telemetry.addLine("DRIVER:");
-    telemetry.addData("Speed Factor", speedFactor);
-    if (droneLaunched) {
-        telemetry.addLine("DRONE LAUNCHED");
-    }
-
-    telemetry.addLine();
-    telemetry.addLine();
-
-    telemetry.addLine("CONTROLLER:");
-    telemetry.addData("Intake Speed", intakeSpeedFactor);
-    telemetry.addLine();
-    telemetry.addData("Intake Position",intakePositions[intakePosition]);
-    telemetry.addData("Arm Position", intakeArm.getCurrentPosition());
-    telemetry.addData("Arm Power", intakeArm.getPower());
-    telemetry.addData("Slide Position", intakeSlide1.getCurrentPosition());
-    telemetry.addData("Slides At Bottom", slideSwitch.isPressed());
-    telemetry.addLine();
-    if (pincher1Open) {
-        telemetry.addLine("LEFT PINCHER OPEN");
-    } else {
-        telemetry.addLine("LEFT PINCHER CLOSED");
-    }
-
-    if (pincher2Open) {
-        telemetry.addLine("RIGHT PINCHER OPEN");
-    } else {
-        telemetry.addLine("RIGHT PINCHER CLOSED");
-    }
-
-    telemetry.update();
-}
+        telemetry.update();
     }
     private void initHardware() {
         driveFrontLeft = hardwareMap.get(DcMotor.class, "driveFrontLeft");
@@ -379,21 +308,13 @@ if(!hangInitiated) {
         intakeSlide1.setPower(-0.5);
         intakeSlide2.setPower(-0.5);
 
-            while(!slideSwitch.isPressed() && opModeIsActive()) {
-                telemetry.addLine("WAITING FOR INTAKE RESET");
-                telemetry.update();
-                if(gamepad2.right_stick_button){return;}
-            }
+        while(!slideSwitch.isPressed() && opModeIsActive()) {
+            telemetry.addLine("WAITING FOR INTAKE RESET");
+            telemetry.update();
+            if(gamepad2.right_stick_button){return;}
+        }
         intakeSlide1.setMode(STOP_AND_RESET_ENCODER);
         intakeSlide2.setMode(STOP_AND_RESET_ENCODER);
         telemetry.addLine("Encoders Reset!");
-    }
-
-    private void passiveResetSlidePositions(){
-        if(slideSwitch.isPressed() && intakePosition == 0 || intakePosition == 2) {
-            intakeSlide1.setMode(STOP_AND_RESET_ENCODER);
-            intakeSlide2.setMode(STOP_AND_RESET_ENCODER);
-            telemetry.addLine("Encoders Reset!");
-        }
     }
 }

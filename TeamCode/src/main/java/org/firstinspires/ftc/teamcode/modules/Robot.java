@@ -194,22 +194,6 @@ public class Robot {
                 slideDistance = STAGE4.getSlidePosition();
                 armDistance = STAGE4.getArmPosition();
                 break;
-            case STAGE5:
-                slideDistance = STAGE5.getSlidePosition();
-                armDistance = STAGE5.getArmPosition();
-                break;
-            case STAGE6:
-                slideDistance = STAGE6.getSlidePosition();
-                armDistance = STAGE6.getArmPosition();
-                break;
-            case STAGE7:
-                slideDistance = STAGE7.getSlidePosition();
-                armDistance = STAGE7.getArmPosition();
-                break;
-            case STAGE8:
-                slideDistance = STAGE8.getSlidePosition();
-                armDistance = STAGE8.getArmPosition();
-                break;
             case PRIME_HANGING:
                 slideDistance = PRIME_HANGING.getSlidePosition();
                 armDistance = PRIME_HANGING.getArmPosition();
