@@ -114,6 +114,11 @@ public class TeleOpDrive extends LinearOpMode {
     }
 
     private void processControl(){
+        if(gamepad2.start){
+            intakeSlide1.setMode(STOP_AND_RESET_ENCODER);
+            intakeSlide2.setMode(STOP_AND_RESET_ENCODER);
+        }
+
         if(gamepad2.left_stick_button){
             activeResetSlidePositions();
         }
