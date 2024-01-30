@@ -31,6 +31,8 @@ public class TeleOpDrive extends LinearOpMode {
 
     static final int buttonDelay = 250;
     private int intakePosition = 0;
+    int targetSlidePosition = 0;
+    int targetArmPosition = 0
 
     double speedFactor = 0.7;
     double intakeSpeedFactor = 0.5;
@@ -158,13 +160,39 @@ public class TeleOpDrive extends LinearOpMode {
             double intakeSlidePower = -gamepad2.left_stick_y;
             double intakeArmPower = -gamepad2.right_stick_y;
 
-            intakeSlide1.setMode(RUN_USING_ENCODER);
-            intakeSlide2.setMode(RUN_USING_ENCODER);
-            intakeArm.setMode(RUN_USING_ENCODER);
+            if(-gamepad2.left_stick_y > 0.1 || gamepad2.left_stick_y < -0.1){
 
-            intakeSlide1.setPower(intakeSlidePower);
-            intakeSlide2.setPower(intakeSlidePower);
-            intakeArm.setPower(intakeArmPower);
+                intakeSlide1.setMode(RUN_USING_ENCODER);
+                intakeSlide2.setMode(RUN_USING_ENCODER);
+
+                intakeSlide1.setPower(intakeSlidePower);
+                intakeSlide2.setPower(intakeSlidePower);
+
+                targetSlidePosition = intakeSlide1.getCurrentPosition();
+            }else{
+                intakeSlide1.setTargetPosition(targetSlidePosition);
+                intakeSlide2.setTargetPosition(targetSlidePosition);
+
+                intakeSlide1.setMode(RUN_TO_POSITION);
+                intakeSlide2.setMode(RUN_TO_POSITION);
+
+                intakeSlide1.setPower(intakeSpeedFactor);
+                intakeSlide2.setPower(intakeSpeedFactor);
+            }
+            
+            if(-gamepad2.right_stick_y > 0.1 || gamepad2.right_stick_y < -0.1){
+
+                intakeArm.setMode(RUN_USING_ENCODER);
+                intakeArm.setPower(intakeArmPower);
+
+                targetArmPosition = intakeArm.getCurrentPosition();
+            }else{
+                intakeArm.setTargetPosition(targetArmPosition);
+
+                intakeArm.setMode(RUN_TO_POSITION);
+
+                intakeArm.setPower(intakeSpeedFactor);
+            }
 
             if (gamepad2.back && !previousGamepad2.back) {
                 if (intakePosition > 10) {
