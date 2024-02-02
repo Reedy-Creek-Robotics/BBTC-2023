@@ -3,11 +3,11 @@ package org.firstinspires.ftc.teamcode.modules;
 public enum IntakePositions {
     PICKING(0,0),
     LOADING(10,50),
-    STAGE0(250, 100),
-    STAGE1(250, 400),
-    STAGE2(250, 800),
-    STAGE3(250,1200),
-    STAGE4(250, 1600),
+    STAGE0(300, 100),
+    STAGE1(300, 400),
+    STAGE2(300, 800),
+    STAGE3(300,1200),
+    STAGE4(300, 1600),
     PRIME_HANGING(2, 1800),
     HANGING(2, 1300);
 

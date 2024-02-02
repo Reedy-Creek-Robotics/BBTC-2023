@@ -30,7 +30,7 @@ public class TeleOpDrive extends LinearOpMode {
     static final int buttonDelay = 250;
     private int intakePosition = 0;
     int targetSlidePosition = 0;
-    int targetArmPosition = 0
+    int targetArmPosition = 0;
 
     double speedFactor = 0.7;
     double intakeSpeedFactor = 0.5;
@@ -67,8 +67,8 @@ public class TeleOpDrive extends LinearOpMode {
     boolean pincher2Open;
     boolean droneLaunched;
     boolean manualControl;
-    Boolean hangPrimed = false;
-    Boolean hangInitiated = false;
+    boolean hangPrimed = false;
+    boolean hangInitiated = false;
 
     IntakePositions intakePositions[] = IntakePositions.values();
 
@@ -95,7 +95,7 @@ public class TeleOpDrive extends LinearOpMode {
             processControl();
             processTelemetry();
 
-            passiveResetSlidePositions();
+           // passiveResetSlidePositions();
         }
     }
 
@@ -114,13 +114,8 @@ public class TeleOpDrive extends LinearOpMode {
     }
 
     private void processControl(){
-        if(gamepad2.start){
-            intakeSlide1.setMode(STOP_AND_RESET_ENCODER);
-            intakeSlide2.setMode(STOP_AND_RESET_ENCODER);
-        }
-
         if(gamepad2.left_stick_button){
-            activeResetSlidePositions();
+           activeResetSlidePositions();
         }
 
         if(gamepad2.left_bumper && !previousGamepad2.left_bumper && pinch1Debounce.milliseconds() > buttonDelay) {
@@ -155,10 +150,10 @@ public class TeleOpDrive extends LinearOpMode {
         }
 
         if(manualControl) {
-            double intakeSlidePower = -gamepad2.left_stick_y;
-            double intakeArmPower = -gamepad2.right_stick_y;
+            double intakeSlidePower = -gamepad2.left_stick_y * 0.5;
+            double intakeArmPower = -gamepad2.right_stick_y * 0.5;
 
-            if(-gamepad2.left_stick_y > 0.1 || gamepad2.left_stick_y < -0.1){
+            if(gamepad2.left_stick_y > 0.1 || gamepad2.left_stick_y < -0.1){
 
                 intakeSlide1.setMode(RUN_USING_ENCODER);
                 intakeSlide2.setMode(RUN_USING_ENCODER);
@@ -168,6 +163,9 @@ public class TeleOpDrive extends LinearOpMode {
 
                 targetSlidePosition = intakeSlide1.getCurrentPosition();
             }else{
+
+                if(targetSlidePosition < 0){targetSlidePosition=0;}
+
                 intakeSlide1.setTargetPosition(targetSlidePosition);
                 intakeSlide2.setTargetPosition(targetSlidePosition);
 
@@ -177,8 +175,8 @@ public class TeleOpDrive extends LinearOpMode {
                 intakeSlide1.setPower(intakeSpeedFactor);
                 intakeSlide2.setPower(intakeSpeedFactor);
             }
-            
-            if(-gamepad2.right_stick_y > 0.1 || gamepad2.right_stick_y < -0.1){
+
+            if(gamepad2.right_stick_y > 0.1 || gamepad2.right_stick_y < -0.1){
 
                 intakeArm.setMode(RUN_USING_ENCODER);
                 intakeArm.setPower(intakeArmPower);
@@ -193,8 +191,8 @@ public class TeleOpDrive extends LinearOpMode {
             }
 
             if (gamepad2.back && !previousGamepad2.back) {
-                if (intakePosition > 10) {
-                    intakePosition = 10;
+                if (intakePosition > 7) {
+                    intakePosition = 7;
                 }
                 manualControl = false;
                 intakeSlide1.setMode(STOP_AND_RESET_ENCODER);
@@ -215,8 +213,8 @@ public class TeleOpDrive extends LinearOpMode {
                 intakeDebounce.reset();
             }
 
-            if (intakePosition > 10) {
-                intakePosition = 10;
+            if (intakePosition > 6) {
+                intakePosition = 6;
             } else if (intakePosition < 0) {
                 intakePosition = 0;
             }
@@ -306,6 +304,10 @@ public class TeleOpDrive extends LinearOpMode {
             telemetry.addLine();
 
             telemetry.addLine("CONTROLLER:");
+            if(manualControl){
+                telemetry.addLine("MANUAL");
+                telemetry.addLine();
+            }
             telemetry.addData("Intake Speed", intakeSpeedFactor);
             telemetry.addLine();
             telemetry.addData("Intake Position",intakePositions[intakePosition]);
@@ -394,8 +396,8 @@ public class TeleOpDrive extends LinearOpMode {
                 telemetry,
                 this
         );
-
     }
+
     private void activeResetSlidePositions(){
         intakeArm.setTargetPosition(20);
         intakeArm.setMode(RUN_TO_POSITION);
@@ -417,13 +419,9 @@ public class TeleOpDrive extends LinearOpMode {
     }
 
     private void passiveResetSlidePositions(){
-        if(intakeSlide1.getCurrentPosition() == 0 && !slideSwitch.isPressed() && !manualControl) {
-            telemetry.addLine("ATTEMPTING TO AUTO RESET");
-            telemetry.addLine();
-            telemetry.addLine("PRESS RIGHT STICK IN TO CANCEL AND ENTER MANUAL MODE");
-            telemetry.update();
+        if(intakeSlide1.getCurrentPosition() < 5 && !slideSwitch.isPressed()) {
 
-            intakeArm.setTargetPosition(100);
+            intakeArm.setTargetPosition(20);
             intakeArm.setMode(RUN_TO_POSITION);
             intakeArm.setPower(0.5);
 
@@ -433,25 +431,15 @@ public class TeleOpDrive extends LinearOpMode {
             intakeSlide2.setMode(RUN_USING_ENCODER);
             intakeSlide2.setPower(-0.5);
 
-            while (intakeSlide1.getCurrentPosition() < 5 && !slideSwitch.isPressed() && !manualControl) {
-                telemetry.addLine("ATTEMPTING TO AUTO RESET");
-                telemetry.addLine();
-                telemetry.addLine("PRESS RIGHT STICK IN TO CANCEL AND ENTER MANUAL MODE");
-                telemetry.update();
                 if (gamepad2.right_stick_button) {
                     manualControl = true;
                     return;
                 }
-            }
-            intakeSlide1.setMode(STOP_AND_RESET_ENCODER);
-            intakeSlide2.setMode(STOP_AND_RESET_ENCODER);
         }
 
-        if(slideSwitch.isPressed() && intakePosition == 0 || intakePosition == 2 && !manualControl) {
+        if(intakeSlide1.getCurrentPosition() <= 0 && slideSwitch.isPressed()) {
             intakeSlide1.setMode(STOP_AND_RESET_ENCODER);
             intakeSlide2.setMode(STOP_AND_RESET_ENCODER);
-            telemetry.addLine("Encoders Reset!");
-
         }
     }
 }
