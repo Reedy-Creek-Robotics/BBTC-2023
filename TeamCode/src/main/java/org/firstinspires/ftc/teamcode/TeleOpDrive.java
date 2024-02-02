@@ -437,7 +437,7 @@ public class TeleOpDrive extends LinearOpMode {
                 }
         }
 
-        if(intakeSlide1.getCurrentPosition() <= 0 && slideSwitch.isPressed()) {
+        if(intakePosition == 0 && slideSwitch.isPressed()) {
             intakeSlide1.setMode(STOP_AND_RESET_ENCODER);
             intakeSlide2.setMode(STOP_AND_RESET_ENCODER);
         }
