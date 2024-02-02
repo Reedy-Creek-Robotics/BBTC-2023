@@ -95,7 +95,7 @@ public class TeleOpDrive extends LinearOpMode {
             processControl();
             processTelemetry();
 
-           // passiveResetSlidePositions();
+           passiveResetSlidePositions();
         }
     }
 
