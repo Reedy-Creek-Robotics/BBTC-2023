@@ -73,7 +73,7 @@ public class BlueFar extends BaseAuto {
             bot.turn(90, SPEED_DRIVE, LEFT);
             Thread.sleep(4000);
             bot.forward(90, SPEED_DRIVE);
-            bot.strafe(26, SPEED_DRIVE, LEFT);
+            bot.strafe(30, SPEED_DRIVE, LEFT);
             bot.forward(12, SPEED_DRIVE);
             bot.turn(3, SPEED_DRIVE, RIGHT);
             bot.runIntake(STAGE0, SPEED_INTAKE);
