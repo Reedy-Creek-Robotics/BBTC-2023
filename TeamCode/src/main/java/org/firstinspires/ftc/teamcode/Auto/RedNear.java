@@ -21,17 +21,16 @@ public class RedNear extends BaseAuto {
         telemetry.update();
 
         if (redPropPos.equals("Left")) {
-            bot.forward(24, SPEED_DRIVE);
-            bot.turn(90, SPEED_DRIVE, LEFT);
+            bot.forward(18, SPEED_DRIVE);
+            bot.turn(45, SPEED_DRIVE, LEFT);
             bot.forward(10, SPEED_DRIVE);
             bot.runPincher1(PINCHER_1_OPEN);
-            bot.forward(-33, SPEED_DRIVE);
-            bot.turn(180, SPEED_DRIVE, RIGHT);
-            bot.forward(10, SPEED_DRIVE);
-            bot.strafe(13, SPEED_DRIVE, LEFT);
-            bot.turn(5, SPEED_DRIVE, LEFT);
-            bot.runIntake(STAGE1, SPEED_INTAKE);
-            bot.forward(4, 0.2);
+            bot.forward(-10, SPEED_DRIVE);
+            bot.turn(128, SPEED_DRIVE, RIGHT);
+            bot.forward(38, SPEED_DRIVE);
+            bot.strafe(24, SPEED_DRIVE, LEFT);
+            bot.runIntake(STAGE0, SPEED_INTAKE);
+            bot.forward(6, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);
             bot.forward(-7, SPEED_DRIVE);
@@ -58,14 +57,14 @@ public class RedNear extends BaseAuto {
             bot.strafe(23, SPEED_DRIVE, RIGHT);
 
         }else{
-            bot.forward(34, SPEED_DRIVE);
+            bot.forward(35, SPEED_DRIVE);
             bot.runPincher1(PINCHER_1_OPEN);
             bot.forward(-10, SPEED_DRIVE);
             bot.turn(90, SPEED_DRIVE, RIGHT);
             bot.forward(32, SPEED_INTAKE);
-            bot.strafe(15, SPEED_DRIVE, LEFT);
+            bot.strafe(13, SPEED_DRIVE, LEFT);
             bot.turn(7, SPEED_DRIVE, LEFT);
-            bot.runIntake(STAGE1, SPEED_INTAKE);
+            bot.runIntake(STAGE0, SPEED_INTAKE);
             bot.forward(10, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);

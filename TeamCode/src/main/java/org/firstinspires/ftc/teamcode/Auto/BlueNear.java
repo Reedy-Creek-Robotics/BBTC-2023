@@ -23,14 +23,14 @@ public class BlueNear extends BaseAuto {
         if (bluePropPos.equals("Right")) {
             bot.forward(24, SPEED_DRIVE);
             bot.turn(90, SPEED_DRIVE, RIGHT);
-            bot.forward(10, SPEED_DRIVE); //failing
+            bot.forward(10, SPEED_DRIVE);
             bot.runPincher1(PINCHER_1_OPEN);
             bot.forward(-33, SPEED_DRIVE);
             bot.turn(180, SPEED_DRIVE, LEFT);
             bot.forward(10, SPEED_DRIVE);
             bot.strafe(5, SPEED_DRIVE, RIGHT);
-            bot.runIntake(STAGE1, SPEED_INTAKE);
-            bot.forward(8, 0.2);
+            bot.runIntake(STAGE0, SPEED_INTAKE);
+            bot.forward(9, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);
             bot.forward(-7, SPEED_DRIVE);
@@ -47,7 +47,7 @@ public class BlueNear extends BaseAuto {
             bot.turn(180, SPEED_DRIVE, LEFT);
             bot.forward(15, SPEED_DRIVE);
             bot.strafe(8 , SPEED_DRIVE, LEFT);
-            bot.runIntake(STAGE1, SPEED_INTAKE);
+            bot.runIntake(STAGE0, SPEED_INTAKE);
             bot.forward(4, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);
@@ -56,15 +56,15 @@ public class BlueNear extends BaseAuto {
             bot.strafe(16, SPEED_DRIVE, LEFT);
 
         }else{
-            bot.forward(33.5, SPEED_DRIVE);
+            bot.forward(35, SPEED_DRIVE);
             bot.runPincher1(PINCHER_1_OPEN);
             bot.forward(-10, SPEED_DRIVE);
             bot.turn(90, SPEED_DRIVE, LEFT);
             bot.forward(32, SPEED_INTAKE);
-            bot.strafe(7, SPEED_DRIVE, RIGHT);
+            bot.strafe(5, SPEED_DRIVE, RIGHT);
             bot.turn(6, SPEED_DRIVE, RIGHT);
-            bot.runIntake(STAGE1, SPEED_INTAKE);
-            bot.forward(9.5, 0.2);
+            bot.runIntake(STAGE0, SPEED_INTAKE);
+            bot.forward(11, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);
             bot.forward(-4, SPEED_DRIVE);

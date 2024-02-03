@@ -176,7 +176,7 @@ public class TeleOpDrive extends LinearOpMode {
                 intakeSlide2.setPower(intakeSpeedFactor);
             }
 
-            if(gamepad2.right_stick_y > 0.1 || gamepad2.right_stick_y < -0.1){
+            if(gamepad2.right_stick_y > 0.05 || gamepad2.right_stick_y < -0.05){
 
                 intakeArm.setMode(RUN_USING_ENCODER);
                 intakeArm.setPower(intakeArmPower);
