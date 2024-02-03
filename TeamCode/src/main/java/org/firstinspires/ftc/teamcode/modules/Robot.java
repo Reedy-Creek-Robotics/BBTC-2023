@@ -286,17 +286,10 @@ public class Robot {
         while (driveFrontLeft.isBusy() && driveFrontRight.isBusy() && driveBackLeft.isBusy() && driveBackRight.isBusy() && opMode.opModeIsActive()) ;
     }
 
-    private void waitIntake() {
-        while (intakeArm.isBusy() && intakeSlide1.isBusy() && intakeSlide2.isBusy() && opMode.opModeIsActive()) {
-        }
-    }
-
     private void intakeMotors(double power) {
         intakeArm.setPower(power);
         intakeSlide1.setPower(power);
         intakeSlide2.setPower(power);
-
-        waitIntake();
     }
 
     private void intakeTargetPositions(int armDistance, int slideDistance) {

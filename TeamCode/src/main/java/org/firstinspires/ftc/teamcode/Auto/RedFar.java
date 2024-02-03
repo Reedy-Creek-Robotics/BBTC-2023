@@ -26,15 +26,18 @@ public class RedFar extends BaseAuto {
             bot.turn(45, SPEED_DRIVE, LEFT);
             bot.forward(27, SPEED_DRIVE);
             bot.turn(94, SPEED_DRIVE, RIGHT);
+            Thread.sleep(4000);
             bot.forward(80, SPEED_DRIVE);
-            bot.strafe(30, SPEED_DRIVE, RIGHT);
-            bot.turn(5, SPEED_DRIVE, RIGHT);
+            bot.strafe(45, SPEED_DRIVE, RIGHT);
+            bot.turn(5, SPEED_DRIVE, LEFT);
             bot.runIntake(STAGE0, SPEED_INTAKE);
+            super.waitIntake();
             bot.forward(13, 0.2);
             bot.runPincher1(PINCHER_1_OPEN);
             Thread.sleep(1000);
             bot.forward(-5, SPEED_DRIVE);
             bot.runIntake(LOADING, SPEED_INTAKE);
+            super.waitIntake();
             bot.strafe(36, SPEED_DRIVE, LEFT);
 
         } else if (redPropPos.equals("Left")) {
@@ -43,17 +46,19 @@ public class RedFar extends BaseAuto {
             bot.forward(9.5, SPEED_DRIVE);
             bot.runPincher2(PINCHER_2_OPEN);
             bot.forward(-7, SPEED_DRIVE);
-            bot.strafe(30, SPEED_DRIVE, RIGHT);
-            bot.turn(186, SPEED_DRIVE, RIGHT);
+            bot.strafe(23, SPEED_DRIVE, RIGHT);
+            bot.turn(183, SPEED_DRIVE, RIGHT);
             Thread.sleep(4000);
             bot.forward(80, SPEED_DRIVE);
-            bot.strafe(18, SPEED_DRIVE, RIGHT);
+            bot.strafe(22, SPEED_DRIVE, RIGHT);
             bot.runIntake(STAGE0, SPEED_INTAKE);
+            super.waitIntake();
             bot.forward(13, 0.2);
             bot.runPincher1(PINCHER_1_OPEN);
             Thread.sleep(1000);
             bot.forward(-5, SPEED_DRIVE);
             bot.runIntake(LOADING, SPEED_INTAKE);
+            super.waitIntake();
             bot.strafe(18, SPEED_DRIVE, LEFT);;
 
         }else{
@@ -63,17 +68,20 @@ public class RedFar extends BaseAuto {
             bot.strafe(16, SPEED_DRIVE, LEFT);
             bot.forward(28,SPEED_DRIVE);
             bot.turn(87, SPEED_DRIVE, RIGHT);
+            Thread.sleep(4000);
             bot.forward(90, SPEED_DRIVE);
-            bot.strafe(30, SPEED_DRIVE, RIGHT);
+            bot.strafe(36, SPEED_DRIVE, RIGHT);
             bot.forward(12, SPEED_DRIVE);
             bot.turn(3, SPEED_DRIVE, LEFT);
             bot.runIntake(STAGE0, SPEED_INTAKE);
+            super.waitIntake();
             bot.forward(6, 0.2);
             bot.runPincher1(PINCHER_1_OPEN);
             Thread.sleep(1000);
             bot.forward(-4, 0.2);
             bot.runIntake(LOADING, SPEED_INTAKE);
-            bot.strafe(24, SPEED_DRIVE, LEFT);
+            super.waitIntake();
+            bot.strafe(28, SPEED_DRIVE, LEFT);
         }
     }
 }

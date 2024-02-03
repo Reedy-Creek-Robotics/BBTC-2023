@@ -28,13 +28,15 @@ public class RedNear extends BaseAuto {
             bot.forward(-10, SPEED_DRIVE);
             bot.turn(128, SPEED_DRIVE, RIGHT);
             bot.forward(38, SPEED_DRIVE);
-            bot.strafe(24, SPEED_DRIVE, LEFT);
+            bot.strafe(30, SPEED_DRIVE, LEFT);
             bot.runIntake(STAGE0, SPEED_INTAKE);
+            super.waitIntake();
             bot.forward(6, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);
             bot.forward(-7, SPEED_DRIVE);
             bot.runIntake(LOADING, SPEED_INTAKE);
+            super.waitIntake();
             bot.strafe(40, SPEED_DRIVE, RIGHT);
 
         } else if (redPropPos.equals("Right")) {
@@ -48,12 +50,14 @@ public class RedNear extends BaseAuto {
             bot.forward(15, SPEED_DRIVE);
             bot.strafe(6 , SPEED_DRIVE, RIGHT);
             bot.turn(5,SPEED_DRIVE,LEFT);
-            bot.runIntake(STAGE1, SPEED_INTAKE);
+            bot.runIntake(STAGE0, SPEED_INTAKE);
+            super.waitIntake();
             bot.forward(3, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);
             bot.forward(-7, SPEED_DRIVE);
             bot.runIntake(LOADING, SPEED_INTAKE);
+            super.waitIntake();
             bot.strafe(23, SPEED_DRIVE, RIGHT);
 
         }else{
@@ -62,15 +66,17 @@ public class RedNear extends BaseAuto {
             bot.forward(-10, SPEED_DRIVE);
             bot.turn(90, SPEED_DRIVE, RIGHT);
             bot.forward(32, SPEED_INTAKE);
-            bot.strafe(13, SPEED_DRIVE, LEFT);
+            bot.strafe(7, SPEED_DRIVE, LEFT);
             bot.turn(7, SPEED_DRIVE, LEFT);
             bot.runIntake(STAGE0, SPEED_INTAKE);
-            bot.forward(10, 0.2);
+            super.waitIntake();
+            bot.forward(11, 0.2);
             bot.runPincher2(PINCHER_2_OPEN);
             Thread.sleep(1000);
             bot.forward(-4, SPEED_DRIVE);
             bot.runIntake(LOADING, SPEED_INTAKE);
-            bot.strafe(30 , SPEED_DRIVE, RIGHT);
+            super.waitIntake();
+            bot.strafe(25 , SPEED_DRIVE, RIGHT);
         }
     }
 }

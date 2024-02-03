@@ -113,5 +113,9 @@ public class BaseAuto extends LinearOpMode {
         Thread.sleep(100);
 
         bot.runIntake(PICKING, SPEED_INTAKE);
+        waitIntake();
     }
+
+    protected void waitIntake() {
+        while (intakeArm.isBusy() && intakeSlide1.isBusy() && intakeSlide2.isBusy() && opModeIsActive()) {}}
 }
