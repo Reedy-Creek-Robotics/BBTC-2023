@@ -69,6 +69,7 @@ public class TeleOpDrive extends LinearOpMode {
     boolean manualControl;
     boolean hangPrimed = false;
     boolean hangInitiated = false;
+    boolean activeReset = false;
 
     IntakePositions intakePositions[] = IntakePositions.values();
 
@@ -113,135 +114,139 @@ public class TeleOpDrive extends LinearOpMode {
         driveBackRight.setPower(backRightPower * speedFactor);
     }
 
-    private void processControl(){
-        if(gamepad2.left_stick_button){
-           activeResetSlidePositions();
+    private void processControl() {
+        if (gamepad2.left_stick_button || activeReset) {
+            activeResetSlidePositions();
         }
 
-        if(gamepad2.left_bumper && !previousGamepad2.left_bumper && pinch1Debounce.milliseconds() > buttonDelay) {
+        if (gamepad2.left_bumper && !previousGamepad2.left_bumper && pinch1Debounce.milliseconds() > buttonDelay) {
             pincher1Open = !pincher1Open;
             pinch1Debounce.reset();
         }
 
-        if(gamepad2.right_bumper && !previousGamepad2.right_bumper && pinch2Debounce.milliseconds() > buttonDelay) {
+        if (gamepad2.right_bumper && !previousGamepad2.right_bumper && pinch2Debounce.milliseconds() > buttonDelay) {
             pincher2Open = !pincher2Open;
             pinch2Debounce.reset();
         }
 
-        if(pincher1Open){
+        if (pincher1Open) {
             pincher1.setPosition(PINCHER_1_OPEN);
         } else {
             pincher1.setPosition(PINCHER_1_CLOSED);
         }
 
-        if(pincher2Open){
+        if (pincher2Open) {
             pincher2.setPosition(PINCHER_2_OPEN);
         } else {
             pincher2.setPosition(PINCHER_2_CLOSED);
         }
 
-        if(gamepad1.x && gamepad1.b){
+        if (gamepad1.x && gamepad1.b) {
             drone.setPosition(0.7);
             droneLaunched = true;
         }
 
-        if(!droneLaunched){
+        if (!droneLaunched) {
             drone.setPosition(0);
         }
 
-        if(manualControl) {
-            double intakeSlidePower = -gamepad2.left_stick_y * 0.5;
-            double intakeArmPower = -gamepad2.right_stick_y * 0.5;
+        if (!activeReset) {
+            if (manualControl) {
+                double intakeSlidePower = -gamepad2.left_stick_y * 0.5;
+                double intakeArmPower = -gamepad2.right_stick_y * 0.5;
 
-            if(gamepad2.left_stick_y > 0.1 || gamepad2.left_stick_y < -0.1){
+                if (gamepad2.left_stick_y > 0.1 || gamepad2.left_stick_y < -0.1) {
 
-                intakeSlide1.setMode(RUN_USING_ENCODER);
-                intakeSlide2.setMode(RUN_USING_ENCODER);
+                    intakeSlide1.setMode(RUN_USING_ENCODER);
+                    intakeSlide2.setMode(RUN_USING_ENCODER);
 
-                intakeSlide1.setPower(intakeSlidePower);
-                intakeSlide2.setPower(intakeSlidePower);
+                    intakeSlide1.setPower(intakeSlidePower);
+                    intakeSlide2.setPower(intakeSlidePower);
 
-                targetSlidePosition = intakeSlide1.getCurrentPosition();
-            }else{
+                    targetSlidePosition = intakeSlide1.getCurrentPosition();
+                } else {
 
-                if(targetSlidePosition < 0){targetSlidePosition=0;}
+                    if (targetSlidePosition < 0) {
+                        targetSlidePosition = 0;
+                    }
 
-                intakeSlide1.setTargetPosition(targetSlidePosition);
-                intakeSlide2.setTargetPosition(targetSlidePosition);
+                    intakeSlide1.setTargetPosition(targetSlidePosition);
+                    intakeSlide2.setTargetPosition(targetSlidePosition);
 
-                intakeSlide1.setMode(RUN_TO_POSITION);
-                intakeSlide2.setMode(RUN_TO_POSITION);
+                    intakeSlide1.setMode(RUN_TO_POSITION);
+                    intakeSlide2.setMode(RUN_TO_POSITION);
 
-                intakeSlide1.setPower(intakeSpeedFactor);
-                intakeSlide2.setPower(intakeSpeedFactor);
-            }
-
-            if(gamepad2.right_stick_y > 0.05 || gamepad2.right_stick_y < -0.05){
-
-                intakeArm.setMode(RUN_USING_ENCODER);
-                intakeArm.setPower(intakeArmPower);
-
-                targetArmPosition = intakeArm.getCurrentPosition();
-            }else{
-                intakeArm.setTargetPosition(targetArmPosition);
-
-                intakeArm.setMode(RUN_TO_POSITION);
-
-                intakeArm.setPower(intakeSpeedFactor);
-            }
-
-            if (gamepad2.back && !previousGamepad2.back) {
-                if (intakePosition > 7) {
-                    intakePosition = 7;
+                    intakeSlide1.setPower(intakeSpeedFactor);
+                    intakeSlide2.setPower(intakeSpeedFactor);
                 }
-                manualControl = false;
-                intakeSlide1.setMode(STOP_AND_RESET_ENCODER);
-                intakeSlide2.setMode(STOP_AND_RESET_ENCODER);
-                intakeArm.setMode(STOP_AND_RESET_ENCODER);
-            }
-        }else {
-            if(gamepad2.back && !previousGamepad2.back){
-                manualControl = true;
-                return;
-            }
 
-            if (gamepad2.dpad_up && intakeDebounce.milliseconds() > 200) {
-                intakePosition++;
-                intakeDebounce.reset();
-            } else if (gamepad2.dpad_down && intakeDebounce.milliseconds() > 200) {
-                intakePosition--;
-                intakeDebounce.reset();
-            }
+                if (gamepad2.right_stick_y > 0.05 || gamepad2.right_stick_y < -0.05) {
 
-            if (intakePosition > 6) {
-                intakePosition = 6;
-            } else if (intakePosition < 0) {
-                intakePosition = 0;
-            }
+                    intakeArm.setMode(RUN_USING_ENCODER);
+                    intakeArm.setPower(intakeArmPower);
 
-            if(gamepad2.x && gamepad2.b){
-                hangPrimed = true;
-            }
+                    targetArmPosition = intakeArm.getCurrentPosition();
+                } else {
+                    intakeArm.setTargetPosition(targetArmPosition);
 
-            if(hangPrimed){
-                intakePosition = 7;
-                telemetry.addLine("READY TO HANG");
-            }
+                    intakeArm.setMode(RUN_TO_POSITION);
 
-            if(hangPrimed && gamepad2.y && gamepad2.a){
-                hangInitiated = true;
-            }
+                    intakeArm.setPower(intakeSpeedFactor);
+                }
 
-            if(hangInitiated){
-                intakePosition = 8;
-                telemetry.clearAll();
-                telemetry.addLine("I really hope this works");
-                telemetry.addLine("and we are haning right now");
-                telemetry.addLine("- Cohen");
-                telemetry.update();
-            }
+                if (gamepad2.back && !previousGamepad2.back) {
+                    if (intakePosition > 7) {
+                        intakePosition = 7;
+                    }
+                    manualControl = false;
+                    intakeSlide1.setMode(STOP_AND_RESET_ENCODER);
+                    intakeSlide2.setMode(STOP_AND_RESET_ENCODER);
+                    intakeArm.setMode(STOP_AND_RESET_ENCODER);
+                }
+            } else {
+                if (gamepad2.back && !previousGamepad2.back) {
+                    manualControl = true;
+                    return;
+                }
 
-            bot.runIntake(intakePositions[intakePosition], intakeSpeedFactor);
+                if (gamepad2.dpad_up && intakeDebounce.milliseconds() > 200) {
+                    intakePosition++;
+                    intakeDebounce.reset();
+                } else if (gamepad2.dpad_down && intakeDebounce.milliseconds() > 200) {
+                    intakePosition--;
+                    intakeDebounce.reset();
+                }
+
+                if (intakePosition > 6) {
+                    intakePosition = 6;
+                } else if (intakePosition < 0) {
+                    intakePosition = 0;
+                }
+
+                if (gamepad2.x && gamepad2.b) {
+                    hangPrimed = true;
+                }
+
+                if (hangPrimed) {
+                    intakePosition = 7;
+                    telemetry.addLine("READY TO HANG");
+                }
+
+                if (hangPrimed && gamepad2.y && gamepad2.a) {
+                    hangInitiated = true;
+                }
+
+                if (hangInitiated) {
+                    intakePosition = 8;
+                    telemetry.clearAll();
+                    telemetry.addLine("I really hope this works");
+                    telemetry.addLine("and we are hanging right now");
+                    telemetry.addLine("- Cohen");
+                    telemetry.update();
+                }
+
+                bot.runIntake(intakePositions[intakePosition], intakeSpeedFactor);
+            }
         }
     }
 
@@ -397,6 +402,8 @@ public class TeleOpDrive extends LinearOpMode {
     }
 
     private void activeResetSlidePositions(){
+        manualControl = false;
+
         intakeArm.setTargetPosition(20);
         intakeArm.setMode(RUN_TO_POSITION);
         intakeArm.setPower(0.5);
@@ -406,14 +413,14 @@ public class TeleOpDrive extends LinearOpMode {
         intakeSlide1.setPower(-0.5);
         intakeSlide2.setPower(-0.5);
 
-        while(!slideSwitch.isPressed() && opModeIsActive()) {
-            telemetry.addLine("WAITING FOR INTAKE RESET");
-            telemetry.update();
-            if(gamepad2.right_stick_button){return;}
+        if(!slideSwitch.isPressed()) {
+            activeReset = true;
         }
-        intakeSlide1.setMode(STOP_AND_RESET_ENCODER);
-        intakeSlide2.setMode(STOP_AND_RESET_ENCODER);
-        telemetry.addLine("Encoders Reset!");
+        if(slideSwitch.isPressed()){
+            intakeSlide1.setMode(STOP_AND_RESET_ENCODER);
+            intakeSlide2.setMode(STOP_AND_RESET_ENCODER);
+            activeReset = false;
+        }
     }
 
     private void passiveResetSlidePositions(){
