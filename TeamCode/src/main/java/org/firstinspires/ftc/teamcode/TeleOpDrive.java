@@ -69,6 +69,7 @@ public class TeleOpDrive extends LinearOpMode {
     boolean manualControl;
     boolean hangPrimed = false;
     boolean hangInitiated = false;
+    boolean activeReset = false;
 
     IntakePositions intakePositions[] = IntakePositions.values();
 
@@ -114,7 +115,7 @@ public class TeleOpDrive extends LinearOpMode {
     }
 
     private void processControl(){
-        if(gamepad2.left_stick_button){
+        if(gamepad2.left_stick_button || activeReset){
            activeResetSlidePositions();
         }
 
@@ -408,14 +409,14 @@ public class TeleOpDrive extends LinearOpMode {
         intakeSlide1.setPower(-0.5);
         intakeSlide2.setPower(-0.5);
 
-        while(!slideSwitch.isPressed() && opModeIsActive()) {
-            telemetry.addLine("WAITING FOR INTAKE RESET");
-            telemetry.update();
-            if(gamepad2.right_stick_button){return;}
+        if(!slideSwitch.isPressed()) {
+            activeReset = true;
         }
-        intakeSlide1.setMode(STOP_AND_RESET_ENCODER);
-        intakeSlide2.setMode(STOP_AND_RESET_ENCODER);
-        telemetry.addLine("Encoders Reset!");
+        if(slideSwitch.isPressed()){
+            intakeSlide1.setMode(STOP_AND_RESET_ENCODER);
+            intakeSlide2.setMode(STOP_AND_RESET_ENCODER);
+            activeReset = false;
+        }
     }
 
     private void passiveResetSlidePositions(){
