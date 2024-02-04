@@ -306,16 +306,9 @@ public class TeleOpDrive extends LinearOpMode {
             telemetry.addLine("CONTROLLER:");
             if(manualControl){
                 telemetry.addLine("MANUAL");
+                telemetry.addData("Slides At Bottom", slideSwitch.isPressed());
                 telemetry.addLine();
             }
-            telemetry.addData("Intake Speed", intakeSpeedFactor);
-            telemetry.addLine();
-            telemetry.addData("Intake Position",intakePositions[intakePosition]);
-            telemetry.addData("Arm Position", intakeArm.getCurrentPosition());
-            telemetry.addData("Arm Power", intakeArm.getPower());
-            telemetry.addData("Slide Position", intakeSlide1.getCurrentPosition());
-            telemetry.addData("Slides At Bottom", slideSwitch.isPressed());
-            telemetry.addLine();
             if (pincher1Open) {
                 telemetry.addLine("LEFT PINCHER OPEN");
             } else {
@@ -327,6 +320,11 @@ public class TeleOpDrive extends LinearOpMode {
             } else {
                 telemetry.addLine("RIGHT PINCHER CLOSED");
             }
+            telemetry.addData("Intake Speed", intakeSpeedFactor);
+            telemetry.addLine();
+            telemetry.addData("Intake Position",intakePositions[intakePosition]);
+            telemetry.addLine();
+
 
             telemetry.update();
         }
