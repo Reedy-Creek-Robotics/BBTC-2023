@@ -100,6 +100,8 @@ public class BaseAuto extends LinearOpMode {
                 this
         );
 
+        bot.setup();
+
         waitForStart();
 
         bluePropPos = bot.detectPropPosition("blue");

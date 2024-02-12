@@ -78,6 +78,8 @@ public class TeleOpDrive extends LinearOpMode {
 
         initHardware();
 
+        bot.setup();
+
         pinch1Debounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         pinch2Debounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         speedFactorDebounce = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);

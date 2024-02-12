@@ -85,69 +85,51 @@ public class Robot {
     }
 
     public void forward(double distanceInches, double speed) {
-        setup();
         int distanceTicks = inchesToTicks(distanceInches);
 
-        // Move Forward
-        driveFrontLeft.setDirection(REVERSE);
-        driveFrontRight.setDirection(FORWARD);
-        driveBackLeft.setDirection(REVERSE);
-        driveBackRight.setDirection(FORWARD);
-
-        driveTargetPositions(distanceTicks);
+        driveFrontLeft.setTargetPosition(distanceTicks);
+        driveFrontRight.setTargetPosition(distanceTicks);
+        driveBackLeft.setTargetPosition(distanceTicks);
+        driveBackRight.setTargetPosition(distanceTicks);
 
         driveMotors(speed);
     }
 
     public void strafe(double distanceInches, double speed, Direction direction) {
-        setup();
         int distanceTicks = inchesToTicks(distanceInches);
 
 
         switch (direction) {
             case LEFT:
-                // Strafe Left
-                driveFrontLeft.setDirection(FORWARD);
-                driveFrontRight.setDirection(FORWARD);
-                driveBackLeft.setDirection(REVERSE);
-                driveBackRight.setDirection(REVERSE);
-
-                // Set distance or tick variable to each motor
-                driveTargetPositions(distanceTicks);
+                driveFrontLeft.setTargetPosition(-distanceTicks);
+                driveFrontRight.setTargetPosition(distanceTicks);
+                driveBackLeft.setTargetPosition(distanceTicks);
+                driveBackRight.setTargetPosition(-distanceTicks);
                 break;
             case RIGHT:
-                // Strafe Right
-                driveFrontLeft.setDirection(REVERSE);
-                driveFrontRight.setDirection(REVERSE);
-                driveBackLeft.setDirection(FORWARD);
-                driveBackRight.setDirection(FORWARD);
-
-                driveTargetPositions(distanceTicks);
+                driveFrontLeft.setTargetPosition(distanceTicks);
+                driveFrontRight.setTargetPosition(-distanceTicks);
+                driveBackLeft.setTargetPosition(-distanceTicks);
+                driveBackRight.setTargetPosition(distanceTicks);
                 break;
         }
-
         driveMotors(speed);
     }
 
     public void turn(int degrees, double speed, Direction direction) {
-        setup();
         int distanceTicks = degreesToDistance(degrees);
         switch (direction) {
             case LEFT:
-                driveFrontLeft.setDirection(FORWARD);
-                driveFrontRight.setDirection(FORWARD);
-                driveBackLeft.setDirection(FORWARD);
-                driveBackRight.setDirection(FORWARD);
-
-                driveTargetPositions(distanceTicks);
+                driveFrontLeft.setTargetPosition(-distanceTicks);
+                driveFrontRight.setTargetPosition(distanceTicks);
+                driveBackLeft.setTargetPosition(-distanceTicks);
+                driveBackRight.setTargetPosition(distanceTicks);
                 break;
             case RIGHT:
-                driveFrontLeft.setDirection(REVERSE);
-                driveFrontRight.setDirection(REVERSE);
-                driveBackLeft.setDirection(REVERSE);
-                driveBackRight.setDirection(REVERSE);
-
-                driveTargetPositions(distanceTicks);
+                driveFrontLeft.setTargetPosition(distanceTicks);
+                driveFrontRight.setTargetPosition(-distanceTicks);
+                driveBackLeft.setTargetPosition(distanceTicks);
+                driveBackRight.setTargetPosition(-distanceTicks);
                 break;
         }
         driveMotors(speed);
@@ -162,9 +144,9 @@ public class Robot {
     }
 
     public void runIntake(IntakePositions IntakePositions, double speed) {
-        //setup();
         int armDistance = 0;
         int slideDistance = 0;
+
         switch (IntakePositions) {
             case LOADING:
                 slideDistance = LOADING.getSlidePosition();
@@ -203,18 +185,19 @@ public class Robot {
                 armDistance = HANGING.getArmPosition();
                 break;
         }
-
-        intakeTargetPositions(armDistance, slideDistance);
-        intakeMotors(speed);
+        intakeMotors(armDistance, slideDistance, speed);
     }
 
-    private void setup() {
+    public void setup() {
 
-        // Behavior when motor stops
         driveFrontLeft.setZeroPowerBehavior(BRAKE);
         driveFrontRight.setZeroPowerBehavior(BRAKE);
         driveBackLeft.setZeroPowerBehavior(BRAKE);
         driveBackRight.setZeroPowerBehavior(BRAKE);
+        driveFrontLeft.setDirection(REVERSE);
+        driveFrontRight.setDirection(FORWARD);
+        driveBackLeft.setDirection(REVERSE);
+        driveBackRight.setDirection(FORWARD);
         intakeArm.setZeroPowerBehavior(BRAKE);
         intakeSlide1.setZeroPowerBehavior(BRAKE);
         intakeSlide2.setZeroPowerBehavior(BRAKE);
@@ -262,6 +245,11 @@ public class Robot {
     }
 
     private void driveMotors(double power) {
+        driveFrontLeft.setMode(RUN_TO_POSITION);
+        driveFrontRight.setMode(RUN_TO_POSITION);
+        driveBackLeft.setMode(RUN_TO_POSITION);
+        driveBackRight.setMode(RUN_TO_POSITION);
+
         driveFrontLeft.setPower(power);
         driveFrontRight.setPower(power);
         driveBackLeft.setPower(power);
@@ -270,29 +258,11 @@ public class Robot {
         waitDrive();
     }
 
-    private void driveTargetPositions(int distanceTicks) {
-        driveFrontLeft.setTargetPosition(driveFrontLeft.getCurrentPosition() + distanceTicks);
-        driveFrontRight.setTargetPosition(driveFrontRight.getCurrentPosition() + distanceTicks);
-        driveBackLeft.setTargetPosition(driveBackLeft.getCurrentPosition() + distanceTicks);
-        driveBackRight.setTargetPosition(driveBackRight.getCurrentPosition() + distanceTicks);
-
-        driveFrontLeft.setMode(RUN_TO_POSITION);
-        driveFrontRight.setMode(RUN_TO_POSITION);
-        driveBackLeft.setMode(RUN_TO_POSITION);
-        driveBackRight.setMode(RUN_TO_POSITION);
-    }
-
     private void waitDrive() {
         while (driveFrontLeft.isBusy() && driveFrontRight.isBusy() && driveBackLeft.isBusy() && driveBackRight.isBusy() && opMode.opModeIsActive()) ;
     }
 
-    private void intakeMotors(double power) {
-        intakeArm.setPower(power);
-        intakeSlide1.setPower(power);
-        intakeSlide2.setPower(power);
-    }
-
-    private void intakeTargetPositions(int armDistance, int slideDistance) {
+    private void intakeMotors(int armDistance, int slideDistance, double power) {
         intakeArm.setTargetPosition(armDistance);
         intakeSlide1.setTargetPosition(slideDistance);
         intakeSlide2.setTargetPosition(slideDistance);
@@ -300,5 +270,9 @@ public class Robot {
         intakeArm.setMode(RUN_TO_POSITION);
         intakeSlide1.setMode(RUN_TO_POSITION);
         intakeSlide2.setMode(RUN_TO_POSITION);
+
+        intakeArm.setPower(power);
+        intakeSlide1.setPower(power);
+        intakeSlide2.setPower(power);
     }
 }
