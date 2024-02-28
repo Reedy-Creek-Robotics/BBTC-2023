@@ -302,7 +302,7 @@ public class TeleOpDrive extends LinearOpMode {
     private void processTelemetry(){
         if(!hangInitiated) {
             telemetry.addLine("DRIVER:");
-            telemetry.addData("Speed Factor", speedFactor);
+            telemetry.addData("Speed Factor", String.format("%.0", speedFactor));
             if (droneLaunched) {
                 telemetry.addLine("DRONE LAUNCHED");
             }
